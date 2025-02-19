@@ -34,7 +34,10 @@ export default async function SetEventSchedulePage({ params }: Props) {
       <section>
         <h2 className="text-xl font-bold mb-4">Programmazione</h2>
         <Suspense fallback={<p>loading...</p>}>
-          <SchedulesList eventId={event.id} />
+          <SchedulesList
+            eventId={event.id}
+            eventDuration={event.durationMinutes}
+          />
         </Suspense>
       </section>
     </>

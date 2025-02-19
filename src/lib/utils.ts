@@ -1,7 +1,20 @@
 import { subscriptionStatuses } from "@/app/(private)/subscriptions/Subscription";
-import { Bookings, EventSchedules, SubscriptionStatus } from "@/types";
+import {
+  Bookings,
+  EventSchedules,
+  EventScheduleSchemaType,
+  SubscriptionStatus,
+  WeekDay,
+} from "@/types";
 import { clsx, type ClassValue } from "clsx";
-import { format, isValid, parse, startOfDay } from "date-fns";
+import {
+  addMinutes,
+  format,
+  isValid,
+  parse,
+  roundToNearestMinutes,
+  startOfDay,
+} from "date-fns";
 import { it } from "date-fns/locale";
 import { twMerge } from "tailwind-merge";
 import { ACCEPTED_FILE_TYPES, MAX_FILE_SIZE } from "./schema/image";
@@ -32,12 +45,12 @@ export function filterByUsers<
 }
 
 export function groupBookings(bookings: Bookings) {
-  const groupedByEvent = Object.groupBy(bookings, (booking) =>
+  const groupedByEventId = Object.groupBy(bookings, (booking) =>
     booking.schedule.event.id.toString()
   );
 
   const groupedByDay = Object.fromEntries(
-    Object.entries(groupedByEvent).map(([eventName, eventBookings]) => [
+    Object.entries(groupedByEventId).map(([eventName, eventBookings]) => [
       eventName,
       Object.groupBy(eventBookings ?? [], (eventBooking) =>
         format(eventBooking.bookingDate, "EEEE", { locale: it })
@@ -63,18 +76,44 @@ export function groupBookings(bookings: Bookings) {
   return groupedByStartTime;
 }
 
-export function getSchedulesEntries(schedules: EventSchedules) {
+export function getSchedulesEntries(
+  schedules: EventSchedules,
+  eventDuration: number
+) {
   const scheduleEntries = DAYS_OF_WEEK_IN_ORDER.map((day) => {
     const daySchedules = schedules.filter((schedule) => schedule.day === day);
+
+    const defaultStartTime = roundToNearestMinutes(new Date(), {
+      nearestTo: 30,
+    });
 
     return [
       day,
       daySchedules.length
-        ? daySchedules.map(({ startTime, isActive }) => ({
-            startTime,
-            isActive,
-          }))
-        : [{ startTime: "09:00", isActive: true }],
+        ? daySchedules.map(({ startTime, isActive }) => {
+            const parsedStartTime = parse(startTime, "HH:mm:ss", new Date());
+
+            return {
+              startTime: format(parsedStartTime, "HH:mm"),
+              endTime: format(
+                addMinutes(parsedStartTime, eventDuration),
+                "HH:mm"
+              ),
+              isActive,
+            };
+          })
+        : !["saturday", "sunday"].includes(day)
+        ? [
+            {
+              startTime: format(defaultStartTime, "HH:mm"),
+              endTime: format(
+                addMinutes(defaultStartTime, eventDuration),
+                "HH:mm"
+              ),
+              isActive: true,
+            },
+          ]
+        : [],
     ];
   });
 

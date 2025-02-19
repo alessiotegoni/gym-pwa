@@ -14,7 +14,7 @@ export async function updateEventSchedule(
   const session = await auth();
   if (!session?.userId || !session.isAdmin) return { error: true };
 
-  const { success, data } = eventScheduleSchema.safeParse(values)
+  const { success, data } = eventScheduleSchema.safeParse(values);
 
   if (!success) return { error: true };
 

@@ -13,19 +13,22 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { toast } from "@/hooks/use-toast";
 import { Event, EventSchemaType } from "@/types";
 import { eventSchema } from "@/lib/schema/event";
 import { createEvent, editEvent } from "@/actions/events";
 import SubmitBtn from "../SubmitBtn";
 import FormAlert from "../FormAlert";
 import ImgFormField from "../ImgFormField";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 interface EventFormProps {
   event?: EventSchemaType & Pick<Event, "id">;
 }
 
 export function EventForm({ event }: EventFormProps) {
+  const router = useRouter();
+
   const form = useForm<EventSchemaType>({
     resolver: zodResolver(eventSchema),
     defaultValues: event || {
@@ -39,26 +42,20 @@ export function EventForm({ event }: EventFormProps) {
   });
 
   async function handleSubmit(data: EventSchemaType) {
-    try {
-      const action = !event
-        ? createEvent
-        : editEvent.bind(null, data, event.id);
+    const action = !event ? createEvent : editEvent.bind(null, data, event.id);
 
-      const res = await action(data);
+    const res = await action(data);
 
-      if (res?.error) throw new Error();
-
-      toast({
-        title: "Successo",
-        description: event
-          ? "Evento aggiornato con successo."
-          : "Evento creato con successo.",
-      });
-    } catch (err) {
-      form.setError("root", {
-        message: "Si è verificato un errore. Riprova più tardi.",
-      });
+    if (res?.error) {
+      toast.error("Si è verificato un errore. Riprova più tardi.");
+      return;
     }
+
+    toast.success(
+      event ? "Evento aggiornato con successo." : "Evento creato con successo."
+    );
+
+    router.push("/admin/events");
   }
 
   return (
@@ -143,7 +140,10 @@ export function EventForm({ event }: EventFormProps) {
                 <Input
                   type="number"
                   {...field}
-                  onChange={(e) => field.onChange(parseInt(e.target.value))}
+                  onChange={(e) => {
+                    const value = parseInt(e.target.value);
+                    field.onChange(!isNaN(value) ? value : null);
+                  }}
                   value={
                     field.value ? (!isNaN(field.value) ? field.value : "") : ""
                   }
@@ -166,7 +166,10 @@ export function EventForm({ event }: EventFormProps) {
                 <Input
                   type="number"
                   {...field}
-                  onChange={(e) => field.onChange(parseInt(e.target.value))}
+                  onChange={(e) => {
+                    const value = parseInt(e.target.value);
+                    field.onChange(!isNaN(value) ? value : null);
+                  }}
                   value={
                     field.value ? (!isNaN(field.value) ? field.value : "") : ""
                   }

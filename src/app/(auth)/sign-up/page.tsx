@@ -1,5 +1,5 @@
 import SignupForm from "@/components/forms/SignupForm";
-import { TRIAL_DAYS } from "@/lib/configs";
+import { TRIAL_DAYS } from "@/constants";
 import Link from "next/link";
 
 export const metadata = {

@@ -15,16 +15,16 @@ import {
 } from "../ui/form";
 import SubmitBtn from "../SubmitBtn";
 import { Textarea } from "../ui/textarea";
-import { toast } from "@/hooks/use-toast";
-import { createTraining, editTraining } from "@/actions/dailyTraining";
+import { toast } from "sonner";
+import { createTraining, editTraining } from "@/actions/dailyTrainings";
 import ImgFormField from "../ImgFormField";
 import { useRouter } from "next/navigation";
 
 type Props = {
   eventId: number;
   trainingTimestamp: Date;
-  training?: Training;
-  onSubmitSuccess: () => void;
+  training?: Omit<Training, "trainingDate">;
+  onSubmitSuccess?: () => void;
 };
 
 export default function TrainingForm({
@@ -53,18 +53,16 @@ export default function TrainingForm({
     const res = await action(data);
 
     if (res?.error) {
-      toast({
-        title: "Errore",
-        description: res?.message ?? "Errore nel caricamento dell'allenamento",
-        variant: "destructive",
+      toast.error(res?.message ?? "Errore nel caricamento dell'allenamento", {
+        duration: 7_000,
       });
       return;
     }
 
-    toast({ description: "Allenamento caricato con successo!" });
+    toast.success("Allenamento caricato con successo!");
 
     router.refresh();
-    onSubmitSuccess();
+    onSubmitSuccess?.();
   }
 
   return (

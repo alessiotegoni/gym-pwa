@@ -15,7 +15,6 @@ import {
 import { Input } from "@/components/ui/input";
 import { signinSchema } from "@/lib/schema/auth";
 import SubmitBtn from "../SubmitBtn";
-import { signIn } from "@/lib/auth";
 import { useSearchParams } from "next/navigation";
 import { credentialsSignIn } from "@/actions/auth";
 import FormAlert from "../FormAlert";

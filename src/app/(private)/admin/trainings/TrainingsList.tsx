@@ -1,9 +1,4 @@
-"use client";
-
-import { useEffect, useState } from "react";
 import { DailyTraining } from "@/types";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
 import Training from "./Training";
 import { TrainingSearchParams } from "./page";
 
@@ -22,16 +17,9 @@ export function TrainingsList({
   trainings,
   searchParams: { date, search },
 }: Props) {
-  const [eventTrainings, setEventTrainings] = useState(trainings);
-  const pathname = usePathname();
-
-  useEffect(() => {
-    setEventTrainings(trainings);
-  }, [trainings]);
-
-  return eventTrainings.length ? (
+  return trainings.length ? (
     <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-      {eventTrainings.map((training) => (
+      {trainings.map((training) => (
         <Training
           key={training.id}
           eventId={eventId}
@@ -39,19 +27,10 @@ export function TrainingsList({
           training={training}
         />
       ))}
-      {trainings.length === 10 && eventTrainings.length > 0 && (
-        <Link
-          href={`${pathname}?nextCursor=${eventTrainings.at(-1)?.id}`}
-          className="text-center text-sm text-blue-800 hover:underline"
-        >
-          Vedi altri
-        </Link>
-      )}
     </div>
   ) : (
     <p className="text-muted-foreground">
-      Nessun allenamento programmato {" "}
-      {date && `in data: ${date}`}
+      Nessun allenamento programmato {date && `in data: ${date}`}
     </p>
   );
 }

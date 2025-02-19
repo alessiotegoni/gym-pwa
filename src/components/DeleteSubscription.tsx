@@ -11,13 +11,12 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { Button } from "./ui/button";
 import { cancelSubscription } from "@/actions/subscriptions";
 import { Subscription } from "@/types";
 import { useState } from "react";
-import { toast } from "@/hooks/use-toast";
 import SubmitBtn from "./SubmitBtn";
 import { cn } from "@/lib/utils";
+import { toast } from "sonner";
 
 type Props = {
   subscription?: Partial<Subscription>;
@@ -34,12 +33,9 @@ export default function DeleteSubscription({ subscription, className }: Props) {
     const res = await cancelSubscription(subscription!);
 
     if (res?.error)
-      toast({
-        title: "Errore",
-        description:
-          "Impossibile cancellare l'abbonamento, contattattare la palestra",
-        variant: "destructive",
-      });
+      toast.error(
+        "Impossibile cancellare l'abbonamento, contattattare la palestra"
+      );
 
     setLoading(false);
   };

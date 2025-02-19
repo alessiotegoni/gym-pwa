@@ -88,14 +88,14 @@ export const events = pgTable(
 );
 
 export const eventsRelations = relations(events, ({ many }) => ({
-  eventSchedules: many(eventSchedule),
+  eventScheduless: many(eventSchedules),
   dailyTrainings: many(dailyTrainings),
 }));
 
 export const daysEnum = pgEnum("days", DAYS_OF_WEEK_IN_ORDER);
 
-export const eventSchedule = pgTable(
-  "eventSchedule",
+export const eventSchedules = pgTable(
+  "eventSchedules",
   {
     id: serial("id").primaryKey(),
     eventId: integer("eventId")
@@ -110,11 +110,11 @@ export const eventSchedule = pgTable(
   })
 );
 
-export const eventScheduleRelations = relations(
-  eventSchedule,
+export const eventSchedulesRelations = relations(
+  eventSchedules,
   ({ one, many }) => ({
     event: one(events, {
-      fields: [eventSchedule.eventId],
+      fields: [eventSchedules.eventId],
       references: [events.id],
     }),
     bookings: many(bookings),
@@ -127,7 +127,7 @@ export const bookings = pgTable(
   {
     id: serial("id").primaryKey(),
     scheduleId: integer("scheduleId")
-      .references(() => eventSchedule.id)
+      .references(() => eventSchedules.id)
       .notNull(),
     userId: integer("userId")
       .references(() => users.id)
@@ -143,9 +143,9 @@ export const bookingsRelations = relations(bookings, ({ one }) => ({
     fields: [bookings.userId],
     references: [users.id],
   }),
-  schedule: one(eventSchedule, {
+  schedule: one(eventSchedules, {
     fields: [bookings.scheduleId],
-    references: [eventSchedule.id],
+    references: [eventSchedules.id],
   }),
 }));
 
@@ -195,12 +195,9 @@ export const dailyTrainings = pgTable(
   })
 );
 
-export const dailyTrainingsRelations = relations(
-  dailyTrainings,
-  ({ one }) => ({
-    event: one(events, {
-      fields: [dailyTrainings.eventId],
-      references: [events.id],
-    }),
-  })
-);
+export const dailyTrainingsRelations = relations(dailyTrainings, ({ one }) => ({
+  event: one(events, {
+    fields: [dailyTrainings.eventId],
+    references: [events.id],
+  }),
+}));

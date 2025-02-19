@@ -8,7 +8,6 @@ import { uploadImg } from "@/lib/utils";
 import { EventSchemaType } from "@/types";
 import { eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
-import { redirect } from "next/navigation";
 
 export async function createEvent(values: EventSchemaType) {
   const session = await auth();
@@ -37,9 +36,9 @@ export async function createEvent(values: EventSchemaType) {
 
   const imageUrl = await uploadImg(img);
 
-  await db.insert(events).values({ ...restData, imageUrl });
+  if (!imageUrl) return { error: true };
 
-  redirect("/admin/events");
+  await db.insert(events).values({ ...restData, imageUrl });
 }
 
 export async function editEvent(values: EventSchemaType, eventId: number) {
@@ -61,14 +60,15 @@ export async function editEvent(values: EventSchemaType, eventId: number) {
   if (!eventExist) return { error: true };
 
   let imageUrl = img as string;
-  if (img instanceof File) imageUrl = await uploadImg(img);
+  if (img instanceof File) {
+    imageUrl = await uploadImg(img);
+    if (!imageUrl) return { error: true };
+  }
 
   await db
     .update(events)
     .set({ ...restData, imageUrl })
     .where(eq(events.id, eventId));
-
-  redirect("/admin/events");
 }
 
 export async function deleteEvent(formData: FormData) {

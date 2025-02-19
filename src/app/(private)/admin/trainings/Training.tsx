@@ -25,8 +25,8 @@ import TrainingDatePicker from "@/components/TrainingDatePicker";
 import { useState } from "react";
 import TrainingImg from "@/components/TrainingImg";
 import type { Training } from "@/types";
-import { toast } from "@/hooks/use-toast";
-import { deleteTraining } from "@/actions/dailyTraining";
+import { toast } from "sonner";
+import { deleteTraining } from "@/actions/dailyTrainings";
 import SubmitBtn from "@/components/SubmitBtn";
 import { isTrainingEditable } from "@/lib/utils";
 
@@ -44,18 +44,13 @@ export default function Training({ eventId, eventName, training }: Props) {
     const res = await deleteTraining(trainingId);
 
     if (res?.error) {
-      toast({
-        description: "Errore nell'eliminazione dell'allenamento",
-        variant: "destructive",
-      });
+      toast.error("Errore nell'eliminazione dell'allenamento");
 
       setIsDeleting(false);
       return;
     }
 
-    toast({
-      description: "Allenamento eliminato con successo",
-    });
+    toast.success("Allenamento eliminato con successo");
 
     setIsDeleting(false);
   }

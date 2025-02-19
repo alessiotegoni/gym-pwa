@@ -1,3 +1,5 @@
+"server-only";
+
 import { db } from "@/drizzle/db";
 import { startOfDay } from "date-fns";
 
@@ -57,6 +59,26 @@ export async function getBookings() {
   });
 
   return results;
+}
+
+export async function getEvent(eventId: number) {
+  const result = await db.query.events.findFirst({
+    where: ({ id }, { eq }) => eq(id, eventId),
+  });
+
+  return result;
+}
+
+export async function getEventSchedule(scheduleEventId: number) {
+  const schedules = await db.query.eventSchedules.findMany({
+    columns: {
+      id: false,
+      eventId: false,
+    },
+    where: ({ eventId }, { eq }) => eq(eventId, scheduleEventId),
+  });
+
+  return schedules;
 }
 
 export async function getTraining({

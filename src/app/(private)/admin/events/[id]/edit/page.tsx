@@ -1,21 +1,15 @@
 import { EventForm } from "@/components/forms/EventForm";
-import { db } from "@/drizzle/db";
+import { getEvent } from "@/lib/queries";
 import { notFound } from "next/navigation";
 
 type Props = {
-  params: Promise<{ id?: string }>;
+  params: Promise<{ id: string }>;
 };
 
 export default async function EditEventPage({ params }: Props) {
-  const { id } = await params;
-  if (!id) return;
-
-  const eventId = parseInt(id);
-  if (isNaN(eventId)) return;
-
-  const event = await db.query.events.findFirst({
-    where: ({ id }, { eq }) => eq(id, eventId),
-  });
+  const eventId = parseInt((await params).id);
+  if (isNaN(eventId)) return
+  const event = await getEvent(eventId);
 
   if (!event) notFound();
 

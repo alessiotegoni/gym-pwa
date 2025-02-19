@@ -17,7 +17,7 @@ export default async function TrainingDialog({
   isAdmin,
   trainingTimestamp,
 }: Props) {
-  const dailyTraining = await db.query.dailyTrainings.findFirst({
+  const training = await db.query.dailyTrainings.findFirst({
     columns: {
       id: true,
       description: true,
@@ -29,22 +29,12 @@ export default async function TrainingDialog({
         eq(trainingDate, format(trainingTimestamp, "yyyy-MM-dd"))
       ),
   });
-  // const dailyTraining = {
-  //   id: 1,
-  //   description: "Allenamento di resistenza con esercizi a corpo libero.",
-  //   eventId: 43,
-  //   imageUrl:
-  //     "https://images.unsplash.com/photo-1737100593814-8ceb04f29cca?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-  //   trainingDate: "2025-02-04",
-  // };
 
   return (
     <Dialog>
       <DialogTrigger asChild>
         <p className="text-xs hover:underline font-medium text-blue-600 cursor-pointer">
-          {isAdmin && !dailyTraining
-            ? "Carica allenamento"
-            : "Vedi allenamento"}
+          {isAdmin && !training ? "Carica allenamento" : "Vedi allenamento"}
         </p>
       </DialogTrigger>
       <DialogContent className="rounded-xl">
@@ -54,13 +44,13 @@ export default async function TrainingDialog({
         {isAdmin ? (
           <CreateDailyTrainingForm
             eventId={eventId}
-            dailyTraining={dailyTraining}
+            training={training}
             trainingTimestamp={trainingTimestamp}
           />
-        ) : dailyTraining ? (
+        ) : training ? (
           <>
-            <p className="text-center">{dailyTraining.description}</p>
-            <TrainingImg {...dailyTraining} />
+            <p className="text-center">{training.description}</p>
+            <TrainingImg {...training} />
           </>
         ) : (
           <p>Il trainer deve ancora caricare l'allenamento</p>

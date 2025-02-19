@@ -8,6 +8,16 @@ export const DAYS_OF_WEEK_IN_ORDER = [
   "sunday",
 ] as const;
 
+export const giorniSettimana = [
+  "lunedì",
+  "martedì",
+  "mercoledì",
+  "giovedì",
+  "venerdì",
+  "sabato",
+  "domenica",
+]
+
 export const SUBSCRIPTION_STATUSES = [
   "active",
   "canceled",

@@ -5,11 +5,11 @@ import { TrainingsEventsList } from "./TrainingsEventsList";
 import SearchBar from "@/components/SearchBar";
 import { DatePicker } from "@/components/DatePicker";
 import CreateEventCta from "@/components/CreateEventCta";
+import { formatDate } from "@/lib/utils";
 
 export type TrainingSearchParams = Awaited<Props["searchParams"]>;
 
 export const getEventsTrainings = async ({
-  nextCursor,
   search,
   date,
 }: TrainingSearchParams) => {
@@ -18,29 +18,18 @@ export const getEventsTrainings = async ({
     with: {
       dailyTrainings: {
         columns: { eventId: false },
-        where: (dailyTrainings, { and, lt, eq, like }) => {
-          const conditions = [];
-
-          if (nextCursor) {
-            conditions.push(lt(dailyTrainings.id, Number.parseInt(nextCursor)));
-          }
-
-          if (date) {
-            conditions.push(eq(dailyTrainings.trainingDate, date));
-          }
-
-          if (search) {
-            conditions.push(like(dailyTrainings.description, `%${search}%`));
-          }
-
-          return and(...conditions);
-        },
+        where: ({ trainingDate, description }, { and, eq, ilike, gte }) =>
+          and(
+            !date ? gte(trainingDate, formatDate(new Date())) : undefined,
+            date ? eq(trainingDate, date) : undefined,
+            search ? ilike(description, `%${search}%`) : undefined
+          ),
         orderBy: ({ trainingDate }, { asc }) => asc(trainingDate),
         limit: 10,
       },
     },
     where: search
-      ? (events, { like }) => like(events.name, `%${search}%`)
+      ? (events, { ilike }) => ilike(events.name, `%${search}%`)
       : undefined,
   });
 
@@ -54,7 +43,6 @@ export const metadata: Metadata = {
 
 type Props = {
   searchParams: Promise<{
-    nextCursor?: string;
     search?: string;
     date?: string;
   }>;

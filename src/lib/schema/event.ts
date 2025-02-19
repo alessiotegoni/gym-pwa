@@ -13,11 +13,11 @@ export const eventSchema = z
       .positive("La capacità deve essere maggiore di 0"),
     bookingCutoffMinutes: z
       .number({ message: "Numero invalido" })
-      .positive()
+      .positive("Il limite di prenotazione deve essere maggiore a 0")
       .nullable(),
     cancellationCutoffMinutes: z
       .number({ message: "Numero invalido" })
-      .positive()
+      .positive("Il limite di cancellazione deve essere maggiore a 0")
       .nullable(),
   })
   .merge(imageSchema);

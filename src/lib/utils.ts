@@ -1,11 +1,12 @@
 import { subscriptionStatuses } from "@/app/(private)/subscriptions/Subscription";
-import { Bookings, SubscriptionStatus } from "@/types";
+import { Bookings, EventSchedules, SubscriptionStatus } from "@/types";
 import { clsx, type ClassValue } from "clsx";
 import { format, isValid, parse, startOfDay } from "date-fns";
 import { it } from "date-fns/locale";
 import { twMerge } from "tailwind-merge";
 import { ACCEPTED_FILE_TYPES, MAX_FILE_SIZE } from "./schema/image";
 import { pinata } from "./configs";
+import { DAYS_OF_WEEK_IN_ORDER } from "@/constants";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -60,6 +61,24 @@ export function groupBookings(bookings: Bookings) {
   );
 
   return groupedByStartTime;
+}
+
+export function getSchedulesEntries(schedules: EventSchedules) {
+  const scheduleEntries = DAYS_OF_WEEK_IN_ORDER.map((day) => {
+    const daySchedules = schedules.filter((schedule) => schedule.day === day);
+
+    return [
+      day,
+      daySchedules.length
+        ? daySchedules.map(({ startTime, isActive }) => ({
+            startTime,
+            isActive,
+          }))
+        : [{ startTime: "09:00", isActive: true }],
+    ];
+  });
+
+  return scheduleEntries;
 }
 
 // export const groupBookings = (bookings: Bookings): GroupedBookings =>
@@ -122,7 +141,7 @@ export const isValidImage = ({ type, size }: File) => {
 
 export const uploadImg = async (file: File) => {
   const upload = await pinata.upload.file(file);
-  const url = await pinata.gateways.convert(upload.IpfsHash)
+  const url = await pinata.gateways.convert(upload.IpfsHash);
 
   return url;
 };

@@ -16,10 +16,10 @@ import {
 import { Input } from "@/components/ui/input";
 import { EditUserSchemaType, User } from "@/types";
 import { editUserSchema } from "@/lib/schema/user";
-import { toast } from "@/hooks/use-toast";
+import { toast } from "sonner";
 import ImgFormField from "../ImgFormField";
 import SubmitBtn from "../SubmitBtn";
-import { updateUserProfile } from "@/actions/user";
+import { updateUserProfile } from "@/actions/users";
 
 type Props = {
   user: User;
@@ -28,7 +28,6 @@ type Props = {
 export function UserProfileForm({
   user: { firstName, lastName, image },
 }: Props) {
-
   const form = useForm<EditUserSchemaType>({
     resolver: zodResolver(editUserSchema),
     defaultValues: {
@@ -42,19 +41,13 @@ export function UserProfileForm({
     const res = await updateUserProfile(data);
 
     if (res.error) {
-      toast({
-        title: "Errore",
-        description:
-          "Si è verificato un errore durante l'aggiornamento del profilo. Riprova più tardi.",
-        variant: "destructive",
-      });
+      toast.error(
+        "Si è verificato un errore durante l'aggiornamento del profilo. Riprova più tardi."
+      );
       return;
     }
 
-    toast({
-      title: "Profilo aggiornato",
-      description: "Le tue informazioni sono state aggiornate con successo.",
-    });
+    toast("Le tue informazioni sono state aggiornate con successo.");
   }
 
   return (

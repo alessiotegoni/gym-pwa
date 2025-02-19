@@ -34,12 +34,12 @@ import {
 import { Switch } from "@/components/ui/switch";
 import { createSubscriptionSchema } from "@/lib/schema/subscription";
 import SubmitBtn from "../SubmitBtn";
-import { CreateSubscriptionType, Users } from "@/types";
+import { CreateSubscriptionType, User } from "@/types";
 import { adminCreateSubscription } from "@/actions/subscriptions";
 import { SUBSCRIPTIONS_PLANS } from "@/constants";
 
 type Props = {
-  users: Pick<Users, "id" | "email">[];
+  users: Pick<User, "id" | "email">[];
 };
 
 export default function SubscriptionCreateForm({ users }: Props) {

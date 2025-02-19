@@ -3,7 +3,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import { SidebarProvider } from "@/components/ui/sidebar";
-import { Toaster } from "@/components/ui/toaster";
+import { Toaster } from "@/components/ui/sonner";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -35,7 +35,7 @@ export default function RootLayout({
           <SidebarProvider className="grid grid-rows-[auto_1fr_auto]">
             {children}
           </SidebarProvider>
-          <Toaster />
+          <Toaster richColors position="top-center" duration={5_000} />
         </ThemeProvider>
       </body>
     </html>

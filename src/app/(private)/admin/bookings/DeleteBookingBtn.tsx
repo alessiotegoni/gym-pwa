@@ -2,7 +2,7 @@
 
 import { deleteBooking } from "@/actions/bookings";
 import { Button, ButtonProps } from "@/components/ui/button";
-import { toast } from "@/hooks/use-toast";
+import { toast } from "sonner";
 import { LoaderCircle } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { ReactNode, useTransition } from "react";
@@ -27,15 +27,11 @@ export default function DeleteBookingBtn({
     startDeleteTransition(async () => {
       const res = await deleteBooking(bookingId, pathname);
       if (res?.error) {
-        toast({
-          title: "Errore",
-          description: "Errore nell'eliminazione della prenotazione",
-          variant: "destructive",
-        });
+        toast.error("Errore nell'eliminazione della prenotazione");
         return;
       }
 
-      toast({ title: "Prenotazione eliminata con successo!" });
+      toast.success("Prenotazione eliminata con successo!");
     });
   }
 

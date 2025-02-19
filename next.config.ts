@@ -1,7 +1,14 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  images: {
+    dangerouslyAllowSVG: true,
+    remotePatterns: [
+      { hostname: "placehold.co" },
+      { hostname: "images.unsplash.com" },
+      { hostname: "cyan-tropical-guanaco-792.mypinata.cloud" },
+    ],
+  },
 };
 
 export default nextConfig;

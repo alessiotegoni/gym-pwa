@@ -6,6 +6,12 @@ import { auth } from "@/lib/auth";
 import { and, eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 
+export async function createBooking() {
+  const session = await auth();
+
+  if (!session?.userId) return { error: true };
+}
+
 export async function deleteBooking(id: number, path: string) {
   const session = await auth();
 

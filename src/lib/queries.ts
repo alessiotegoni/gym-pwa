@@ -1,7 +1,7 @@
 "server-only";
 
 import { db } from "@/drizzle/db";
-import { startOfDay } from "date-fns";
+import { addDays, startOfDay } from "date-fns";
 
 export async function getUser({
   userId,
@@ -61,6 +61,41 @@ export async function getBookings() {
   return results;
 }
 
+export async function getUserBookings(id: number) {
+  const results = await db.query.bookings.findMany({
+    where: ({ userId, bookingDate }, { and, gte, eq }) =>
+      and(eq(userId, id), gte(bookingDate, new Date())),
+    with: {
+      schedule: {
+        columns: { startTime: true },
+        with: {
+          bookings: {
+            where: ({ bookingDate }, { gte }) => gte(bookingDate, new Date()),
+            columns: { id: true },
+            with: {
+              user: {
+                columns: { firstName: true, lastName: true, image: true },
+              },
+            },
+          },
+          event: {
+            columns: {
+              id: true,
+              name: true,
+              imageUrl: true,
+              capacity: true,
+              durationMinutes: true,
+            },
+          },
+        },
+      },
+    },
+    orderBy: (bookings, { asc }) => [asc(bookings.bookingDate)],
+  });
+
+  return results;
+}
+
 export async function getEvent(eventId: number) {
   const result = await db.query.events.findFirst({
     where: ({ id }, { eq }) => eq(id, eventId),
@@ -70,15 +105,35 @@ export async function getEvent(eventId: number) {
 }
 
 export async function getEventsWithSchedules() {
+  const now = startOfDay(new Date());
+
   const results = await db.query.events.findMany({
-    columns: {
-      id: true,
-      name: true,
-      durationMinutes: true,
-    },
     with: {
       schedules: {
+        columns: {
+          id: true,
+          day: true,
+          startTime: true,
+        },
+        where: ({ isActive }, { eq }) => eq(isActive, true),
         orderBy: ({ startTime }, { asc }) => asc(startTime),
+        with: {
+          bookings: {
+            columns: {
+              id: true,
+              bookingDate: true,
+            },
+            where: ({ bookingDate }, { and, lte, gte }) =>
+              and(gte(bookingDate, now), lte(bookingDate, addDays(now, 7))),
+
+            orderBy: ({ bookingDate }, { asc }) => asc(bookingDate),
+            with: {
+              user: {
+                columns: { id: true, firstName: true, lastName: true, image: true },
+              },
+            },
+          },
+        },
       },
     },
   });

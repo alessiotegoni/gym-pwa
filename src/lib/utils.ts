@@ -11,8 +11,6 @@ import {
   addDays,
   addMinutes,
   format,
-  getDay,
-  isValid,
   parse,
   roundToNearestMinutes,
   startOfDay,
@@ -151,18 +149,13 @@ export const getCurrentTime = () => {
   return parse(format(now, "HH:mm"), "HH:mm", now);
 };
 
-export const getNext7Days = () => {
-  const nextDays = Array.from({ length: 7 }, (_, i) => {
-    const date = addDays(new Date(), i);
+export const getNext7Dates = () => {
+  const nextDates = Array.from({ length: 7 }, (_, i) => addDays(new Date(), i));
 
-    return {
-      day: format(date, "EEEE").toLowerCase(),
-      formatted: format(date, "EEEE dd/MM/yyyy", { locale: it }),
-    };
-  });
-
-  return nextDays;
+  return nextDates;
 };
+
+export const getDay = (date: Date) => format(date, "EEEE").toLowerCase();
 
 export const formatDate = (date: Date) => format(date, "yyyy-MM-dd");
 

@@ -1,13 +1,17 @@
+import { auth } from "@/lib/auth";
 import ScheduleCarousel from "./ScheduleCarousel";
 import { getEventsWithSchedules } from "@/lib/queries";
 
 type Props = {
-    searchParams: Promise<{ date?: string }>
+  searchParams: Promise<{ bookingDate?: string }>;
 };
-export default async function SchedulePage({}: Props) {
-  const events = await getEventsWithSchedules();
+export default async function SchedulePage({ searchParams }: Props) {
+  const [session, events] = await Promise.all([
+    auth(),
+    getEventsWithSchedules(),
+  ]);
 
-  console.log(events);
+  if (!session?.userId) return
 
-  return <ScheduleCarousel events={events} />;
+  return <ScheduleCarousel events={events} userId={session.userId} />;
 }

@@ -7,7 +7,7 @@ import {
   subscriptions,
   users,
 } from "@/drizzle/schema";
-import { getBookings, getEventSchedule } from "@/lib/queries";
+import { getBookings, getEventSchedule, getEventsWithSchedules } from "@/lib/queries";
 import { signupSchema } from "@/lib/schema/auth";
 import { dailyTrainingSchema } from "@/lib/schema/dailyTraining";
 import { eventSchema } from "@/lib/schema/event";
@@ -38,6 +38,7 @@ export type EventSchemaType = z.infer<typeof eventSchema>;
 
 export type EventSchedules = Awaited<ReturnType<typeof getEventSchedule>>;
 export type EventScheduleSchemaType = z.infer<typeof eventScheduleSchema>;
+export type EventsWithSchedules = Awaited<ReturnType<typeof getEventsWithSchedules>>
 
 export type EventsTrainings = Awaited<ReturnType<typeof getEventsTrainings>>;
 

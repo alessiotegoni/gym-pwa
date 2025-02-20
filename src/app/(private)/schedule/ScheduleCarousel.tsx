@@ -1,53 +1,62 @@
-"use client";
-
-import { getNext7Days } from "@/lib/utils";
-import { Card, CardContent } from "@/components/ui/card";
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
-} from "@/components/ui/carousel";
-import { useSchedule } from "@/context/ScheduleProvider";
-import { getEventsWithSchedules } from "@/lib/queries";
+import { CarouselContent, CarouselItem } from "@/components/ui/carousel";
+import { EventsWithSchedules } from "@/types";
+import { getDay, getNext7Dates } from "@/lib/utils";
+import EventScheduleList from "./EventSchedule";
 
 type Props = {
-  events: Awaited<ReturnType<typeof getEventsWithSchedules>>;
+  events: EventsWithSchedules;
+  userId: number;
 };
 
-export default function ScheduleCarousel({ events }: Props) {
-  const { currentDay } = useSchedule();
-
-  console.log(currentDay);
-
-  const currentSchedule = events.filter((event) =>
-    event.schedules.filter(
-      (eventSchedule) => eventSchedule.day === currentDay.day
-    )
-  );
-
-  console.log(currentSchedule);
-
+export default function ScheduleCarousel({ events, userId }: Props) {
   return (
-    <Carousel className="w-full max-w-xs">
+    <>
       <CarouselContent>
-        {getNext7Days().map(({ formatted }, index) => (
-          <CarouselItem key={index}>
-            <div className="p-1">
-              <Card>
-                <CardContent className="flex aspect-square items-center justify-center p-6">
-                  <span className="text-4xl font-semibold capitalize">
-                    {formatted}
-                  </span>
-                </CardContent>
-              </Card>
-            </div>
-          </CarouselItem>
-        ))}
+        {getNext7Dates().map((date) => {
+          const dateDay = getDay(date);
+
+          const scheduleEvents = events.filter((event) =>
+            event.schedules.some(
+              (eventSchedule) => eventSchedule.day === dateDay
+            )
+          );
+
+          if (!scheduleEvents.length) {
+            return (
+              <CarouselItem key={date.toString()} data-day={dateDay}>
+                <h3 className="text-center font-semibold">
+                  Nessuna programmazione per questa data
+                </h3>
+              </CarouselItem>
+            );
+          }
+
+          return (
+            <CarouselItem key={date.toString()} data-day={dateDay}>
+              {scheduleEvents.map(({ schedules, ...event }) => {
+                const eventSchedules = schedules.filter(
+                  (s) => s.day === getDay(date)
+                );
+
+                return (
+                  <section key={event.id} data-event={event.name}>
+                    <h3 className="text-lg font-semibold capitalize mb-3">
+                      {event.name}
+                    </h3>
+                    <EventScheduleList
+                      event={event}
+                      schedules={eventSchedules}
+                      userId={userId}
+                    />
+                  </section>
+                );
+              })}
+            </CarouselItem>
+          );
+        })}
       </CarouselContent>
-      <CarouselPrevious />
-      <CarouselNext />
-    </Carousel>
+      {/* <CarouselPrevious />
+      <CarouselNext /> */}
+    </>
   );
 }

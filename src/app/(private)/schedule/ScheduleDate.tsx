@@ -1,45 +1,24 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
+import { CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 import { useSchedule } from "@/context/ScheduleProvider";
-import { ArrowLeft, ArrowRight } from "lucide-react";
+import { format } from "date-fns";
+import { it } from "date-fns/locale";
 
 type Props = {};
 export default function ScheduleDate({}: Props) {
-  const {
-    currentDay: { formatted },
-    canScrollPrevDay,
-    scrollPrevDay,
-    canScrollNextDay,
-    scrollNextDay,
-  } = useSchedule();
+  const { currentDate } = useSchedule();
 
   return (
     <div className="flex justify-between items-center gap-2 mt-3 mb-7">
-      <Button
-        variant="outline"
-        size="icon"
-        className="size-8 rounded-full"
-        onClick={() => scrollPrevDay()}
-        disabled={!canScrollPrevDay}
-      >
-        <ArrowLeft />
-      </Button>
+      <CarouselPrevious />
       <h2
         className="text-xl font-semibold p-1 bg-secondary
       rounded-xl capitalize px-3"
       >
-        {formatted}
+        {format(currentDate, "EEEE dd/MM/yyyy", { locale: it })}
       </h2>
-      <Button
-        variant="outline"
-        size="icon"
-        className="size-8 rounded-full"
-        onClick={() => scrollNextDay()}
-        disabled={!canScrollNextDay}
-      >
-        <ArrowRight />
-      </Button>
+      <CarouselNext />
     </div>
   );
 }

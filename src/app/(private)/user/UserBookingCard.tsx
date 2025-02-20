@@ -11,11 +11,11 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
-import { getUserBookings } from "./page";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import DeleteBookingBtn from "../admin/bookings/DeleteBookingBtn";
+import { getUserBookings } from "@/lib/queries";
 
 type Props = {
   booking: Awaited<ReturnType<typeof getUserBookings>>[0];
@@ -38,16 +38,16 @@ export default function UserBookingCard({ booking }: Props) {
           <div className="flex items-center gap-3">
             <div className="relative w-12 h-12 rounded-full overflow-hidden">
               <Image
-                src={booking.schedule.event.imageUrl || "/placeholder.svg"}
+                src={booking.schedule.event.imageUrl}
                 alt={booking.schedule.event.name}
-                layout="fill"
                 objectFit="cover"
+                fill
               />
             </div>
             <div>
               <h3 className="font-semibold">{booking.schedule.event.name}</h3>
-              <p className="text-sm text-muted-foreground">
-                <CalendarDays className="w-4 h-4 inline mr-1" />
+              <p className="text-sm flex items-center gap-1 text-muted-foreground">
+                <CalendarDays className="size-4" />
                 {format(booking.bookingDate, "d MMMM", { locale: it })}
               </p>
             </div>
@@ -60,7 +60,7 @@ export default function UserBookingCard({ booking }: Props) {
         <div className="mt-5 flex items-center justify-between">
           <div className="flex gap-2">
             <Badge variant="secondary" className="flex items-center">
-              <Users className="w-4 h-4 mr-1" />
+              <Users />
               {booking.schedule.bookings.length}/
               {booking.schedule.event.capacity}
             </Badge>

@@ -69,6 +69,23 @@ export async function getEvent(eventId: number) {
   return result;
 }
 
+export async function getEventsWithSchedules() {
+  const results = await db.query.events.findMany({
+    columns: {
+      id: true,
+      name: true,
+      durationMinutes: true,
+    },
+    with: {
+      schedules: {
+        orderBy: ({ startTime }, { asc }) => asc(startTime),
+      },
+    },
+  });
+
+  return results;
+}
+
 export async function getEventSchedule(scheduleEventId: number) {
   const schedules = await db.query.eventSchedules.findMany({
     columns: {

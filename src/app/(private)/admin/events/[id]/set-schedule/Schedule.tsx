@@ -33,8 +33,6 @@ export default function Schedule({ day, eventDuration }: Props) {
     schedules.some((schedule) => schedule.isActive)
   );
 
-  // FIXME: utilizzare le schedules dal db al posto che quelle di fieldArray
-
   useEffect(() => {
     form.setValue(
       day,

@@ -8,8 +8,10 @@ import {
 } from "@/types";
 import { clsx, type ClassValue } from "clsx";
 import {
+  addDays,
   addMinutes,
   format,
+  getDay,
   isValid,
   parse,
   roundToNearestMinutes,
@@ -147,6 +149,19 @@ export const getBookingTime = (time: string) =>
 export const getCurrentTime = () => {
   const now = new Date();
   return parse(format(now, "HH:mm"), "HH:mm", now);
+};
+
+export const getNext7Days = () => {
+  const nextDays = Array.from({ length: 7 }, (_, i) => {
+    const date = addDays(new Date(), i);
+
+    return {
+      day: format(date, "EEEE").toLowerCase(),
+      formatted: format(date, "EEEE dd/MM/yyyy", { locale: it }),
+    };
+  });
+
+  return nextDays;
 };
 
 export const formatDate = (date: Date) => format(date, "yyyy-MM-dd");

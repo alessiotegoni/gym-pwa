@@ -88,7 +88,7 @@ export const events = pgTable(
 );
 
 export const eventsRelations = relations(events, ({ many }) => ({
-  eventScheduless: many(eventSchedules),
+  schedules: many(eventSchedules),
   dailyTrainings: many(dailyTrainings),
 }));
 

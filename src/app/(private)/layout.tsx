@@ -15,19 +15,14 @@ export default function PrivateLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <ThemeProvider
-      attribute="class"
-      defaultTheme="system"
-      enableSystem
-      disableTransitionOnChange
-    >
-      <SidebarProvider className="grid grid-rows-[auto_1fr_auto] h-dvh">
-        <TopBar />
-        <main className={`container p-4 ${inter.variable} antialiased font-inter`}>
-          {children}
-        </main>
-        <BottomBar />
-      </SidebarProvider>
-    </ThemeProvider>
+    <>
+      <TopBar />
+      <main
+        className={`container p-4 ${inter.variable} antialiased font-inter`}
+      >
+        {children}
+      </main>
+      <BottomBar />
+    </>
   );
 }

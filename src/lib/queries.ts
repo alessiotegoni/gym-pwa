@@ -74,7 +74,7 @@ export async function getUserBookings(id: number) {
             columns: { id: true },
             with: {
               user: {
-                columns: { firstName: true, lastName: true, image: true },
+                columns: { id: true },
               },
             },
           },
@@ -129,7 +129,9 @@ export async function getEventsWithSchedules() {
             orderBy: ({ bookingDate }, { asc }) => asc(bookingDate),
             with: {
               user: {
-                columns: { id: true, firstName: true, lastName: true, image: true },
+                columns: {
+                  id: true,
+                },
               },
             },
           },
@@ -151,25 +153,4 @@ export async function getEventSchedule(scheduleEventId: number) {
   });
 
   return schedules;
-}
-
-export async function getTraining({
-  eventId,
-  date,
-  trainingId,
-}: {
-  eventId?: number;
-  date?: string;
-  trainingId?: number;
-}) {
-  const result = await db.query.dailyTrainings.findFirst({
-    where: ({ id, eventId: trainingEventId, trainingDate }, { and, eq }) =>
-      and(
-        eventId ? eq(trainingEventId, eventId) : undefined,
-        trainingId ? eq(id, trainingId) : undefined,
-        date ? eq(trainingDate, date) : undefined
-      ),
-  });
-
-  return result;
 }

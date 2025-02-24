@@ -18,6 +18,7 @@ export default function SubmitBtn({
   label,
   loadingLabel,
   className,
+  disabled,
   isLoading,
   type = "submit",
   children,
@@ -31,13 +32,13 @@ export default function SubmitBtn({
   return (
     <Button
       type={type}
-      disabled={isPending}
+      disabled={isPending || disabled}
       className={cn("w-full", className)}
       {...props}
     >
       {isPending ? (
         <>
-          <LoaderCircle className="animate-spin !size-4" />
+          <LoaderCircle className="animate-spin !size-5" />
           {loadingLabel && `${loadingLabel}...`}
         </>
       ) : (

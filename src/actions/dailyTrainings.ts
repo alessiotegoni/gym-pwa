@@ -3,12 +3,36 @@
 import { db } from "@/drizzle/db";
 import { dailyTrainings } from "@/drizzle/schema";
 import { auth } from "@/lib/auth";
-import { getTraining } from "@/lib/queries";
 import { dailyTrainingSchema } from "@/lib/schema/dailyTraining";
 import { formatDate, isTrainingEditable, uploadImg } from "@/lib/utils";
 import { DailyTrainingSchemaType } from "@/types";
 import { eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
+
+export async function getTraining({
+  eventId,
+  date,
+  trainingId,
+}: {
+  eventId?: number;
+  date?: string;
+  trainingId?: number;
+}) {
+  const session = await auth();
+
+  if (!session?.userId) return;
+
+  const result = await db.query.dailyTrainings.findFirst({
+    where: ({ id, eventId: trainingEventId, trainingDate }, { and, eq }) =>
+      and(
+        eventId ? eq(trainingEventId, eventId) : undefined,
+        trainingId ? eq(id, trainingId) : undefined,
+        date ? eq(trainingDate, date) : undefined
+      ),
+  });
+
+  return result;
+}
 
 export async function createTraining(values: DailyTrainingSchemaType) {
   const session = await auth();
@@ -18,7 +42,6 @@ export async function createTraining(values: DailyTrainingSchemaType) {
   const { success, data } = dailyTrainingSchema.safeParse(values);
 
   if (!success) return { error: true };
-  console.log("dwdwd");
 
   const { eventId, img, trainingTimestamp, description } = data;
 
@@ -59,15 +82,18 @@ export async function editTraining(
 
   if (!success) return { error: true };
 
-  const { img, description, trainingTimestamp, eventId } = data;
+  const { img, description, trainingTimestamp } = data;
 
   const trainingExist = await getTraining({ trainingId });
   if (!trainingExist) return { error: true };
 
   if (isTrainingEditable(trainingExist.trainingDate)) {
-    const trainingExist = await getTraining({
-      eventId,
-      date: formatDate(trainingTimestamp),
+    const trainingExist = await db.query.dailyTrainings.findFirst({
+      where: ({ id, trainingDate }, { and, ne }) =>
+        and(
+          eq(trainingDate, formatDate(trainingTimestamp)),
+          ne(id, trainingId)
+        ),
     });
 
     if (trainingExist)

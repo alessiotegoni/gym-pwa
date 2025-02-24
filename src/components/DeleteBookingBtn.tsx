@@ -1,11 +1,12 @@
 "use client";
 
 import { deleteBooking } from "@/actions/bookings";
-import { Button, ButtonProps } from "@/components/ui/button";
+import { ButtonProps } from "@/components/ui/button";
 import { toast } from "sonner";
-import { LoaderCircle } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { ReactNode, useTransition } from "react";
+import { cn } from "@/lib/utils";
+import SubmitBtn from "./SubmitBtn";
 
 type Props = {
   bookingId: number;
@@ -22,7 +23,7 @@ export default function DeleteBookingBtn({
 
   const pathname = usePathname();
 
-  function handleclick() {
+  function handleDelete() {
     if (isPending) return;
     startDeleteTransition(async () => {
       const res = await deleteBooking(bookingId, pathname);
@@ -36,14 +37,13 @@ export default function DeleteBookingBtn({
   }
 
   return (
-    <Button
-      size="sm"
-      className={className}
-      onClick={handleclick}
-      disabled={isPending}
+    <SubmitBtn
+      className={cn("w-fit", className)}
+      onClick={handleDelete}
+      isLoading={isPending}
       {...props}
     >
-      {isPending ? <LoaderCircle className="animate-spin !size-5" /> : children}
-    </Button>
+      {children}
+    </SubmitBtn>
   );
 }

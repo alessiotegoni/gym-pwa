@@ -13,6 +13,11 @@ import {
   format,
   parse,
   roundToNearestMinutes,
+  set,
+  setHours,
+  setMilliseconds,
+  setMinutes,
+  setSeconds,
   startOfDay,
 } from "date-fns";
 import { it } from "date-fns/locale";
@@ -66,7 +71,7 @@ export function groupBookings(bookings: Bookings) {
           day,
           Object.groupBy(
             dayBookings ?? [],
-            (dayBooking) => dayBooking.schedule.startTime
+            (dayBooking) => dayBooking.schedule.startTime.slice(0, 5)
           ),
         ])
       ),
@@ -138,6 +143,17 @@ export function getSchedulesEntries(
 
 export const getBookingTime = (time: string) =>
   parse(time, "HH:mm", new Date());
+
+export const getBookingDateTime = (date: Date, time: string) => {
+  const [hours, minutes] = time.split(":").map(Number);
+
+  return set(date, {
+    hours,
+    minutes,
+    seconds: 0,
+    milliseconds: 0,
+  });
+};
 
 // export const isToday = (day: string) => {
 //   const currentDay = format(new Date(), "EEEE", { locale: it });

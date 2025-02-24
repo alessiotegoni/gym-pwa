@@ -2,7 +2,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Bookings } from "@/types";
 import { Trash2 } from "lucide-react";
-import DeleteBookingBtn from "./DeleteBookingBtn";
+import DeleteBookingBtn from "../../../../components/DeleteBookingBtn";
 
 export default function BookingList({ bookings }: { bookings: Bookings }) {
   return (

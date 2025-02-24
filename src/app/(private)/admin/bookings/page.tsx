@@ -8,127 +8,6 @@ import SubmitBtn from "@/components/SubmitBtn";
 import { getBookings } from "@/lib/queries";
 import AdminBookingCard from "./AdminBookingCard";
 
-let bookings = [
-  // Event: Yoga Class (11, 12, 13 Febbraio)
-  {
-    id: 1,
-    createdAt: new Date("2025-02-11T08:00:00.000Z"),
-    scheduleId: 101,
-    userId: 201,
-    bookingDate: new Date("2025-02-18T00:00:00.000Z"),
-    user: {
-      firstName: "Alice",
-      lastName: "Verdi",
-      email: "alice.verdi@example.com",
-      image: "",
-    },
-    schedule: {
-      id: 101,
-      startTime: "09:00",
-      event: {
-        id: 301,
-        name: "Yoga Class",
-        capacity: 15,
-        durationMinutes: 60,
-      },
-    },
-  },
-  {
-    id: 2,
-    createdAt: new Date("2025-02-11T09:30:00.000Z"),
-    scheduleId: 102,
-    userId: 202,
-    bookingDate: new Date("2025-02-11T00:00:00.000Z"),
-    user: {
-      firstName: "Luca",
-      lastName: "Rossi",
-      email: "luca.rossi@example.com",
-      image: "",
-    },
-    schedule: {
-      id: 102,
-      startTime: "11:00",
-      event: {
-        id: 301,
-        name: "Yoga Class",
-        capacity: 15,
-        durationMinutes: 60,
-      },
-    },
-  },
-  {
-    id: 3,
-    createdAt: new Date("2025-02-11T10:00:00.000Z"),
-    scheduleId: 103,
-    userId: 203,
-    bookingDate: new Date("2025-02-11T00:00:00.000Z"),
-    user: {
-      firstName: "Giulia",
-      lastName: "Bianchi",
-      email: "giulia.bianchi@example.com",
-      image: "",
-    },
-    schedule: {
-      id: 103,
-      startTime: "17:00",
-      event: {
-        id: 301,
-        name: "Yoga Class",
-        capacity: 15,
-        durationMinutes: 60,
-      },
-    },
-  },
-
-  // Event: Spinning Class (11, 12, 13 Febbraio)
-  {
-    id: 4,
-    createdAt: new Date("2025-02-11T12:00:00.000Z"),
-    scheduleId: 201,
-    userId: 204,
-    bookingDate: new Date("2025-02-11T00:00:00.000Z"),
-    user: {
-      firstName: "Marco",
-      lastName: "Neri",
-      email: "marco.neri@example.com",
-      image: "",
-    },
-    schedule: {
-      id: 201,
-      startTime: "07:30",
-      event: {
-        id: 401,
-        name: "Spinning Class",
-        capacity: 20,
-        durationMinutes: 45,
-      },
-    },
-  },
-  {
-    id: 5,
-    createdAt: new Date("2025-02-11T14:00:00.000Z"),
-    scheduleId: 202,
-    userId: 205,
-    bookingDate: new Date("2025-02-11T00:00:00.000Z"),
-    user: {
-      firstName: "Serena",
-      lastName: "Morelli",
-      email: "serena.morelli@example.com",
-      image: "",
-    },
-    schedule: {
-      id: 202,
-      startTime: "19:00",
-      event: {
-        id: 401,
-        name: "Spinning Class",
-        capacity: 20,
-        durationMinutes: 45,
-      },
-    },
-  },
-];
-
 export const metadata = {
   title: "Gestisci prenotazioni",
   description: "Visualizza e gestisci le prenotazioni dei tuoi utenti",
@@ -139,7 +18,7 @@ type Props = {
 };
 
 export default async function BookingsPage({ searchParams }: Props) {
-  const [session, booking, { search }] = await Promise.all([
+  const [session, bookings, { search }] = await Promise.all([
     auth(),
     getBookings(),
     searchParams,

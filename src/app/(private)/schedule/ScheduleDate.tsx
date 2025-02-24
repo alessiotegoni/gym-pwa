@@ -1,13 +1,30 @@
 "use client";
 
-import { CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
-import { useSchedule } from "@/context/ScheduleProvider";
+import { CarouselNext, CarouselPrevious, useCarousel } from "@/components/ui/carousel";
+import { getNext7Dates } from "@/lib/utils";
 import { format } from "date-fns";
 import { it } from "date-fns/locale";
+import { UseEmblaCarouselType } from "embla-carousel-react";
+import { useEffect, useState } from "react";
 
-type Props = {};
-export default function ScheduleDate({}: Props) {
-  const { currentDate } = useSchedule();
+export default function ScheduleDate() {
+
+  const { api } = useCarousel();
+
+  const [dateIndex, setDateIndex] = useState(api?.selectedScrollSnap() ?? 0);
+
+  const nextDates = getNext7Dates();
+  const currentDate = nextDates[dateIndex];
+
+  const onSelect = (e: UseEmblaCarouselType[1]) =>
+    e && setDateIndex(e.selectedScrollSnap());
+
+  useEffect(() => {
+    api?.on("select", onSelect);
+    return () => {
+      api?.off("select", onSelect);
+    };
+  }, [api]);
 
   return (
     <div className="flex justify-between items-center gap-2 mt-3 mb-7">

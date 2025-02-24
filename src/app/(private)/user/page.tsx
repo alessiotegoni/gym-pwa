@@ -5,6 +5,8 @@ import { Button } from "@/components/ui/button";
 import { Fragment } from "react";
 import UserBookingCard from "./UserBookingCard";
 import { getUserBookings } from "@/lib/queries";
+import { format, isToday, isTomorrow } from "date-fns";
+import { it } from "date-fns/locale";
 
 export const metadata = {
   title: "Le mie prenotazioni",
@@ -19,7 +21,7 @@ export default async function UserPage() {
   const bookings = await getUserBookings(session.userId);
 
   const groupedBookings = Object.groupBy(bookings, (booking) =>
-    booking.schedule.event.id.toString()
+    booking.bookingDate.toDateString()
   );
 
   return (
@@ -39,23 +41,34 @@ export default async function UserPage() {
           </Button>
         </div>
       ) : (
-        Object.entries(groupedBookings).map(
-          ([eventId, bookings]) =>
+        Object.entries(groupedBookings).map(([bookingDate, bookings]) => {
+          const date = new Date(bookingDate);
+
+          return (
             !!bookings?.length && (
-              <Fragment key={eventId}>
+              <Fragment key={bookingDate}>
                 <div className="flex justify-between items-center gap-2">
                   <h3 className="text-lg font-semibold mt-4 mb-2">
-                    {bookings[0].schedule.event.name}
+                    {isToday(date)
+                      ? "Oggi"
+                      : isTomorrow(date)
+                      ? "Domani"
+                      : format(date, "d MMMM", { locale: it })}
                   </h3>
                 </div>
                 <div className="grid gap-3 md:grid-cols-2 lg:grid-cols-3">
                   {bookings.map((booking) => (
-                    <UserBookingCard key={booking.id} booking={booking} />
+                    <UserBookingCard
+                      key={booking.id}
+                      booking={booking}
+                      userId={session.userId}
+                    />
                   ))}
                 </div>
               </Fragment>
             )
-        )
+          );
+        })
       )}
     </>
   );

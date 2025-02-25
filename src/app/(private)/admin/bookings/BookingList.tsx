@@ -3,6 +3,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Bookings } from "@/types";
 import { Trash2 } from "lucide-react";
 import DeleteBookingBtn from "../../../../components/DeleteBookingBtn";
+import MorphingDialogBasicImage from "@/components/MorphingDialogBasicImage";
 
 export default function BookingList({ bookings }: { bookings: Bookings }) {
   return (
@@ -17,14 +18,12 @@ export default function BookingList({ bookings }: { bookings: Bookings }) {
             key={booking.id}
             className="flex items-center justify-between space-x-2 p-2 bg-secondary rounded-md"
           >
-            <div className="flex items-center space-x-2">
-              <Avatar>
-                <AvatarImage src={booking.user.image || undefined} />
-                <AvatarFallback>
-                  {booking.user.firstName[0].toUpperCase()}
-                  {booking.user.lastName[0].toUpperCase()}
-                </AvatarFallback>
-              </Avatar>
+            <div className="flex items-center gap-2">
+              <MorphingDialogBasicImage
+                src={booking.user.image || "https://placeholder.co/40x40"}
+                alt={`${booking.user.firstName} ${booking.user.lastName}`}
+                className="size-10"
+              />
               <div>
                 <p className="text-sm font-medium">
                   {booking.user.firstName} {booking.user.lastName}

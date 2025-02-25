@@ -1,12 +1,12 @@
 import { Event, EventsWithSchedules } from "@/types";
-import { addMinutes, format, isEqual } from "date-fns";
+import { addMinutes, format, isAfter, isEqual } from "date-fns";
 import { it } from "date-fns/locale";
 import { CalendarDays, Trash2 } from "lucide-react";
 import Image from "next/image";
 import { Card, CardContent } from "@/components/ui/card";
 import { DAYS_OF_WEEK_IN_ORDER, giorniSettimana } from "@/constants";
 import DeleteBookingBtn from "../../../components/DeleteBookingBtn";
-import { getBookingDateTime } from "@/lib/utils";
+import { getBookingDateTime, isBookingOperable } from "@/lib/utils";
 import CreateBookingBtn from "@/components/CreateBookingBtn";
 import BookingDetails from "@/components/BookingDetails";
 
@@ -24,7 +24,7 @@ export default function EventSchedulesList({
   date,
 }: Props) {
   return (
-    <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+    <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 mt-2">
       {schedules.map((schedule) => {
         const bookingDate = getBookingDateTime(date, schedule.startTime);
 
@@ -88,11 +88,28 @@ export default function EventSchedulesList({
                   <CreateBookingBtn
                     scheduleId={schedule.id}
                     bookingDate={bookingDate}
+                    bookingCutoffMinutes={event.bookingCutoffMinutes}
+                    disabled={
+                      !isBookingOperable(
+                        bookingDate,
+                        event.bookingCutoffMinutes,
+                        "create"
+                      )
+                    }
                   />
                 ) : (
                   <DeleteBookingBtn
                     variant="destructive"
                     bookingId={userBooking.id}
+                    bookingDate={bookingDate}
+                    cancellationCutoffMinutes={event.cancellationCutoffMinutes}
+                    disabled={
+                      !isBookingOperable(
+                        bookingDate,
+                        event.cancellationCutoffMinutes,
+                        "delete"
+                      )
+                    }
                   >
                     <Trash2 />
                     Elimina

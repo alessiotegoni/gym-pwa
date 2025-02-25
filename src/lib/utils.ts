@@ -1,24 +1,22 @@
 import { subscriptionStatuses } from "@/app/(private)/subscriptions/Subscription";
-import {
-  Bookings,
-  EventSchedules,
-  EventScheduleSchemaType,
-  SubscriptionStatus,
-  WeekDay,
-} from "@/types";
+import { Bookings, EventSchedules, SubscriptionStatus } from "@/types";
 import { clsx, type ClassValue } from "clsx";
 import {
   addDays,
   addMinutes,
   format,
+  isAfter,
+  isBefore,
+  isToday,
+  isValid,
+  isWithinInterval,
   parse,
   roundToNearestMinutes,
   set,
-  setHours,
-  setMilliseconds,
   setMinutes,
-  setSeconds,
   startOfDay,
+  subDays,
+  subMinutes,
 } from "date-fns";
 import { it } from "date-fns/locale";
 import { twMerge } from "tailwind-merge";
@@ -69,9 +67,8 @@ export function groupBookings(bookings: Bookings) {
       Object.fromEntries(
         Object.entries(days).map(([day, dayBookings]) => [
           day,
-          Object.groupBy(
-            dayBookings ?? [],
-            (dayBooking) => dayBooking.schedule.startTime.slice(0, 5)
+          Object.groupBy(dayBookings ?? [], (dayBooking) =>
+            dayBooking.schedule.startTime.slice(0, 5)
           ),
         ])
       ),
@@ -141,8 +138,19 @@ export function getSchedulesEntries(
 //     return acc;
 //   }, {} as GroupedBookings);
 
-export const getBookingTime = (time: string) =>
-  parse(time, "HH:mm", new Date());
+export const getBookingTime = (time: string) => {
+  if (!time || typeof time !== "string") {
+    throw new Error("Orario non valido");
+  }
+
+  const parsedTime = parse(time, "HH:mm", new Date());
+
+  if (!isValid(parsedTime)) {
+    throw new Error(`Formato orario non valido: ${time}`);
+  }
+
+  return parsedTime;
+};
 
 export const getBookingDateTime = (date: Date, time: string) => {
   const [hours, minutes] = time.split(":").map(Number);
@@ -174,6 +182,24 @@ export const getNext7Dates = () => {
 export const getDay = (date: Date) => format(date, "EEEE").toLowerCase();
 
 export const formatDate = (date: Date) => format(date, "yyyy-MM-dd");
+
+export const isBookingOperable = (
+  bookingDate: Date,
+  cutoffMinutes: number | null,
+  type: "create" | "delete"
+) => {
+  if (!cutoffMinutes) return isBefore(new Date(), bookingDate);
+
+  const cutoffDate = subMinutes(bookingDate, cutoffMinutes);
+
+  if (type === "create")
+    return isWithinInterval(new Date(), {
+      start: subDays(bookingDate, 2),
+      end: cutoffDate,
+    });
+
+  if (type === "delete") return isBefore(new Date(), cutoffDate);
+};
 
 export const isTrainingEditable = (trainingDate: string | Date) => {
   const parsedTrainingDate =

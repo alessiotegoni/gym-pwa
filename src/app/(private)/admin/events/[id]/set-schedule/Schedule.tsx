@@ -3,8 +3,10 @@
 import { Button } from "@/components/ui/button";
 import {
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
+  FormLabel,
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
@@ -15,6 +17,7 @@ import { EventScheduleSchemaType, WeekDay } from "@/types";
 import { useFieldArray, useFormContext } from "react-hook-form";
 import { Switch } from "@/components/ui/switch";
 import { addMinutes, format, roundToNearestMinutes } from "date-fns";
+import { getBookingTime } from "@/lib/utils";
 
 type Props = {
   day: WeekDay;
@@ -36,18 +39,26 @@ export default function Schedule({ day, eventDuration }: Props) {
   useEffect(() => {
     form.setValue(
       day,
-      schedules.map(({ startTime, endTime, isActive }) => ({
-        startTime,
-        endTime,
+      schedules.map(({ isActive, ...schedule }) => ({
+        ...schedule,
         isActive: !isDayActive ? false : isActive,
       }))
     );
   }, [isDayActive]);
 
   const handleAddTime = () => {
-    const startTime = roundToNearestMinutes(new Date(), {
-      nearestTo: 30,
-    });
+    const lastSchedule = schedules.at(-1);
+
+    const lastStartTime = lastSchedule
+      ? getBookingTime(lastSchedule.startTime)
+      : new Date();
+
+    const startTime = roundToNearestMinutes(
+      lastStartTime ? addMinutes(lastStartTime, eventDuration) : lastStartTime,
+      {
+        nearestTo: 30,
+      }
+    );
 
     append({
       startTime: format(startTime, "HH:mm"),
@@ -70,29 +81,68 @@ export default function Schedule({ day, eventDuration }: Props) {
         <Switch checked={isDayActive} onCheckedChange={setIsDayActive} />
       </div>
       {!!schedules.length && isDayActive && (
-        <div className="mt-4 grid grid-cols-2 gap-3">
+        <div className="my-4">
           {schedules.map((schedule, i) => (
             <div key={schedule.id}>
-              <FormField
-                control={form.control}
-                name={`${day}.${i}.startTime`}
-                render={({ field }) => (
-                  <FormItem>
-                    <FormControl>
-                      <Input type="time" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
+              <div className="grid grid-cols-2 gap-3 my-4">
+                <FormField
+                  control={form.control}
+                  name={`${day}.${i}.startTime`}
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormControl>
+                        <Input
+                          type="time"
+                          {...field}
+                          onChange={(e) => {
+                            field.onChange(e);
+                            form.setValue(
+                              `${day}.${i}.endTime`,
+                              format(
+                                addMinutes(
+                                  getBookingTime(e.target.value),
+                                  eventDuration
+                                ),
+                                "HH:mm"
+                              )
+                            );
+                          }}
+                        />
+                      </FormControl>
+                      <FormDescription>Orario di inizio</FormDescription>
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name={`${day}.${i}.endTime`}
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormControl>
+                        <Input type="time" value={field.value} disabled />
+                      </FormControl>
+                      <FormDescription>Orario di fine</FormDescription>
+                    </FormItem>
+                  )}
+                />
+                {form.formState.errors[day] && (
+                  <p className="text-sm text-destructive col-span-2">
+                    {form.formState.errors[day][i]?.startTime?.message}
+                  </p>
                 )}
-              />
-              <div className="flex justify-between items-center gap-2 mt-2">
+              </div>
+              <div className="flex justify-end items-center gap-2 mt-2">
                 <FormField
                   control={form.control}
                   name={`${day}.${i}.isActive`}
                   render={({ field }) => (
-                    <FormItem>
+                    <FormItem className="flex items-center gap-3 bg-secondary rounded-lg h-9 px-3 border borde-secondary">
+                      <FormLabel>
+                        {field.value ? "Disattiva" : "Attiva"} orario
+                      </FormLabel>
                       <FormControl>
                         <Switch
+                          className="!mt-0"
                           checked={field.value}
                           onCheckedChange={field.onChange}
                         />
@@ -103,10 +153,10 @@ export default function Schedule({ day, eventDuration }: Props) {
                 <Button
                   type="button"
                   variant="destructive"
-                  size="icon"
                   onClick={() => remove(i)}
                 >
                   <Trash2 />
+                  Elimina
                 </Button>
               </div>
             </div>

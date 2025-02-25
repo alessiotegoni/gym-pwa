@@ -10,11 +10,15 @@ import SubmitBtn from "./SubmitBtn";
 
 type Props = {
   bookingId: number;
+  bookingDate: Date;
+  cancellationCutoffMinutes: number | null;
   children?: ReactNode;
 } & ButtonProps;
 
 export default function DeleteBookingBtn({
   bookingId,
+  bookingDate,
+  cancellationCutoffMinutes,
   children,
   className,
   ...props
@@ -26,9 +30,16 @@ export default function DeleteBookingBtn({
   function handleDelete() {
     if (isPending) return;
     startDeleteTransition(async () => {
-      const res = await deleteBooking(bookingId, pathname);
+      const res = await deleteBooking(
+        bookingId,
+        bookingDate,
+        cancellationCutoffMinutes,
+        pathname
+      );
       if (res?.error) {
-        toast.error("Errore nell'eliminazione della prenotazione");
+        toast.error(
+          res.message ?? "Errore nell'eliminazione della prenotazione"
+        );
         return;
       }
 

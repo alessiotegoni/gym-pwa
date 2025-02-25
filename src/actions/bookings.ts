@@ -3,6 +3,7 @@
 import { db } from "@/drizzle/db";
 import { bookings } from "@/drizzle/schema";
 import { auth } from "@/lib/auth";
+import { isBookingOperable } from "@/lib/utils";
 import { startOfDay } from "date-fns";
 import { and, eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
@@ -30,11 +31,16 @@ export async function getBookedUsers(id: number, date: Date) {
   return results.map((booking) => booking.user);
 }
 
-export async function createBooking(scheduleId: number, bookingDate: Date) {
+export async function createBooking(
+  scheduleId: number,
+  bookingDate: Date,
+  bookingCutoffMinutes: number | null
+) {
   const session = await auth();
 
-  if (!session?.userId || isNaN(scheduleId) || bookingDate < new Date())
-    return { error: true };
+  if (!session?.userId || isNaN(scheduleId)) return { error: true };
+  if (!isBookingOperable(bookingDate, bookingCutoffMinutes, "create"))
+    return { error: true, message: "Prenotazioni chiuse" };
 
   const { rowCount } = await db
     .insert(bookings)
@@ -45,12 +51,22 @@ export async function createBooking(scheduleId: number, bookingDate: Date) {
   revalidatePath("/schedule", "page");
 }
 
-export async function deleteBooking(id: number, path: string) {
+export async function deleteBooking(
+  id: number,
+  bookingDate: Date,
+  cancellationCutoffMinutes: number | null,
+  path: string
+) {
   const session = await auth();
 
-  if (!session?.userId) return { error: true };
-
-  if (isNaN(id)) return { error: true };
+  if (!session?.userId || isNaN(id)) return { error: true };
+  if (!isBookingOperable(bookingDate, cancellationCutoffMinutes, "create"))
+    return {
+      error: true,
+      message: cancellationCutoffMinutes
+        ? `Puoi cancellarti solo ${cancellationCutoffMinutes} minuti prima dell'inizio del corso`
+        : "Non puoi cancellarti dopo l'inizio o la fine del corso",
+    };
 
   await db
     .delete(bookings)

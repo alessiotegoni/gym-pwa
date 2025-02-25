@@ -24,6 +24,7 @@ export function EventScheduleForm({
   eventDuration,
 }: Props) {
   const form = useForm<EventScheduleSchemaType>({
+    mode: "all",
     resolver: zodResolver(eventScheduleSchema),
     defaultValues: Object.fromEntries(schedules),
   });
@@ -41,13 +42,15 @@ export function EventScheduleForm({
     toast.success("Programma dell'evento aggiornato con successo.");
   }
 
+  console.log(form.formState.errors);
+
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
         {DAYS_OF_WEEK_IN_ORDER.map((day) => (
           <Schedule key={day} day={day} eventDuration={eventDuration} />
         ))}
-        <SubmitBtn label="Aggiorna programma" loadingLabel="Aggiornando" />
+        <SubmitBtn label="Aggiorna programma" loadingLabel="Aggiornando" className="sticky bottom-4" />
       </form>
     </Form>
   );

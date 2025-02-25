@@ -15,8 +15,8 @@ type Props = {
 };
 export default function UserHeader({ user, showLogout = false }: Props) {
   return (
-    <header>
-      <div className="flex items-center justify-between mb-7">
+    <header className="px-4 py-3 border border-zinc-300/40 bg-zinc-100 dark:border-zinc-700/40 dark:bg-zinc-900 rounded-xl">
+      <div className="flex items-center justify-between mb-5">
         <h1 className="text-xl font-semibold">Profilo</h1>
         <Button variant="ghost" size="icon" asChild>
           <Link href="/user/profile/edit" className="!size-5">
@@ -25,12 +25,9 @@ export default function UserHeader({ user, showLogout = false }: Props) {
         </Button>
       </div>
       <div className="flex justify-between">
-        <div className="flex items-center gap-4">
-          <Avatar className="size-16">
-            <AvatarImage
-              src={user.image || "https://placehold.co/40x40"}
-              alt={user.lastName}
-            />
+        <div className="flex items-center gap-3">
+          <Avatar className="size-14">
+            <AvatarImage src={user.image ?? ""} alt={user.lastName} />
             <AvatarFallback>
               {user.firstName
                 .split(" ")
@@ -40,7 +37,7 @@ export default function UserHeader({ user, showLogout = false }: Props) {
             </AvatarFallback>
           </Avatar>
           <div>
-            <h2 className="text-xl font-semibold">
+            <h2 className="text-lg font-semibold">
               {user.firstName} {user.lastName}
             </h2>
             <p className="text-sm text-muted-foreground">{user.email}</p>
@@ -55,8 +52,8 @@ export default function UserHeader({ user, showLogout = false }: Props) {
           >
             <SubmitBtn
               label="logout"
-              loadingLabel="sloggando"
-              className="!bg-red-600 text-white p-3 py-1 h-fit"
+              variant="destructive"
+              className="p-3 text-xs py-1 h-fit rounded-lg"
             />
           </form>
         )}

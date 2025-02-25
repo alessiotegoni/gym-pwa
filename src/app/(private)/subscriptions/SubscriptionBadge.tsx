@@ -25,7 +25,7 @@ export default function SubscriptionBadge({
         {children ? children : subscriptionStatuses[status!].text}
       </Badge>
       {endDate && (
-        <p className="text-sm font-medium text-muted-foreground dark:text-slate-400">
+        <p className="text-sm font-medium">
           {status === "expired"
             ? "Scaduto"
             : status === "canceled"

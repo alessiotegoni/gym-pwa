@@ -32,13 +32,13 @@ export default function BookingDetails({
 
   return (
     <div className="flex gap-2">
-      <Badge variant="secondary" className="flex items-center">
+      <Badge variant="secondary" className="flex items-center rounded-lg">
         <Users className="size-4 mr-1" />
         {usersCount}/{eventCapacity}
       </Badge>
       <Dialog onOpenChange={setIsDialogOpen}>
         <DialogTrigger asChild>
-          <Button variant="outline" size="sm">
+          <Button variant="outline" size="sm" className="rounded-lg">
             <Info />
             Dettagli
           </Button>

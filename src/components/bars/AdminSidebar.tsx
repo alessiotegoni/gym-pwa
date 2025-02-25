@@ -1,3 +1,5 @@
+"use client";
+
 import {
   Sidebar,
   SidebarContent,
@@ -6,6 +8,7 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
+  useSidebar,
 } from "@/components/ui/sidebar";
 import {
   Users,
@@ -15,11 +18,28 @@ import {
   FolderTree,
   Dumbbell,
 } from "lucide-react";
-import SwitchThemeBtn from "../SwitchThemeBtn";
-import { signOut } from "@/lib/auth";
+import { signOut } from "next-auth/react";
 import Link from "next/link";
+import { Button } from "../ui/button";
+import { usePathname } from "next/navigation";
+import { cn } from "@/lib/utils";
+
+const LINKS = [
+  { icon: Users, href: "/admin/members", label: "Gestisci Membri" },
+  {
+    icon: FolderTree,
+    href: "/admin/subscriptions",
+    label: "Gestisci Abbonamenti",
+  },
+  { icon: Calendar, href: "/admin/events", label: "Gestisci Corsi" },
+  { icon: BookOpen, href: "/admin/bookings", label: "Gestisci Prenotazioni" },
+  { icon: Dumbbell, href: "/admin/trainings", label: "Gestisci Allenamenti" },
+];
 
 export function AdminSidebar() {
+  const pathname = usePathname();
+  const { setOpenMobile } = useSidebar();
+
   return (
     <Sidebar side="right" className="bg-white border-r border-gray-200">
       <SidebarHeader className="text-2xl m-2 mb-0 font-bold">
@@ -27,82 +47,44 @@ export function AdminSidebar() {
       </SidebarHeader>
       <SidebarContent className="p-2">
         <SidebarMenu>
-          <SidebarMenuItem>
-            <SidebarMenuButton asChild>
-              <Link
-                href="/admin/members"
-                className="flex items-center !h-12 gap-2 rounded-lg transition-colors"
-              >
-                <Users className="!size-5" />
-                <span className="text-base">Gestisci Membri</span>
-              </Link>
-            </SidebarMenuButton>
-          </SidebarMenuItem>
-          <SidebarMenuItem>
-            <SidebarMenuButton asChild>
-              <Link
-                href="/admin/subscriptions"
-                className="flex items-center !h-12 gap-2 rounded-lg transition-colors"
-              >
-                <FolderTree className="!size-5" />
-                <span className="text-base">Gestisci Abbonamenti</span>
-              </Link>
-            </SidebarMenuButton>
-          </SidebarMenuItem>
-          <SidebarMenuItem>
-            <SidebarMenuButton className="py-3" asChild>
-              <Link
-                href="/admin/events"
-                className="flex items-center !h-12 gap-2 rounded-lg transition-colors"
-              >
-                <Calendar className="!size-5" />
-                <span className="text-base">Gestisci Corsi</span>
-              </Link>
-            </SidebarMenuButton>
-          </SidebarMenuItem>
-          <SidebarMenuItem>
-            <SidebarMenuButton className="py-3" asChild>
-              <Link
-                href="/admin/bookings"
-                className="flex items-center !h-12 gap-2 rounded-lg transition-colors"
-              >
-                <BookOpen className="!size-5" />
-                <span className="text-base">Gestisci Prenotazioni</span>
-              </Link>
-            </SidebarMenuButton>
-          </SidebarMenuItem>
-          <SidebarMenuItem>
-            <SidebarMenuButton className="py-3" asChild>
-              <Link
-                href="/admin/trainings"
-                className="flex items-center !h-12 gap-2 rounded-lg transition-colors"
-              >
-                <Dumbbell className="!size-5" />
-                <span className="text-base">Gestisci Allenamenti</span>
-              </Link>
-            </SidebarMenuButton>
-          </SidebarMenuItem>
+          {LINKS.map(({ icon: Icon, href, label }) => {
+            const isActive = pathname === href;
+
+            return (
+              <SidebarMenuItem key={href} onClick={() => setOpenMobile(false)}>
+                <SidebarMenuButton asChild>
+                  <Link
+                    href={href}
+                    className={cn(
+                      "flex items-center gap-2 !h-10 px-3 rounded-lg transition-colors",
+                      isActive && "bg-primary *:text-black"
+                    )}
+                  >
+                    <Icon className="!size-5" />
+                    <span className={cn("font-medium", isActive && "font-semibold")}>{label}</span>
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+            );
+          })}
         </SidebarMenu>
       </SidebarContent>
       <SidebarFooter>
         <SidebarMenu>
           <SidebarMenuItem>
-            <SwitchThemeBtn />
-          </SidebarMenuItem>
-          <SidebarMenuItem>
             <form
               action={async () => {
-                "use server";
-
                 await signOut({ redirectTo: "/sign-in" });
               }}
             >
-              <SidebarMenuButton
-                className="flex items-center gap-2 bg-destructive
-              rounded-lg text-base !h-12 font-semibold transition-colors text-white"
-              >
-                <LogOut className="!size-5" />
-                <span>Logout</span>
+              <SidebarMenuButton asChild>
+                <Button
+                  variant="destructive"
+                  className="!h-10 justify-start rounded-lg"
+                >
+                  <LogOut className="!size-5" />
+                  <span>Logout</span>
+                </Button>
               </SidebarMenuButton>
             </form>
           </SidebarMenuItem>

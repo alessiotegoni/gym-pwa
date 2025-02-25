@@ -51,10 +51,10 @@ export default function AdminBookingCard({
   };
 
   return (
-    <Card>
+    <Card className="rounded-xl border border-zinc-300/40 bg-zinc-100 dark:border-zinc-700/40 dark:bg-zinc-900">
       <CardHeader className="flex-row justify-between">
         <CardTitle className="text-xl">{name}</CardTitle>
-        <Badge className="rounded-full">
+        <Badge className="rounded-full text-black">
           Prenotati oggi:
           <strong className="ml-1">{todayBookings}</strong>
         </Badge>

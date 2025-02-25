@@ -1,4 +1,3 @@
-import { stripe, SUBSCRIPTIONS_PLANS } from "@/lib/configs";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { CreditCard, Calendar, AlertCircle } from "lucide-react";
@@ -12,11 +11,10 @@ import UserHeader from "@/components/UserHeader";
 import ExtendSubDatePicker from "@/components/ExtendSubscription";
 import DeleteSubscription from "@/components/DeleteSubscription";
 import { Metadata } from "next";
-
-export const generateMetadata = async (): Promise<Metadata> => {
-
-  
-}
+import { stripe } from "@/app/api/stripe-webhook/route";
+import { SUBSCRIPTIONS_PLANS } from "@/constants";
+import { cn } from "@/lib/utils";
+import BtnFixedContainer from "@/components/BtnFixedContainer";
 
 type Props = {
   params: Promise<{ id?: string }>;
@@ -30,7 +28,7 @@ export default async function SubscriptionPage({ params }: Props) {
   const subscription = await db.query.subscriptions.findFirst({
     where: ({ id }, { eq }) => eq(id, parseInt(subId)),
     with: {
-      users: {
+      user: {
         columns: {
           firstName: true,
           lastName: true,
@@ -74,11 +72,14 @@ export default async function SubscriptionPage({ params }: Props) {
   return (
     <div className="flex flex-col h-full">
       <header>
-        {session?.isAdmin && <UserHeader user={subscription.users} />}
+        {session?.isAdmin && <UserHeader user={subscription.user} />}
       </header>
 
       <main className="grow">
-        <h1 className="text-lg font-semibold py-7">Dettagli Abbonamento</h1>
+        <h1 className="text-2xl font-semibold mt-2">Dettagli Abbonamento</h1>
+        <p className="mb-7 font-medium text-muted-foreground mt-2">
+          Id abbonamento: {subscription.id}
+        </p>
         <div className="space-y-6">
           <section>
             <SubscriptionBadge
@@ -143,15 +144,20 @@ export default async function SubscriptionPage({ params }: Props) {
           </section>
         </div>
       </main>
-      <footer className="space-y-2 mt-8 grid grid-cols-2 gap-2">
-        {(session?.isAdmin || session?.userId === subscription.userId) && (
-          <DeleteSubscription subscription={subscription} />
-        )}
-        {session?.isAdmin &&
-          ["active", "trial"].includes(subscription.status) && (
-            <ExtendSubDatePicker subscription={subscription} />
+      <BtnFixedContainer>
+        <footer className="space-y-2 grid grid-cols-2 gap-2">
+          {(session?.isAdmin || session?.userId === subscription.userId) && (
+            <DeleteSubscription
+              subscription={subscription}
+              className={cn(!session.isAdmin && "col-span-2")}
+            />
           )}
-      </footer>
+          {session?.isAdmin &&
+            ["active", "trial"].includes(subscription.status) && (
+              <ExtendSubDatePicker subscription={subscription} />
+            )}
+        </footer>
+      </BtnFixedContainer>
     </div>
   );
 }

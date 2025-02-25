@@ -9,26 +9,30 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { CheckCircle, Dumbbell, Clock, Calendar } from "lucide-react";
+import Link from "next/link";
 
 export default function Home() {
   return (
     <div className="flex flex-col space-y-8 pb-16">
       {/* Hero Section */}
-      <section className="relative h-[300px] flex items-center justify-center">
-        {/* <Image
-          src="/placeholder.svg?height=300&width=400"
-          alt="Tabata Gym"
+      <section
+        className="relative h-[300px] flex items-center justify-center  xl:rounded-br-xl xl:rounded-bl-xl
+      overflow-hidden"
+      >
+        <Image
+          src="https://cyan-tropical-guanaco-792.mypinata.cloud/ipfs/bafkreidu5kwiizafpajpctmxci2tvpsdqinjhqnejeb3gm7kqbzpq2kzba"
+          alt="School of tabata"
           fill
-          className="object-cover"
-        /> */}
-        <div
+          className="aspect-video object-cover"
+        />
+        {/* <div
           className="absolute inset-0 bg-black dark:bg-opacity-50 flex items-center justify-center
         xl:rounded-br-xl xl:rounded-bl-xl"
         >
           <h1 className="text-4xl font-bold text-white text-center">
             Benvenuti a Tabata
           </h1>
-        </div>
+        </div> */}
       </section>
 
       {/* About Section */}
@@ -55,7 +59,7 @@ export default function Home() {
               key={index}
               className="flex flex-col lg:p-10 items-center p-4"
             >
-              <feature.icon className="size-8 text-yellow-600 dark:text-yellow-500 mb-2 lg:size-12" />
+              <feature.icon className="size-8 dark:text-primary mb-2 lg:size-12" />
               <h3 className="text-sm lg:text-base font-medium text-center">
                 {feature.title}
               </h3>
@@ -75,16 +79,15 @@ export default function Home() {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <p className="text-3xl font-bold text-yellow-600 dark:text-yellow-500">
-              €50/mese
-            </p>
+            <p className="text-3xl font-bold">€50/mese</p>
           </CardContent>
           <CardFooter>
             <Button
-              className="w-full bg-yellow-600 dark:bg-yellow-500 dark:hover:bg-yellow-600
+              className="w-full
              font-bold"
+              asChild
             >
-              Iscriviti Ora
+              <Link href="/sign-up">Iscriviti Ora</Link>
             </Button>
           </CardFooter>
         </Card>
@@ -96,9 +99,7 @@ export default function Home() {
         <Card>
           <CardHeader className="pb-0">
             <CardTitle>Prova Gratuita</CardTitle>
-            <CardDescription>
-              Sperimenta Tabata senza impegno
-            </CardDescription>
+            <CardDescription>Sperimenta Tabata senza impegno</CardDescription>
           </CardHeader>
           <CardContent className="pt-5">
             <p className="">
@@ -107,11 +108,8 @@ export default function Home() {
             </p>
           </CardContent>
           <CardFooter>
-            <Button
-              variant="outline"
-              className="w-full dark:border-yellow-500 dark:text-yellow-500"
-            >
-              Richiedi Prova Gratuita
+            <Button className="w-full" asChild>
+              <Link href="/sign-up?trial=true">Richiedi Prova Gratuita</Link>
             </Button>
           </CardFooter>
         </Card>

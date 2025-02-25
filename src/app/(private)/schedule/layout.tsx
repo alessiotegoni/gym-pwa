@@ -4,7 +4,7 @@ import { Carousel } from "@/components/ui/carousel";
 
 export default function ScheduleLayout({ children }: { children: ReactNode }) {
   return (
-    <Carousel className="w-full max-w-sm h-full">
+    <Carousel className="w-full max-w-sm">
       <ScheduleDate />
       {children}
     </Carousel>

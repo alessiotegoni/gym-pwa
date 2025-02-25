@@ -33,7 +33,7 @@ import { cn } from "@/lib/utils";
 
 type Props = {
   event: Event;
-  className?: string
+  className?: string;
   showHeader?: boolean;
   showFooter?: boolean;
 };
@@ -54,7 +54,12 @@ export function EventCard({
   showFooter = true,
 }: Props) {
   return (
-    <Card className={cn("overflow-hidden", className)}>
+    <Card
+      className={cn(
+        "overflow-hidden rounded-xl border border-zinc-300/40 bg-zinc-100 dark:border-zinc-700/40 dark:bg-zinc-900",
+        className
+      )}
+    >
       {showHeader && (
         <CardHeader className="p-0">
           <div className="relative h-48">

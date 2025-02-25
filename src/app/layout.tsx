@@ -28,8 +28,7 @@ export default function RootLayout({
       <body className={`${inter.variable} antialiased font-inter`}>
         <ThemeProvider
           attribute="class"
-          defaultTheme="system"
-          enableSystem
+          defaultTheme="dark"
           disableTransitionOnChange
         >
           <SidebarProvider className="grid grid-rows-[auto_1fr_auto]">

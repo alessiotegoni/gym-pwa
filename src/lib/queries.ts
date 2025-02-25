@@ -1,7 +1,9 @@
 "server-only";
 
 import { db } from "@/drizzle/db";
+import { subscriptions } from "@/drizzle/schema";
 import { addDays, startOfDay } from "date-fns";
+import { and, count, eq, lte, gte, ne } from "drizzle-orm";
 
 export async function getUser({
   userId,
@@ -16,6 +18,23 @@ export async function getUser({
   });
 
   return result;
+}
+
+export async function hasSubscription(userId: number) {
+  const [{ subscriptionCount }] = await db
+    .select({ subscriptionCount: count() })
+    .from(subscriptions)
+    .where(
+      and(
+        eq(subscriptions.userId, userId),
+        lte(subscriptions.createdAt, new Date()),
+        gte(subscriptions.endDate, new Date()),
+        ne(subscriptions.status, "canceled"),
+        ne(subscriptions.status, "expired")
+      )
+    );
+
+  return !!subscriptionCount;
 }
 
 export async function getActiveSubscriptions(userId: number) {

@@ -68,7 +68,7 @@ export default function Training({ eventId, eventName, training }: Props) {
       </CardHeader>
       <CardContent>
         <TrainingImg {...training} />
-        <p className="text-sm text-muted-foreground mt-2">
+        <p className="text-sm text-white/80 mt-2">
           {training.description}
         </p>
       </CardContent>
@@ -79,7 +79,7 @@ export default function Training({ eventId, eventName, training }: Props) {
               eventId={eventId}
               eventName={eventName}
               training={training}
-              className="rounded-md px-3"
+              className="rounded-md px-3 font-semibold"
             >
               <Pencil className="size-4" />
               Modifica

@@ -10,8 +10,8 @@ import SubmitBtn from "./SubmitBtn";
 
 type Props = {
   bookingId: number;
-  bookingDate: Date;
-  cancellationCutoffMinutes: number | null;
+  bookingDate?: Date;
+  cancellationCutoffMinutes?: number | null;
   children?: ReactNode;
 } & ButtonProps;
 
@@ -32,9 +32,9 @@ export default function DeleteBookingBtn({
     startDeleteTransition(async () => {
       const res = await deleteBooking(
         bookingId,
+        pathname,
         bookingDate,
-        cancellationCutoffMinutes,
-        pathname
+        cancellationCutoffMinutes
       );
       if (res?.error) {
         toast.error(

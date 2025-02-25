@@ -70,6 +70,7 @@ export default function DeleteSubscription({ subscription, className }: Props) {
             >
               <SubmitBtn
                 isLoading={loading}
+                variant="destructive"
                 label="Cancella Abbonamento"
                 loadingLabel="Cancellando"
               />

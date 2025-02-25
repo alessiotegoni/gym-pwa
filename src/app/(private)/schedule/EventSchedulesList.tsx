@@ -15,6 +15,7 @@ type Props = {
   schedules: EventsWithSchedules[0]["schedules"];
   userId: number;
   date: Date;
+  hasSubscription: boolean;
 };
 
 export default function EventSchedulesList({
@@ -22,6 +23,7 @@ export default function EventSchedulesList({
   schedules,
   userId,
   date,
+  hasSubscription,
 }: Props) {
   return (
     <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 mt-2">
@@ -41,7 +43,7 @@ export default function EventSchedulesList({
         );
 
         return (
-          <Card key={schedule.id}>
+          <Card key={schedule.id} className="rounded-xl border border-zinc-300/40 bg-zinc-100 dark:border-zinc-700/40 dark:bg-zinc-900">
             <CardContent className="p-4">
               <div className="grid grid-cols-[auto_1fr_auto]">
                 <div className="flex items-center gap-3">
@@ -84,37 +86,40 @@ export default function EventSchedulesList({
                   usersCount={schedule.bookings.length}
                   eventCapacity={event.capacity}
                 />
-                {!userBooking ? (
-                  <CreateBookingBtn
-                    scheduleId={schedule.id}
-                    bookingDate={bookingDate}
-                    bookingCutoffMinutes={event.bookingCutoffMinutes}
-                    disabled={
-                      !isBookingOperable(
-                        bookingDate,
-                        event.bookingCutoffMinutes,
-                        "create"
-                      )
-                    }
-                  />
-                ) : (
-                  <DeleteBookingBtn
-                    variant="destructive"
-                    bookingId={userBooking.id}
-                    bookingDate={bookingDate}
-                    cancellationCutoffMinutes={event.cancellationCutoffMinutes}
-                    disabled={
-                      !isBookingOperable(
-                        bookingDate,
-                        event.cancellationCutoffMinutes,
-                        "delete"
-                      )
-                    }
-                  >
-                    <Trash2 />
-                    Elimina
-                  </DeleteBookingBtn>
-                )}
+                {hasSubscription &&
+                  (!userBooking ? (
+                    <CreateBookingBtn
+                      scheduleId={schedule.id}
+                      bookingDate={bookingDate}
+                      bookingCutoffMinutes={event.bookingCutoffMinutes}
+                      disabled={
+                        !isBookingOperable(
+                          bookingDate,
+                          event.bookingCutoffMinutes,
+                          "create"
+                        )
+                      }
+                    />
+                  ) : (
+                    <DeleteBookingBtn
+                      variant="destructive"
+                      bookingId={userBooking.id}
+                      bookingDate={bookingDate}
+                      cancellationCutoffMinutes={
+                        event.cancellationCutoffMinutes
+                      }
+                      disabled={
+                        !isBookingOperable(
+                          bookingDate,
+                          event.cancellationCutoffMinutes,
+                          "delete"
+                        )
+                      }
+                    >
+                      <Trash2 />
+                      Elimina
+                    </DeleteBookingBtn>
+                  ))}
               </div>
             </CardContent>
           </Card>

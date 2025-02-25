@@ -13,11 +13,11 @@ export default function LoginPage() {
         Accedi al tuo account
       </h1>
       <SigninForm />
-      <p className="mt-4 text-center text-sm dark:text-slate-300">
+      <p className="mt-4 text-center text-sm">
         Non hai un account?{" "}
         <Link
           href="/sign-up"
-          className="text-yellow-600 dark:text-yellow-500 hover:underline"
+          className="hover:underline text-primary"
         >
           Registrati
         </Link>

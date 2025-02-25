@@ -18,7 +18,7 @@ export default function PrivateLayout({
     <>
       <TopBar />
       <main
-        className={`container p-4 ${inter.variable} antialiased font-inter`}
+        className={`container relative p-4 ${inter.variable} antialiased font-inter`}
       >
         {children}
       </main>

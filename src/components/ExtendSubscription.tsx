@@ -15,7 +15,7 @@ import {
 import { Subscription } from "@/types";
 import SubmitBtn from "./SubmitBtn";
 import { extendSubscription } from "@/actions/subscriptions";
-import { toast } from "@/hooks/use-toast";
+import { toast } from "sonner";
 
 export default function ExtendSubDatePicker({
   subscription,
@@ -38,12 +38,11 @@ export default function ExtendSubDatePicker({
     );
 
     if (res?.error) {
-      toast({
-        title: "Errore",
-        description: "Errore nell'estendere l'abbonamento, riprovare piu tardi",
-      });
+      toast.error("Errore nell'estendere l'abbonamento, riprovare piu tardi");
     } else {
-      toast({ description: "Data dell'abbonamento estesa!" });
+      toast.success(
+        `Data dell'abbonamento estesa fino al ${date.toLocaleString()}`
+      );
     }
 
     setIsLoading(false);

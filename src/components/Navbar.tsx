@@ -7,7 +7,6 @@ import {
   SheetContent,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import SwitchThemeBtn from "./SwitchThemeBtn";
 
 const navItems = [
   { href: "/", label: "Home" },
@@ -23,8 +22,8 @@ export function Navbar() {
         <div className="flex h-16 items-center justify-between">
           <div className="flex items-center">
             <Link href="/" className="flex items-center space-x-2">
-              <Dumbbell className="!size-5 text-yellow-600 dark:text-yellow-500" />
-              <span className="text-xl font-bold">Tabata Gym</span>
+              <Dumbbell className="!size-5 dark:text-primary" />
+              <span className="text-xl font-bold">Tabata</span>
             </Link>
           </div>
 
@@ -33,7 +32,7 @@ export function Navbar() {
               <Link
                 key={item.href}
                 href={item.href}
-                className="text-sm font-medium hover:text-yellow-600 dark:text-slate-300 dark:hover:text-yellow-500"
+                className="text-sm font-medium hover:bg-primary dark:hover:text-black rounded-lg p-1 px-2"
               >
                 {item.label}
               </Link>
@@ -42,11 +41,7 @@ export function Navbar() {
 
           <div className="flex items-center">
             <div className="flex gap-3">
-              <SwitchThemeBtn className="mr-2" />
-              <Button
-                asChild
-                className="hidden md:block font-semibold bg-yellow-600 dark:bg-yellow-500 dark:hover:bg-yellow-600"
-              >
+              <Button asChild className="hidden md:block">
                 <Link href="/sign-up?trial=true">Prova Gratuita</Link>
               </Button>
             </div>
@@ -70,10 +65,7 @@ export function Navbar() {
                     </SheetClose>
                   ))}
 
-                  <SheetClose
-                    asChild
-                    className="bg-yellow-600 font-semibold dark:bg-yellow-500 dark:hover:bg-yellow-600"
-                  >
+                  <SheetClose asChild>
                     <Button asChild>
                       <Link href="/sign-up?trial=true">Prova Gratuita</Link>
                     </Button>

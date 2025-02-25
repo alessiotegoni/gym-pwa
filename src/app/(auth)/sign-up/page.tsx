@@ -16,10 +16,7 @@ export default function SignupPage() {
       <SignupForm />
       <p className="mt-4 text-center text-sm dark:text-slate-300">
         Hai gia un account?{" "}
-        <Link
-          href="/sign-in"
-          className="text-yellow-600 dark:text-yellow-500 hover:underline"
-        >
+        <Link href="/sign-in" className="hover:underline text-primary">
           Accedi
         </Link>
       </p>

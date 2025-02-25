@@ -1,6 +1,6 @@
 import { auth } from "@/lib/auth";
 import ScheduleCarousel from "./ScheduleCarousel";
-import { getEventsWithSchedules } from "@/lib/queries";
+import { hasSubscription, getEventsWithSchedules } from "@/lib/queries";
 
 export const metadata = {
   title: "Palinsesto",
@@ -15,10 +15,18 @@ export default async function SchedulePage({ searchParams }: Props) {
   const session = await auth();
   if (!session?.userId) return;
 
-  const [events, currentDate] = await Promise.all([
-    getEventsWithSchedules(),
-    searchParams,
-  ]);
+  const [eventsWithSchedules, isUserSubscripted, currentDate] =
+    await Promise.all([
+      getEventsWithSchedules(),
+      hasSubscription(session.userId),
+      searchParams,
+    ]);
 
-  return <ScheduleCarousel events={events} userId={session.userId} />;
+  return (
+    <ScheduleCarousel
+      events={eventsWithSchedules}
+      userId={session.userId}
+      hasSubscription={isUserSubscripted}
+    />
+  );
 }

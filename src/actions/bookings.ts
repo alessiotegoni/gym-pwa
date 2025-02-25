@@ -3,6 +3,7 @@
 import { db } from "@/drizzle/db";
 import { bookings } from "@/drizzle/schema";
 import { auth } from "@/lib/auth";
+import { hasSubscription } from "@/lib/queries";
 import { isBookingOperable } from "@/lib/utils";
 import { startOfDay } from "date-fns";
 import { and, eq } from "drizzle-orm";
@@ -39,6 +40,15 @@ export async function createBooking(
   const session = await auth();
 
   if (!session?.userId || isNaN(scheduleId)) return { error: true };
+
+  const isSubscripted = await hasSubscription(session.userId);
+
+  if (!isSubscripted)
+    return {
+      error: true,
+      message: "Prima di prenotarti, attiva un abbonamento",
+    };
+
   if (!isBookingOperable(bookingDate, bookingCutoffMinutes, "create"))
     return { error: true, message: "Prenotazioni chiuse" };
 
@@ -53,14 +63,19 @@ export async function createBooking(
 
 export async function deleteBooking(
   id: number,
-  bookingDate: Date,
-  cancellationCutoffMinutes: number | null,
-  path: string
+  path: string,
+  bookingDate?: Date,
+  cancellationCutoffMinutes?: number | null
 ) {
   const session = await auth();
 
   if (!session?.userId || isNaN(id)) return { error: true };
-  if (!isBookingOperable(bookingDate, cancellationCutoffMinutes, "create"))
+  if (
+    !session.isAdmin &&
+    bookingDate &&
+    cancellationCutoffMinutes &&
+    !isBookingOperable(bookingDate, cancellationCutoffMinutes, "create")
+  )
     return {
       error: true,
       message: cancellationCutoffMinutes

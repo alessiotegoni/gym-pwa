@@ -20,6 +20,7 @@ import { toast } from "sonner";
 import ImgFormField from "../ImgFormField";
 import SubmitBtn from "../SubmitBtn";
 import { updateUserProfile } from "@/actions/users";
+import BtnFixedContainer from "../BtnFixedContainer";
 
 type Props = {
   user: User;
@@ -80,7 +81,9 @@ export function UserProfileForm({
           )}
         />
         <ImgFormField />
-        <SubmitBtn label="Aggiorna profilo" loadingLabel="Aggiornando" />
+        <BtnFixedContainer>
+          <SubmitBtn label="Aggiorna profilo" loadingLabel="Aggiornando" />
+        </BtnFixedContainer>
       </form>
     </Form>
   );

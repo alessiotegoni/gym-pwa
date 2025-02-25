@@ -11,7 +11,7 @@ import { eq } from "drizzle-orm";
 import { createSubscriptionSchema } from "@/lib/schema/subscription";
 import { headers } from "next/headers";
 import { after } from "next/server";
-import { getActiveSubscriptions } from "@/lib/queries";
+import { hasSubscription } from "@/lib/queries";
 import { stripe } from "@/app/api/stripe-webhook/route";
 import { SUBSCRIPTIONS_PLANS, TRIAL_DAYS } from "@/constants";
 
@@ -33,14 +33,14 @@ export async function createTrialSubscription() {
 export async function userCreateSubscription() {
   const session = await auth();
 
-  if (!session?.userId) return;
+  if (!session?.userId) return { error: true };
 
-  const [reqHeaders, hasSubscription] = await Promise.all([
+  const [reqHeaders, isSubscribed] = await Promise.all([
     headers(),
-    getActiveSubscriptions(session.userId),
+    hasSubscription(session.userId),
   ]);
 
-  if (hasSubscription) return;
+  if (isSubscribed) return { error: true };
 
   const redirect_url = reqHeaders.get("origin") + "/user";
 
@@ -53,7 +53,7 @@ export async function userCreateSubscription() {
 
   const checkout = await stripe.checkout.sessions.create({
     success_url: redirect_url + "?success=true",
-    cancel_url: redirect_url + "?success=false",
+    cancel_url: redirect_url + "?failed=true",
     line_items: [{ price: SUBSCRIPTIONS_PLANS[0].priceId, quantity: 1 }],
     metadata: {
       userId: session.userId.toString(),
@@ -63,6 +63,8 @@ export async function userCreateSubscription() {
     mode: "subscription",
     payment_method_types: ["card"],
   });
+
+  if (!checkout) return { error: true };
 
   if (checkout.url) redirect(checkout.url);
 }

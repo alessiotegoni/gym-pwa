@@ -12,6 +12,7 @@ import UserHeader from "@/components/UserHeader";
 import { isWithinInterval } from "date-fns";
 import DeleteSubscription from "@/components/DeleteSubscription";
 import { TRIAL_DAYS } from "@/constants";
+import BtnFixedContainer from "@/components/BtnFixedContainer";
 
 export const metadata = {
   title: "Profilo",
@@ -51,18 +52,16 @@ export default async function UserProfilePage({ searchParams }: Props) {
   return (
     <div className="flex flex-col h-full gap-6">
       <UserHeader user={user} showLogout={true} />
-      <Separator />
-
-      <main className="flex-1 overflow-auto">
+      <main className="flex-1">
         <div className="space-y-6">
-          {!user.subscriptions.length && trial ? (
+          {!user.subscriptions.length ? (
             <form
               action={createTrialSubscription}
               className="flex flex-col items-center justify-center h-full
-              p-4 py-6 bg-secondary rounded-xl"
+              p-4 border border-zinc-300/40 bg-zinc-100 dark:border-zinc-700/40 dark:bg-zinc-900 rounded-xl"
             >
               <TestTubeDiagonal className="!size-12" />
-              <p className="text-center text-muted-foreground mt-3">
+              <p className="text-center font-medium mt-3 text-white">
                 Sei idoneo per un periodo di prova di {TRIAL_DAYS} giorni!
               </p>
               <SubmitBtn
@@ -78,20 +77,20 @@ export default async function UserProfilePage({ searchParams }: Props) {
           <section>
             <h3 className="text-lg font-semibold mb-2">Statistiche</h3>
             <div className="grid grid-cols-3 gap-3">
-              <div className="flex flex-col items-center p-2 bg-secondary rounded-xl">
-                <Dumbbell className="!size-6 mb-1 text-primary" />
+              <div className="flex flex-col items-center p-2 border border-zinc-300/40 bg-zinc-100 dark:border-zinc-700/40 dark:bg-zinc-900 rounded-xl">
+                <Dumbbell className="!size-6 mb-1 dark:text-primary" />
                 <span className="text-xl font-bold">4</span>
                 <span className="text-xs text-muted-foreground">
                   Allenamenti
                 </span>
               </div>
-              <div className="flex flex-col items-center p-2 bg-secondary rounded-xl">
-                <CalendarDays className="!size-6 mb-1 text-primary" />
+              <div className="flex flex-col items-center p-2 border border-zinc-300/40 bg-zinc-100 dark:border-zinc-700/40 dark:bg-zinc-900 rounded-xl">
+                <CalendarDays className="!size-6 mb-1 dark:text-primary" />
                 <span className="text-xl font-bold">50</span>
                 <span className="text-xs text-muted-foreground">Classi</span>
               </div>
-              <div className="flex flex-col items-center p-2 bg-secondary rounded-xl">
-                <Trophy className="!size-6 mb-1 text-primary" />
+              <div className="flex flex-col items-center p-2 border border-zinc-300/40 bg-zinc-100 dark:border-zinc-700/40 dark:bg-zinc-900 rounded-xl">
+                <Trophy className="!size-6 mb-1 dark:text-primary" />
                 <span className="text-xl font-bold">34</span>
                 <span className="text-xs text-muted-foreground">Traguardi</span>
               </div>
@@ -104,9 +103,11 @@ export default async function UserProfilePage({ searchParams }: Props) {
           subscription={currentSub}
           className="basis-1/2 p-0"
         />
-        <Button className="grow basis-1/2 p-0" asChild>
-          <Link href="/subscriptions">Vedi Abbonamenti</Link>
-        </Button>
+        <BtnFixedContainer>
+          <Button className="grow w-full basis-1/2" asChild>
+            <Link href="/subscriptions">Vedi Abbonamenti</Link>
+          </Button>
+        </BtnFixedContainer>
       </footer>
     </div>
   );

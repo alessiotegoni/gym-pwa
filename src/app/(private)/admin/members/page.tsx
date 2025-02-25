@@ -1,14 +1,6 @@
 import { db } from "@/drizzle/db";
 import SearchUserBar from "@/components/SearchBar";
 import { Button } from "@/components/ui/button";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import Link from "next/link";
@@ -65,7 +57,10 @@ export default async function MembersPage({ searchParams }: Props) {
       </header>
       <div className="space-y-4">
         {filteredUsers.map((user) => (
-          <Card key={user.id}>
+          <Card
+            key={user.id}
+            className="rounded-xl border border-zinc-300/40 bg-zinc-100 dark:border-zinc-700/40 dark:bg-zinc-900"
+          >
             <CardHeader>
               <CardTitle className="flex items-center space-x-3">
                 <Avatar>

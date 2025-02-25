@@ -11,6 +11,7 @@ import { eventScheduleSchema } from "@/lib/schema/schedule";
 import { updateEventSchedule } from "@/actions/schedules";
 import Schedule from "@/app/(private)/admin/events/[id]/set-schedule/Schedule";
 import { getSchedulesEntries } from "@/lib/utils";
+import BtnFixedContainer from "../BtnFixedContainer";
 
 interface Props {
   eventId: number;
@@ -50,7 +51,13 @@ export function EventScheduleForm({
         {DAYS_OF_WEEK_IN_ORDER.map((day) => (
           <Schedule key={day} day={day} eventDuration={eventDuration} />
         ))}
-        <SubmitBtn label="Aggiorna programma" loadingLabel="Aggiornando" className="sticky bottom-4" />
+        <BtnFixedContainer>
+          <SubmitBtn
+            label="Aggiorna programma"
+            loadingLabel="Aggiornando"
+            className="sticky bottom-4"
+          />
+        </BtnFixedContainer>
       </form>
     </Form>
   );

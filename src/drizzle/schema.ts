@@ -45,6 +45,10 @@ export const usersRelations = relations(users, ({ many }) => ({
   subscriptions: many(subscriptions),
 }));
 
+export const pushNotifcations = pgTable("pushNotifications", {
+  userId: integer("userId").notNull().references(() => users.id, { onDelete: "cascade" })
+})
+
 export const accounts = pgTable(
   "accounts",
   {

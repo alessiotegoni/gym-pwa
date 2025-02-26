@@ -56,7 +56,7 @@ export default function UserBookingCard({ booking, userId }: Props) {
             userId={userId}
             bookingDate={booking.bookingDate}
             eventCapacity={booking.schedule.event.capacity}
-            usersCount={booking.schedule.bookings.length}
+            bookingsCount={booking.schedule.bookings.length}
           />
           <DeleteBookingBtn bookingId={booking.id} variant="destructive">
             <Trash2 />

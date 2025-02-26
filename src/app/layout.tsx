@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
@@ -16,6 +16,17 @@ export const metadata: Metadata = {
     default: "Tabata",
   },
   description: "Tabata gym srl",
+  appleWebApp: {
+    title: "Tabata",
+    capable: true,
+    statusBarStyle: "black-translucent",
+  },
+};
+
+export const viewport: Viewport = {
+  maximumScale: 1,
+  userScalable: false,
+  colorScheme: "dark",
 };
 
 export default function RootLayout({

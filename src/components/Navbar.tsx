@@ -58,7 +58,7 @@ export function Navbar() {
                       <Link
                         key={item.href}
                         href={item.href}
-                        className="text-lg font-medium dark:text-slate-300 dark:hover:text-yellow-500"
+                        className="text-lg font-medium hover:text-primary"
                       >
                         {item.label}
                       </Link>

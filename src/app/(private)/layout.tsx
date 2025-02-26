@@ -1,15 +1,13 @@
 import { Inter } from "next/font/google";
-import { SidebarProvider } from "@/components/ui/sidebar";
 import TopBar from "@/components/bars/TopBar";
 import BottomBar from "@/components/bars/BottomBar";
-import { ThemeProvider } from "@/components/theme-provider";
 
 const inter = Inter({
   variable: "--font-inter",
   subsets: ["latin"],
 });
 
-export default function PrivateLayout({
+export default async function PrivateLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;

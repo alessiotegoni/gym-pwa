@@ -18,11 +18,18 @@ export default function BookingList({ bookings }: { bookings: Bookings }) {
             className="flex items-center justify-between space-x-2 p-2 bg-secondary rounded-md"
           >
             <div className="flex items-center gap-2">
-              <MorphingDialogBasicImage
-                src={booking.user.image || "https://placeholder.co/40x40"}
-                alt={`${booking.user.firstName} ${booking.user.lastName}`}
-                className="size-10"
-              />
+              {booking.user.image ? (
+                <MorphingDialogBasicImage
+                  src={booking.user.image}
+                  alt={`${booking.user.firstName} ${booking.user.lastName}`}
+                  className="size-10"
+                />
+              ) : (
+                <div className="size-10 rounded-[4px] grid place-content-center bg-zinc-950">
+                  {booking.user.firstName.charAt(0).toUpperCase()}
+                  {booking.user.lastName.charAt(0).toUpperCase()}
+                </div>
+              )}
               <div>
                 <p className="text-sm font-medium">
                   {booking.user.firstName} {booking.user.lastName}

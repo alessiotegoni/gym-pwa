@@ -43,13 +43,13 @@ export function AdminSidebar() {
 
   return (
     <Sidebar side="right" className="bg-white border-r border-gray-200">
-      <SidebarHeader className="text-2xl m-2 mb-0 font-bold justify-center items-center
+      <SidebarHeader className="text-2xl m-2 mb-0 font-bold flex-row items-center
       bg-zinc-950 rounded-xl p-4 border border-zinc-700/30">
         <Image
           src="https://cyan-tropical-guanaco-792.mypinata.cloud/ipfs/bafkreidzwpent6mq2wm7yxu3mfmvwmwn5w3xxurj7dbakauepflhjsyvca"
           alt="Tabata addicted"
-          width={70}
-          height={70}
+          width={50}
+          height={45}
         />
         <h1 className="font-semibold">Dashboard</h1>
       </SidebarHeader>

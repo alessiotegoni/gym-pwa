@@ -13,12 +13,14 @@ type Props = {
   scheduleId: number;
   bookingDate: Date;
   bookingCutoffMinutes: number | null;
+  eventCapacity: number;
 } & ButtonProps;
 
 export default function CreateBookingBtn({
   scheduleId,
   bookingDate,
   bookingCutoffMinutes,
+  eventCapacity,
   className,
   ...props
 }: Props) {
@@ -30,7 +32,8 @@ export default function CreateBookingBtn({
       const res = await createBooking(
         scheduleId,
         bookingDate,
-        bookingCutoffMinutes
+        bookingCutoffMinutes,
+        eventCapacity
       );
       if (res?.error) {
         toast.error(res.message ?? "Errore nella creazione della prenotazione");

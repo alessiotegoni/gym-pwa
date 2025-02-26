@@ -82,13 +82,17 @@
   }
 }
 
-
-
 @layer base {
   * {
     @apply border-border outline-ring/50;
   }
   body {
     @apply bg-background text-foreground;
+  }
+}
+
+@layer utilities {
+  .card-primary {
+    @apply border border-zinc-700/40 bg-zinc-900 rounded-xl p-4
   }
 }

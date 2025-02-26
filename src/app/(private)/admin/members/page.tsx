@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import Link from "next/link";
-import { CalendarDays, CreditCard, XCircle } from "lucide-react";
+import { CalendarDays, CreditCard, XCircle, CheckCircle } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { auth } from "@/lib/auth";
 
@@ -20,7 +20,7 @@ type Props = {
 export default async function MembersPage({ searchParams }: Props) {
   const [session, { search }] = await Promise.all([auth(), searchParams]);
 
-  if (!session) return;
+  if (!session) return null;
 
   const users = await db.query.users.findMany({
     where: ({ id }, { ne }) => ne(id, session.userId),
@@ -59,7 +59,7 @@ export default async function MembersPage({ searchParams }: Props) {
         {filteredUsers.map((user) => (
           <Card
             key={user.id}
-            className="rounded-xl border border-zinc-300/40 bg-zinc-100 dark:border-zinc-700/40 dark:bg-zinc-900"
+            className="rounded-xl border border-zinc-800 bg-zinc-900"
           >
             <CardHeader>
               <CardTitle className="flex items-center space-x-3">
@@ -74,40 +74,54 @@ export default async function MembersPage({ searchParams }: Props) {
                   </AvatarFallback>
                 </Avatar>
                 <div>
-                  <span>
+                  <span className="text-zinc-100">
                     {user.firstName} {user.lastName}
                   </span>
-                  <p className="text-sm text-muted-foreground mt-1">
-                    {user.email}
-                  </p>
+                  <p className="text-sm text-zinc-400 mt-1">{user.email}</p>
                 </div>
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="text-sm text-muted-foreground mb-4">
+              <p className="text-sm text-zinc-400 mb-4">
                 Registrato il: {user.createdAt.toLocaleDateString()}
               </p>
               <div className="flex flex-wrap gap-2 mb-4">
-                {!user.subscriptions.length && (
+                {user.subscriptions.length ? (
                   <Badge
                     variant="outline"
-                    className="bg-red-50 text-red-600 border-red-200"
+                    className="bg-emerald-900/30 text-emerald-400 border-emerald-700 py-1"
                   >
-                    <XCircle className="w-3 h-3 mr-1" />
+                    <CheckCircle className="w-3 h-3 mr-1.5" />
+                    Abbonamento attivo
+                  </Badge>
+                ) : (
+                  <Badge
+                    variant="outline"
+                    className="bg-red-900/30 text-red-400 border-red-700 py-1"
+                  >
+                    <XCircle className="w-3 h-3 mr-1.5" />
                     No Abbonamenti attivi
                   </Badge>
                 )}
-                {!user.bookings.length && (
+                {user.bookings.length ? (
                   <Badge
                     variant="outline"
-                    className="bg-orange-50 text-orange-600 border-orange-200"
+                    className="bg-blue-900/30 text-blue-400 border-blue-700 py-1"
                   >
-                    <XCircle className="w-3 h-3 mr-1" />
-                    No Prenotazioni attive
+                    <CheckCircle className="w-3 h-3 mr-1.5" />
+                    Prenotazioni attive: {user.bookings.length}
+                  </Badge>
+                ) : (
+                  <Badge
+                    variant="outline"
+                    className="bg-amber-900/30 text-amber-400 border-amber-700 py-1"
+                  >
+                    <XCircle className="w-3 h-3 mr-1.5" />
+                    Nessuna Prenotazione
                   </Badge>
                 )}
               </div>
-              <div className="flex flex-col space-y-2">
+              <div className="flex flex-col gap-2">
                 <Button asChild variant="outline">
                   <Link href={`/admin/subscriptions?search=${user.email}`}>
                     <CreditCard />

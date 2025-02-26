@@ -3,7 +3,7 @@
 import { db } from "@/drizzle/db";
 import { bookings } from "@/drizzle/schema";
 import { auth } from "@/lib/auth";
-import { hasSubscription } from "@/lib/queries";
+import { getBookingsCount, hasSubscription } from "@/lib/queries";
 import { isBookingOperable } from "@/lib/utils";
 import { startOfDay } from "date-fns";
 import { and, eq } from "drizzle-orm";
@@ -35,7 +35,8 @@ export async function getBookedUsers(id: number, date: Date) {
 export async function createBooking(
   scheduleId: number,
   bookingDate: Date,
-  bookingCutoffMinutes: number | null
+  bookingCutoffMinutes: number | null,
+  eventCapacity: number
 ) {
   const session = await auth();
 
@@ -49,8 +50,24 @@ export async function createBooking(
       message: "Prima di prenotarti, attiva un abbonamento",
     };
 
-  if (!isBookingOperable(bookingDate, bookingCutoffMinutes, "create"))
-    return { error: true, message: "Prenotazioni chiuse" };
+  const bookingsCount = await getBookingsCount(scheduleId, bookingDate);
+
+  if (
+    !isBookingOperable({
+      type: "create",
+      bookingDate,
+      cutoffMinutes: bookingCutoffMinutes,
+      bookingsCount,
+      eventCapacity,
+    })
+  )
+    return {
+      error: true,
+      message:
+        bookingsCount >= eventCapacity
+          ? "Il corso e' pieno"
+          : "Prenotazioni chiuse",
+    };
 
   const { rowCount } = await db
     .insert(bookings)
@@ -71,10 +88,14 @@ export async function deleteBooking(
 
   if (!session?.userId || isNaN(id)) return { error: true };
   if (
-    !session.isAdmin &&
-    bookingDate &&
-    cancellationCutoffMinutes &&
-    !isBookingOperable(bookingDate, cancellationCutoffMinutes, "create")
+    !session.isAdmin ||
+    (bookingDate &&
+      cancellationCutoffMinutes &&
+      !isBookingOperable({
+        type: "delete",
+        bookingDate,
+        cutoffMinutes: cancellationCutoffMinutes,
+      }))
   )
     return {
       error: true,

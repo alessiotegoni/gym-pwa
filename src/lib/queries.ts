@@ -1,7 +1,7 @@
 "server-only";
 
 import { db } from "@/drizzle/db";
-import { subscriptions } from "@/drizzle/schema";
+import { bookings, subscriptions } from "@/drizzle/schema";
 import { addDays, startOfDay } from "date-fns";
 import { and, count, eq, lte, gte, ne } from "drizzle-orm";
 
@@ -113,6 +113,20 @@ export async function getUserBookings(id: number) {
   });
 
   return results;
+}
+
+export async function getBookingsCount(scheduleId: number, bookingDate: Date) {
+  const [result] = await db
+    .select({ count: count() })
+    .from(bookings)
+    .where(
+      and(
+        eq(bookings.scheduleId, scheduleId),
+        eq(bookings.bookingDate, bookingDate)
+      )
+    );
+
+  return result.count;
 }
 
 export async function getEvent(eventId: number) {

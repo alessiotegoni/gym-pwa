@@ -51,6 +51,6 @@ export function TrainingsEventsList({
       </Card>
     ))
   ) : (
-    <p>Nessun allenamento trovato</p>
+    <p className="font-medium">Nessun allenamento trovato</p>
   );
 }

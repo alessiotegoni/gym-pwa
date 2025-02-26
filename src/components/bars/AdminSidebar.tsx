@@ -23,6 +23,7 @@ import Link from "next/link";
 import { Button } from "../ui/button";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
+import Image from "next/image";
 
 const LINKS = [
   { icon: Users, href: "/admin/members", label: "Gestisci Membri" },
@@ -42,8 +43,15 @@ export function AdminSidebar() {
 
   return (
     <Sidebar side="right" className="bg-white border-r border-gray-200">
-      <SidebarHeader className="text-2xl m-2 mb-0 font-bold">
-        Tabata panel
+      <SidebarHeader className="text-2xl m-2 mb-0 font-bold justify-center items-center
+      bg-zinc-950 rounded-xl p-4 border border-zinc-700/30">
+        <Image
+          src="https://cyan-tropical-guanaco-792.mypinata.cloud/ipfs/bafkreidzwpent6mq2wm7yxu3mfmvwmwn5w3xxurj7dbakauepflhjsyvca"
+          alt="Tabata addicted"
+          width={70}
+          height={70}
+        />
+        <h1 className="font-semibold">Dashboard</h1>
       </SidebarHeader>
       <SidebarContent className="p-2">
         <SidebarMenu>
@@ -61,7 +69,11 @@ export function AdminSidebar() {
                     )}
                   >
                     <Icon className="!size-5" />
-                    <span className={cn("font-medium", isActive && "font-semibold")}>{label}</span>
+                    <span
+                      className={cn("font-medium", isActive && "font-semibold")}
+                    >
+                      {label}
+                    </span>
                   </Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>

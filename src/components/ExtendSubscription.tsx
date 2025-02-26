@@ -53,7 +53,6 @@ export default function ExtendSubDatePicker({
     <Popover>
       <PopoverTrigger asChild>
         <Button
-          variant={"outline"}
           className={cn(
             "!mt-0 justify-start text-left font-normal basis-1/2 grow"
           )}
@@ -62,7 +61,7 @@ export default function ExtendSubDatePicker({
           {date ? (
             formatDate(date, "dd MMMM yyyy")
           ) : (
-            <span>Estendi durata</span>
+            <span className="font-semibold">Estendi durata</span>
           )}
         </Button>
       </PopoverTrigger>

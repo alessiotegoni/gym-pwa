@@ -1,8 +1,11 @@
 import { CarouselContent, CarouselItem } from "@/components/ui/carousel";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { CalendarX } from "lucide-react";
 import { EventsWithSchedules } from "@/types";
 import { getDay, getNext7Dates } from "@/lib/utils";
 import EventSchedulesList from "./EventSchedulesList";
 import CreateSubscriptionCard from "@/components/CreateSubscriptionCard";
+import { BorderTrail } from "@/components/ui/border-trail";
 
 type Props = {
   events: EventsWithSchedules;
@@ -31,9 +34,24 @@ export default function ScheduleCarousel({
           if (!scheduleEvents.length) {
             return (
               <CarouselItem key={date.toString()} data-day={dateDay}>
-                <h3 className="text-center text-2xl mt-5 font-semibold">
-                  Nessuna programmazione per questa data
-                </h3>
+                <Card className="card-primary !p-8 relative overflow-hidden mt-2">
+                  <BorderTrail
+                    className="bg-linear-to-l from-blue-200 via-blue-500 to-blue-200 dark:from-blue-400 dark:via-blue-500 dark:to-blue-700"
+                    size={120}
+                  />
+                  <CardContent className="flex flex-col items-center justify-center text-center p-0">
+                    <CalendarX
+                      className="size text-muted-foreground"
+                      size={50}
+                    />
+                    <CardTitle className="text-xl font-semibold my-2">
+                      Nessuna programmazione
+                    </CardTitle>
+                    <p className="text-muted-foreground">
+                      Non ci sono eventi disponibili per questa data
+                    </p>
+                  </CardContent>
+                </Card>
               </CarouselItem>
             );
           }
@@ -46,18 +64,14 @@ export default function ScheduleCarousel({
                 );
 
                 return (
-                  <section
-                    key={event.id}
-                    data-event={event.name}
-                    className="last:mt-4"
-                  >
+                  <section key={event.id} data-event={event.name}>
                     <h3 className="text-lg font-semibold capitalize">
                       {event.name}
                     </h3>
                     {event.bookingCutoffMinutes && (
                       <p className="font-medium text-sm text-muted-foreground">
-                        Le prenotazioni chiudono
-                        {event.bookingCutoffMinutes} minuti prima dell'inizio
+                        Le prenotazioni chiudono {event.bookingCutoffMinutes}{" "}
+                        minuti prima dell'inizio
                       </p>
                     )}
                     <EventSchedulesList

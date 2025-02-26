@@ -15,8 +15,8 @@ type Props = {
 };
 export default function UserHeader({ user, showLogout = false }: Props) {
   return (
-    <header className="px-4 py-3 border border-zinc-300/40 bg-zinc-100 dark:border-zinc-700/40 dark:bg-zinc-900 rounded-xl">
-      <div className="flex items-center justify-between mb-5">
+    <header>
+      <div className="flex items-center justify-between mb-3">
         <h1 className="text-xl font-semibold">Profilo</h1>
         <Button variant="ghost" size="icon" asChild>
           <Link href="/user/profile/edit" className="!size-5">
@@ -24,7 +24,7 @@ export default function UserHeader({ user, showLogout = false }: Props) {
           </Link>
         </Button>
       </div>
-      <div className="flex justify-between">
+      <div className="flex justify-between card-primary">
         <div className="flex items-center gap-3">
           <Avatar className="size-14">
             <AvatarImage src={user.image ?? ""} alt={user.lastName} />

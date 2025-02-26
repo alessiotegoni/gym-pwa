@@ -98,12 +98,12 @@ export default async function UserProfilePage({ searchParams }: Props) {
           </section>
         </div>
       </main>
-      <footer className="flex gap-2">
-        <DeleteSubscription
-          subscription={currentSub}
-          className="basis-1/2 p-0"
-        />
-        <BtnFixedContainer>
+      <footer>
+        <BtnFixedContainer className="flex gap-2">
+          <DeleteSubscription
+            subscription={currentSub}
+            className="basis-1/2 p-0"
+          />
           <Button className="grow w-full basis-1/2" asChild>
             <Link href="/subscriptions">Vedi Abbonamenti</Link>
           </Button>

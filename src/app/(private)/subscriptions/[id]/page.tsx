@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { CreditCard, Calendar, AlertCircle } from "lucide-react";
+import { CreditCard, Calendar, AlertCircle, HandCoins } from "lucide-react";
 import { formatDate } from "date-fns";
 import { db } from "@/drizzle/db";
 import SubscriptionBadge from "../SubscriptionBadge";
@@ -75,74 +75,79 @@ export default async function SubscriptionPage({ params }: Props) {
         {session?.isAdmin && <UserHeader user={subscription.user} />}
       </header>
 
-      <main className="grow">
-        <h1 className="text-2xl font-semibold mt-2">Dettagli Abbonamento</h1>
-        <p className="mb-7 font-medium text-muted-foreground mt-2">
-          Id abbonamento: {subscription.id}
-        </p>
-        <div className="space-y-6">
-          <section>
-            <SubscriptionBadge
-              subscription={subscription}
-              className="*:text-base"
-            />
-          </section>
-
-          <Separator />
-
-          <section>
-            <h2 className="text-xl font-semibold mb-2">Dettagli Piano</h2>
-            <div className="space-y-2">
-              <p>
-                <strong>Nome Piano:</strong> {SUBSCRIPTIONS_PLANS[0].name}
-              </p>
-              <p>
-                <strong>Prezzo:</strong>{" "}
-                {stripeSubscription?.items.data[0].price.unit_amount! / 100 ||
-                  50}
-                &euro;
-              </p>
-              <p>
-                <strong>Durata:</strong> {SUBSCRIPTIONS_PLANS[0].duration}{" "}
-                giorni
-              </p>
-            </div>
-          </section>
-
-          <Separator />
-
-          <section>
-            <h2 className="text-xl font-semibold mb-2">Date Importanti</h2>
-            <div className="space-y-2">
-              <div className="flex items-center gap-2">
-                <Calendar className="!size-5" />
-                <p>
-                  <strong>Data Inizio:</strong>{" "}
-                  {formatDate(subscription.createdAt, "dd/MM/yyyy")}
-                </p>
-              </div>
-              <div className="flex items-center gap-2">
-                <Calendar className="!size-5" />
-                <p>
-                  <strong>Data Fine:</strong>{" "}
-                  {formatDate(subscription.endDate, "dd/MM/yyyy")}
-                </p>
-              </div>
-            </div>
-          </section>
-          <Separator />
-          <section>
-            <h2 className="text-xl font-semibold mb-2">Metodo di Pagamento</h2>
+      <main className="grow mb-10">
+        <section className="card-primary my-3">
+          <h1 className="text-2xl font-semibold">Dettagli Abbonamento</h1>
+          <p className="mb-7 font-medium text-muted-foreground mt-2">
+            Id abbonamento: {subscription.id}
+          </p>
+          <SubscriptionBadge
+            subscription={subscription}
+            className="*:text-base"
+          />
+        </section>
+        <section className="card-primary">
+          <h2 className="text-xl font-semibold mb-4">Dettagli Piano</h2>
+          <div className="space-y-2">
+            <p>
+              <span className="font-medium">Nome Piano:</span>{" "}
+              {SUBSCRIPTIONS_PLANS[0].name}
+            </p>
+            <p>
+              <span className="font-medium">Prezzo:</span>{" "}
+              {stripeSubscription?.items.data[0].price.unit_amount! / 100 || 50}
+              &euro;
+            </p>
+            <p>
+              <span className="font-medium">Durata:</span>{" "}
+              {SUBSCRIPTIONS_PLANS[0].duration} giorni
+            </p>
+          </div>
+        </section>
+        <section className="card-primary my-3">
+          <h2 className="text-xl font-semibold mb-4">Date Importanti</h2>
+          <div className="space-y-2">
             <div className="flex items-center gap-2">
-              <CreditCard className="!size-6" />
+              <Calendar className="!size-5" />
               <p>
-                {subscriptionPayment
-                  ? `${subscriptionPayment.card?.brand} che termina con ${subscriptionPayment.card?.last4}`
-                  : "Pagato in contanti"}
+                <span className="font-medium">Data Inizio:</span>{" "}
+                {formatDate(subscription.createdAt, "dd/MM/yyyy")}
               </p>
             </div>
-          </section>
-        </div>
+            <div className="flex items-center gap-2">
+              <Calendar className="!size-5" />
+              <p>
+                <span className="font-medium">Data Fine:</span>{" "}
+                {formatDate(subscription.endDate, "dd/MM/yyyy")}
+              </p>
+            </div>
+          </div>
+        </section>
+        <section className="card-primary">
+          <h2 className="text-xl font-semibold mb-4">Metodo di Pagamento</h2>
+          <div className="flex items-center gap-2">
+            {subscriptionPayment ? (
+              <CreditCard
+                className="
+              size-6"
+              />
+            ) : (
+              <HandCoins className="size-6" />
+            )}
+            <p>
+              {subscriptionPayment ? (
+                <>
+                  <span className="capitalize">
+                    {subscriptionPayment.card?.brand}{" "}
+                  </span>
+                  che termina con {subscriptionPayment.card?.last4}
+                </>
+              ) : (
+                "Pagato in contanti"
+              )}
+            </p>
+          </div>
+        </section>
       </main>
       <BtnFixedContainer>
         <footer className="space-y-2 grid grid-cols-2 gap-2">

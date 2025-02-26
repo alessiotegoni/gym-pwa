@@ -68,10 +68,10 @@ export default function Schedule({ day, eventDuration }: Props) {
   };
 
   return (
-    <div className="border-b pb-4 mb-4">
-      <div className="flex flex-row items-center justify-between rounded-lg border p-4">
+    <div className="rounded-xl p-4 border border-zinc-700/40 bg-zinc-900">
+      <div className="flex flex-row items-center justify-between">
         <div className="space-y-0.5">
-          <h3 className="font-semibold capitalize">
+          <h3 className="font-semibold text-lg capitalize">
             {giorniSettimana[DAYS_OF_WEEK_IN_ORDER.indexOf(day)]}
           </h3>
           <p className="text-[0.8rem] text-muted-foreground">
@@ -92,6 +92,7 @@ export default function Schedule({ day, eventDuration }: Props) {
                     <FormItem>
                       <FormControl>
                         <Input
+                          className="bg-zinc-950"
                           type="time"
                           {...field}
                           onChange={(e) => {
@@ -119,7 +120,12 @@ export default function Schedule({ day, eventDuration }: Props) {
                   render={({ field }) => (
                     <FormItem>
                       <FormControl>
-                        <Input type="time" value={field.value} disabled />
+                        <Input
+                          className="bg-zinc-950"
+                          type="time"
+                          value={field.value}
+                          disabled
+                        />
                       </FormControl>
                       <FormDescription>Orario di fine</FormDescription>
                     </FormItem>
@@ -136,7 +142,7 @@ export default function Schedule({ day, eventDuration }: Props) {
                   control={form.control}
                   name={`${day}.${i}.isActive`}
                   render={({ field }) => (
-                    <FormItem className="flex items-center gap-3 bg-secondary rounded-lg h-9 px-3 border borde-secondary">
+                    <FormItem className="flex items-center gap-3 bg-secondary rounded-xl h-9 px-3 border borde-secondary">
                       <FormLabel>
                         {field.value ? "Disattiva" : "Attiva"} orario
                       </FormLabel>
@@ -152,6 +158,7 @@ export default function Schedule({ day, eventDuration }: Props) {
                 />
                 <Button
                   type="button"
+                  className="rounded-xl"
                   variant="destructive"
                   onClick={() => remove(i)}
                 >

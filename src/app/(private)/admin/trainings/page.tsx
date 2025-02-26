@@ -64,7 +64,7 @@ export default async function TrainingsPage({ searchParams }: Props) {
         </h2>
         <div className="flex flex-col sm:flex-row gap-x-4">
           <SearchBar search={params.search} placeholder="Cerca allenamento" />
-          <DatePicker selectedDate={params.date} className="h-10" />
+          <DatePicker selectedDate={params.date} className="w-full h-10 rounded-xl" />
         </div>
       </div>
       {!events.length && !params.search && !params.date ? (

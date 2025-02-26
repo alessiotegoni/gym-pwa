@@ -183,22 +183,33 @@ export const getDay = (date: Date) => format(date, "EEEE").toLowerCase();
 
 export const formatDate = (date: Date) => format(date, "yyyy-MM-dd");
 
-export const isBookingOperable = (
-  bookingDate: Date,
-  cutoffMinutes: number | null,
-  type: "create" | "delete"
-) => {
-  if (!cutoffMinutes) return isBefore(new Date(), bookingDate);
+type BookingOperableParams = {
+  type: "create" | "delete";
+  bookingDate: Date;
+  cutoffMinutes: number | null;
+} & (
+  | { type: "create"; eventCapacity: number; bookingsCount: number }
+  | { type: "delete" }
+);
 
-  const cutoffDate = subMinutes(bookingDate, cutoffMinutes);
+export const isBookingOperable = (params: BookingOperableParams) => {
+  const { type, bookingDate, cutoffMinutes } = params;
 
-  if (type === "create")
-    return isWithinInterval(new Date(), {
-      start: subDays(bookingDate, 2),
-      end: cutoffDate,
-    });
+  const now = new Date();
+  const cutoffDate = subMinutes(bookingDate, cutoffMinutes!);
 
-  if (type === "delete") return isBefore(new Date(), cutoffDate);
+  switch (type) {
+    case "create":
+      const { bookingsCount, eventCapacity } = params;
+      if (bookingsCount >= eventCapacity) return false;
+
+      return isWithinInterval(now, {
+        start: subDays(bookingDate, 2),
+        end: !cutoffMinutes ? bookingDate : cutoffDate,
+      });
+    case "delete":
+      return isBefore(now, !cutoffMinutes ? bookingDate : cutoffDate);
+  }
 };
 
 export const isTrainingEditable = (trainingDate: string | Date) => {

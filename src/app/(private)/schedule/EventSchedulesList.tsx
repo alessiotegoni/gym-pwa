@@ -43,7 +43,10 @@ export default function EventSchedulesList({
         );
 
         return (
-          <Card key={schedule.id} className="rounded-xl border border-zinc-300/40 bg-zinc-100 dark:border-zinc-700/40 dark:bg-zinc-900">
+          <Card
+            key={schedule.id}
+            className="rounded-xl border border-zinc-300/40 bg-zinc-100 dark:border-zinc-700/40 dark:bg-zinc-900"
+          >
             <CardContent className="p-4">
               <div className="grid grid-cols-[auto_1fr_auto]">
                 <div className="flex items-center gap-3">
@@ -75,7 +78,7 @@ export default function EventSchedulesList({
                   <p className="text-2xl font-bold">
                     {format(startTime, "HH:mm")}
                   </p>
-                  <p className="text-sm text-muted-foreground">- {endTime}</p>
+                  <p className="text-sm text-muted-foreground">{endTime}</p>
                 </div>
               </div>
               <div className="mt-4 flex items-center justify-between">
@@ -83,7 +86,7 @@ export default function EventSchedulesList({
                   scheduleId={schedule.id}
                   userId={userId}
                   bookingDate={bookingDate}
-                  usersCount={schedule.bookings.length}
+                  bookingsCount={schedule.bookings.length}
                   eventCapacity={event.capacity}
                 />
                 {hasSubscription &&
@@ -92,12 +95,15 @@ export default function EventSchedulesList({
                       scheduleId={schedule.id}
                       bookingDate={bookingDate}
                       bookingCutoffMinutes={event.bookingCutoffMinutes}
+                      eventCapacity={event.capacity}
                       disabled={
-                        !isBookingOperable(
+                        !isBookingOperable({
+                          type: "create",
                           bookingDate,
-                          event.bookingCutoffMinutes,
-                          "create"
-                        )
+                          cutoffMinutes: event.bookingCutoffMinutes,
+                          eventCapacity: event.capacity,
+                          bookingsCount: schedule.bookings.length,
+                        })
                       }
                     />
                   ) : (
@@ -109,11 +115,11 @@ export default function EventSchedulesList({
                         event.cancellationCutoffMinutes
                       }
                       disabled={
-                        !isBookingOperable(
+                        !isBookingOperable({
+                          type: "delete",
                           bookingDate,
-                          event.cancellationCutoffMinutes,
-                          "delete"
-                        )
+                          cutoffMinutes: event.cancellationCutoffMinutes,
+                        })
                       }
                     >
                       <Trash2 />

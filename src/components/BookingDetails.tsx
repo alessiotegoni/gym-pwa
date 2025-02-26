@@ -17,7 +17,7 @@ export type BookingDetailsProps = {
   scheduleId: number;
   userId: number;
   bookingDate: Date;
-  usersCount: number;
+  bookingsCount: number;
   eventCapacity: number;
 };
 
@@ -25,7 +25,7 @@ export default function BookingDetails({
   scheduleId,
   userId,
   bookingDate,
-  usersCount,
+  bookingsCount,
   eventCapacity,
 }: BookingDetailsProps) {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -34,7 +34,7 @@ export default function BookingDetails({
     <div className="flex gap-2">
       <Badge variant="secondary" className="flex items-center rounded-lg">
         <Users className="size-4 mr-1" />
-        {usersCount}/{eventCapacity}
+        {bookingsCount}/{eventCapacity}
       </Badge>
       <Dialog onOpenChange={setIsDialogOpen}>
         <DialogTrigger asChild>

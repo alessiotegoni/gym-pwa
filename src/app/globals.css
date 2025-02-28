@@ -93,6 +93,7 @@
 }
 
 @layer utilities {
+  
   .card-primary {
     @apply border border-zinc-700/40 bg-zinc-900 rounded-xl p-4
   }

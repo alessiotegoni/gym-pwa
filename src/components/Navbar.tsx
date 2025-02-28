@@ -40,8 +40,11 @@ export function Navbar() {
           </nav>
 
           <div className="flex items-center">
-            <div className="flex gap-3">
-              <Button asChild className="hidden md:block">
+            <div className="flex items-center gap-3">
+              <Button asChild variant="outline" className="hidden md:block">
+                <Link href="/sign-in">Accedi</Link>
+              </Button>
+              <Button asChild className="mr-3 md:mr-0">
                 <Link href="/sign-up?trial=true">Prova Gratuita</Link>
               </Button>
             </div>
@@ -66,8 +69,8 @@ export function Navbar() {
                   ))}
 
                   <SheetClose asChild>
-                    <Button asChild>
-                      <Link href="/sign-up?trial=true">Prova Gratuita</Link>
+                    <Button asChild variant="outline">
+                      <Link href="/sign-in">Accedi</Link>
                     </Button>
                   </SheetClose>
                 </nav>

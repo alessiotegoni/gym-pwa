@@ -4,9 +4,16 @@ import { Carousel } from "@/components/ui/carousel";
 
 export default function ScheduleLayout({ children }: { children: ReactNode }) {
   return (
-    <Carousel className="w-full max-w-sm">
-      <ScheduleDate />
-      {children}
-    </Carousel>
+    <div className="w-full max-w-[330px] mx-auto sm:max-w-xl lg:max-w-5xl">
+      <Carousel
+        className="h-full"
+        opts={{
+          container: ".container",
+        }}
+      >
+        <ScheduleDate />
+        {children}
+      </Carousel>
+    </div>
   );
 }

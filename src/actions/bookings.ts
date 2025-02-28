@@ -88,14 +88,14 @@ export async function deleteBooking(
 
   if (!session?.userId || isNaN(id)) return { error: true };
   if (
-    !session.isAdmin ||
-    (bookingDate &&
-      cancellationCutoffMinutes &&
-      !isBookingOperable({
-        type: "delete",
-        bookingDate,
-        cutoffMinutes: cancellationCutoffMinutes,
-      }))
+    !session.isAdmin &&
+    bookingDate &&
+    cancellationCutoffMinutes &&
+    !isBookingOperable({
+      type: "delete",
+      bookingDate,
+      cutoffMinutes: cancellationCutoffMinutes,
+    })
   )
     return {
       error: true,

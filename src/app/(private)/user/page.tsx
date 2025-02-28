@@ -10,7 +10,6 @@ import { it } from "date-fns/locale";
 import CreateSubscriptionCard from "@/components/CreateSubscriptionCard";
 import PaymentAlert from "@/components/PaymentAlert";
 import InstallPrompt from "@/components/InstallPrompt";
-import PushNotificationHandler from "@/components/PushNotificationHandler";
 
 export const metadata = {
   title: "Le mie prenotazioni",
@@ -49,7 +48,6 @@ export default async function UserPage({ searchParams }: Props) {
     <>
       {isSubscripted && success && <PaymentAlert success />}
       <InstallPrompt />
-      <PushNotificationHandler userId={session.userId} />
       <h2 className="text-2xl font-bold mb-2">Le mie prenotazioni</h2>
       {!bookings.length ? (
         <div

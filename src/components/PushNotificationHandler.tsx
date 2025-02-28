@@ -1,12 +1,8 @@
 "use client";
 
-import {
-  sendNotification,
-  subscribeUser,
-  unsubscribeUser,
-} from "@/actions/pushNotifications";
-import { urlBase64ToUint8Array } from "@/lib/utils";
-import { useEffect, useState } from "react";
+import usePushNotifications from "@/hooks/usePushNotifications";
+import { BellOff, BellRing, LoaderCircle } from "lucide-react";
+import { Button } from "./ui/button";
 import { toast } from "sonner";
 
 export default function PushNotificationHandler({
@@ -14,92 +10,36 @@ export default function PushNotificationHandler({
 }: {
   userId: number;
 }) {
-  const [isSupported, setIsSupported] = useState(false);
-  const [subscription, setSubscription] = useState<PushSubscription | null>(
-    null
-  );
-  const [message, setMessage] = useState("");
+  const {
+    isSupported,
+    loading,
+    subscription,
+    subscribeToPush,
+    unsubscribeFromPush,
+  } = usePushNotifications();
 
-  useEffect(() => {
-    if ("serviceWorker" in navigator && "PushManager" in window) {
-      setIsSupported(true);
-      registerServiceWorker();
-    }
-  }, []);
+  if (loading) return null
 
-  async function registerServiceWorker() {
-    const registration = await navigator.serviceWorker.register("/sw.js", {
-      scope: "/",
-      updateViaCache: "none",
-    });
-
-    const sub = await registration.pushManager.getSubscription();
-    if (!sub) subscribeToPush();
-    setSubscription(sub);
-  }
-
-  async function subscribeToPush() {
-    try {
-      const registration = await navigator.serviceWorker.ready;
-      const sub = await registration.pushManager.subscribe({
-        userVisibleOnly: true,
-        applicationServerKey: urlBase64ToUint8Array(
-          process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY!
-        ),
-      });
-      setSubscription(sub);
-      const serializedSub = JSON.parse(JSON.stringify(sub));
-      await subscribeUser(serializedSub);
-    } catch (err) {
-      toast.error(
-        `I permessi di notifica sono essenziali per informarti su abbonamenti
-        in scadenza, abbonamenti scaduti, corsi ecc...`,
-        {
-          className: "grid",
-          classNames: { actionButton: "rounded-xl bg-primary text-black" },
-          action: { label: "Riattiva permessi", onClick: subscribeToPush },
+  if (!isSupported)
+    return (
+      <Button
+        variant="ghost"
+        size="icon"
+        onClick={() =>
+          toast.error("Il tuo dispositivo non supporta le notifiche push")
         }
-      );
-      console.error(err);
-    }
-  }
+      >
+        <BellOff className="!size-5" />
+      </Button>
+    );
 
-  async function unsubscribeFromPush() {
-    await subscription?.unsubscribe();
-    setSubscription(null);
-    await unsubscribeUser();
-  }
-
-  async function sendTestNotification() {
-    if (subscription) {
-      await sendNotification(message);
-      setMessage("");
-    }
-  }
-
-  if (!isSupported) return null
-
-  return (
-    <div>
-      <h3 className="">Push Notifications</h3>
-      {subscription ? (
-        <>
-          <p>You are subscribed to push notifications.</p>
-          <button onClick={unsubscribeFromPush}>Unsubscribe</button>
-          <input
-            type="text"
-            placeholder="Enter notification message"
-            value={message}
-            onChange={(e) => setMessage(e.target.value)}
-          />
-          <button onClick={sendTestNotification}>Send Test</button>
-        </>
-      ) : (
-        <>
-          <p>You are not subscribed to push notifications.</p>
-          <button onClick={subscribeToPush}>Subscribe</button>
-        </>
-      )}
-    </div>
+  return subscription ? (
+    <Button variant="ghost" size="icon"  onClick={unsubscribeFromPush}>
+      <BellRing className="!size-5" />
+    </Button>
+  ) : (
+    <Button variant="ghost" size="icon"  onClick={subscribeToPush}>
+      <BellOff className="!size-5" />
+    </Button>
   );
 }

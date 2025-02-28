@@ -35,7 +35,7 @@ export const subscriptionStatuses: Record<
 
 type Props = {
   subscription: typeof subscriptions.$inferSelect & {
-    users?: { firstName: string; lastName: string; email: string }
+    user?: { firstName: string; lastName: string; email: string }
   }
 }
 
@@ -61,14 +61,14 @@ export default function Subscription({ subscription }: Props) {
         "p-4 rounded-xl min-h-[120px] flex flex-col justify-between shadow-lg backdrop-blur-sm",
       )}
     >
-      {subscription.users && (
+      {subscription.user && (
         <>
           <div className="flex justify-between items-start mb-4">
             <div>
               <h3 className="text-base capitalize font-semibold text-gray-100">
-                {subscription.users.firstName} {subscription.users.lastName}
+                {subscription.user.firstName} {subscription.user.lastName}
               </h3>
-              <p className="text-sm !mt-0 text-gray-300">{subscription.users.email}</p>
+              <p className="text-sm !mt-0 text-gray-300">{subscription.user.email}</p>
             </div>
             <SubscriptionBadge subscription={{ status: subscription.status }} className="mb-2" />
           </div>
@@ -104,7 +104,7 @@ export default function Subscription({ subscription }: Props) {
         </>
       )}
 
-      {!subscription.users && <SubscriptionBadge subscription={subscription} className="mb-4" />}
+      {!subscription.user && <SubscriptionBadge subscription={subscription} className="mb-4" />}
 
       <div className="flex justify-between items-center">
         {subscription.status === "active" && (
@@ -112,7 +112,7 @@ export default function Subscription({ subscription }: Props) {
             {subscription.stripeSubscriptionId ? "Rinnovo automatico" : "Rinnovo non automatico"}
           </span>
         )}
-        {(!["trial", "canceled"].includes(subscription.status) || !subscription.users) && (
+        {(!["trial", "canceled"].includes(subscription.status) || !subscription.user) && (
           <div className="flex justify-end grow">{viewSubscriptionDetail}</div>
         )}
       </div>

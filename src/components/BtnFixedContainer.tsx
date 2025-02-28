@@ -8,7 +8,7 @@ export default function BtnFixedContainer({
   return (
     <div
       className={cn(
-        "fixed bottom-[85px] left-1/2 -translate-x-1/2 w-full px-3",
+        "sticky bottom-[100px] left-1/2 w-full",
         className
       )}
     >

@@ -42,7 +42,7 @@ export default function RootLayout({
           defaultTheme="dark"
           disableTransitionOnChange
         >
-          <SidebarProvider className="grid grid-rows-[auto_1fr_auto]">
+          <SidebarProvider>
             {children}
           </SidebarProvider>
           <Toaster richColors position="top-center" duration={5_000} />

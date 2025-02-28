@@ -26,7 +26,7 @@ export default function EventSchedulesList({
   hasSubscription,
 }: Props) {
   return (
-    <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 mt-2">
+    <div className="grid gap-4 lg:grid-cols-2 mt-2">
       {schedules.map((schedule) => {
         const bookingDate = getBookingDateTime(date, schedule.startTime);
 
@@ -48,7 +48,7 @@ export default function EventSchedulesList({
             className="rounded-xl border border-zinc-300/40 bg-zinc-100 dark:border-zinc-700/40 dark:bg-zinc-900"
           >
             <CardContent className="p-4">
-              <div className="grid grid-cols-[auto_1fr_auto]">
+              <div className="flex justify-between items-center">
                 <div className="flex items-center gap-3">
                   <div className="relative w-12 h-12 rounded-full overflow-hidden">
                     <Image
@@ -74,11 +74,11 @@ export default function EventSchedulesList({
                     </p>
                   </div>
                 </div>
-                <div className="text-right">
+                <div>
                   <p className="text-2xl font-bold">
                     {format(startTime, "HH:mm")}
                   </p>
-                  <p className="text-sm text-muted-foreground">{endTime}</p>
+                  <p className="text-sm text-end text-muted-foreground">{endTime}</p>
                 </div>
               </div>
               <div className="mt-4 flex items-center justify-between">

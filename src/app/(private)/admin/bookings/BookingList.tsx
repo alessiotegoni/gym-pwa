@@ -39,7 +39,12 @@ export default function BookingList({ bookings }: { bookings: Bookings }) {
                 </p>
               </div>
             </div>
-            <DeleteBookingBtn bookingId={booking.id} variant="ghost">
+            <DeleteBookingBtn
+              bookingId={booking.id}
+              userId={booking.user.id}
+              bookingDate={booking.bookingDate}
+              variant="ghost"
+            >
               <Trash2 className="!size-5 text-destructive" />
             </DeleteBookingBtn>
           </div>

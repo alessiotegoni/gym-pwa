@@ -71,48 +71,45 @@ export default function Home() {
       {/* Pricing Section */}
       <section className="px-4">
         <h2 className="text-2xl font-semibold mb-4">Abbonamenti</h2>
-        <Card>
-          <CardHeader>
-            <CardTitle>Abbonamento Mensile</CardTitle>
-            <CardDescription>
-              Accesso illimitato a tutti i servizi
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <p className="text-3xl font-bold">€50/mese</p>
-          </CardContent>
-          <CardFooter>
-            <Button
-              className="w-full
-             font-bold"
-              asChild
-            >
-              <Link href="/sign-up">Iscriviti Ora</Link>
-            </Button>
-          </CardFooter>
-        </Card>
-      </section>
-
-      {/* Trial Period Section */}
-      <section className="px-4">
-        <h2 className="text-2xl font-semibold mb-4">Periodo di Prova</h2>
-        <Card>
-          <CardHeader className="pb-0">
-            <CardTitle>Prova Gratuita</CardTitle>
-            <CardDescription>Sperimenta Tabata senza impegno</CardDescription>
-          </CardHeader>
-          <CardContent className="pt-5">
-            <p className="">
-              Offriamo un periodo di prova di 7 giorni per farti conoscere la
-              nostra palestra e i nostri servizi.
-            </p>
-          </CardContent>
-          <CardFooter>
-            <Button className="w-full" asChild>
-              <Link href="/sign-up?trial=true">Richiedi Prova Gratuita</Link>
-            </Button>
-          </CardFooter>
-        </Card>
+        <div className="grid md:grid-cols-2 gap-3">
+          <Card className="flex flex-col justify-between">
+            <CardHeader>
+              <CardTitle>Abbonamento Mensile</CardTitle>
+              <CardDescription>
+                Accesso illimitato a tutti i servizi
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <p className="text-3xl font-bold">€50/mese</p>
+            </CardContent>
+            <CardFooter>
+              <Button
+                className="w-full
+              font-bold"
+                asChild
+              >
+                <Link href="/sign-up">Iscriviti Ora</Link>
+              </Button>
+            </CardFooter>
+          </Card>
+          <Card>
+            <CardHeader>
+              <CardTitle>Prova Gratuita</CardTitle>
+              <CardDescription>Sperimenta Tabata senza impegno</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <p className="">
+                Offriamo un periodo di prova di 7 giorni per farti conoscere la
+                nostra palestra e i nostri servizi.
+              </p>
+            </CardContent>
+            <CardFooter>
+              <Button className="w-full" asChild>
+                <Link href="/sign-up?trial=true">Richiedi Prova Gratuita</Link>
+              </Button>
+            </CardFooter>
+          </Card>
+        </div>
       </section>
     </div>
   );

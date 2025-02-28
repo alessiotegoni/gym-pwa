@@ -63,11 +63,19 @@ export default function BookedUsers({
                         key={i}
                         className="flex flex-col items-center gap-3 basis-1/3"
                       >
-                        <MorphingDialogBasicImage
-                          src={user.image || "https://placehold.co/40x40"}
-                          alt={fullName}
-                          className="size-14 rounded-full"
-                        />
+                        {user.image ? (
+                            <MorphingDialogBasicImage
+                              src={user.image}
+                              alt={fullName}
+                              className="size-14 rounded-full"
+                            />
+                        ) : (
+                          <div className="size-14 grid place-content-center rounded-full
+                          bg-zinc-900">
+                            {user.firstName.charAt(0).toUpperCase()}
+                            {user.lastName.charAt(0).toUpperCase()}
+                          </div>
+                        )}
                         <span className="text-center text-sm">
                           {user.id === userId ? "Tu" : fullName}
                         </span>

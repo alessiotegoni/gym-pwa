@@ -43,11 +43,19 @@ export const usersRelations = relations(users, ({ many }) => ({
   bookings: many(bookings),
   accounts: many(accounts),
   subscriptions: many(subscriptions),
+  pushNotifications: many(pushNotifcations)
 }));
 
 export const pushNotifcations = pgTable("pushNotifications", {
-  userId: integer("userId").notNull().references(() => users.id, { onDelete: "cascade" })
-})
+  userId: integer("userId")
+    .notNull()
+    .unique()
+    .references(() => users.id, { onDelete: "cascade" }),
+  endpoint: text("endpoint").notNull(),
+  auth: text("auth").notNull(),
+  p256dh: text("p256dh").notNull(),
+  expirationTime: integer("expirationTime"),
+});
 
 export const accounts = pgTable(
   "accounts",

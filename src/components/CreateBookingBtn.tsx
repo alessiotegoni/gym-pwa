@@ -42,7 +42,7 @@ export default function CreateBookingBtn({
 
       toast.success("Prenotazione creata con successo!", {
         action: (
-          <Button size="sm" asChild>
+          <Button size="sm" className="font-semibold" asChild>
             <Link href="/user">Vedi prenotazioni</Link>
           </Button>
         ),

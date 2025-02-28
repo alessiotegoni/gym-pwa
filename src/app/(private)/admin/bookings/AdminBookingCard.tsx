@@ -59,7 +59,7 @@ export default function AdminBookingCard({
           <strong className="ml-1">{todayBookings}</strong>
         </Badge>
       </CardHeader>
-      <CardContent>
+      <CardContent className="p-2">
         {Object.entries(days).map(([day, times], i) => {
           const timesEntries = Object.entries(times);
 
@@ -69,7 +69,7 @@ export default function AdminBookingCard({
           const userTime = getUserTime(bookingDate, times);
 
         return (
-            <div key={day + i} className="mt-2 first:mt-0">
+            <div key={day + i} className="mt-2 first:mt-0 card-primary !bg-zinc-950">
               <div className="flex justify-between items-center">
                 <p className="text-base font-semibold capitalize">
                   {isToday(bookingDate) ? "oggi" : day}

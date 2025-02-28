@@ -141,7 +141,7 @@ const SidebarProvider = React.forwardRef<
               } as React.CSSProperties
             }
             className={cn(
-              "group/sidebar-wrapper flex min-h-svh w-full has-[[data-variant=inset]]:bg-sidebar",
+              "group/sidebar-wrapper w-full has-[[data-variant=inset]]:bg-sidebar",
               className
             )}
             ref={ref}
@@ -229,7 +229,7 @@ const Sidebar = React.forwardRef<
             "group-data-[side=right]:rotate-180",
             variant === "floating" || variant === "inset"
               ? "group-data-[collapsible=icon]:w-[calc(var(--sidebar-width-icon)_+_theme(spacing.4))]"
-              : "group-data-[collapsible=icon]:w-[--sidebar-width-icon]"
+              : "group-data-[collapsible=icon]:w-[--sidebar-width-icon] -z-10"
           )}
         />
         <div

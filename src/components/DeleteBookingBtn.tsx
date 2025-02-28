@@ -7,16 +7,19 @@ import { usePathname } from "next/navigation";
 import { ReactNode, useTransition } from "react";
 import { cn } from "@/lib/utils";
 import SubmitBtn from "./SubmitBtn";
+import { sendNotification } from "@/actions/pushNotifications";
 
 type Props = {
   bookingId: number;
   bookingDate?: Date;
+  userId?: number;
   cancellationCutoffMinutes?: number | null;
   children?: ReactNode;
 } & ButtonProps;
 
 export default function DeleteBookingBtn({
   bookingId,
+  userId,
   bookingDate,
   cancellationCutoffMinutes,
   children,
@@ -27,7 +30,7 @@ export default function DeleteBookingBtn({
 
   const pathname = usePathname();
 
-  function handleDelete() {
+  async function handleDelete() {
     if (isPending) return;
     startDeleteTransition(async () => {
       const res = await deleteBooking(
@@ -45,6 +48,14 @@ export default function DeleteBookingBtn({
 
       toast.success("Prenotazione eliminata con successo!");
     });
+
+    if (userId && bookingDate) {
+      await sendNotification({
+        userId,
+        title: "Prenotazione eliminata",
+        body: `La tua prenotazione in data ${bookingDate.toLocaleDateString()} delle ore ${bookingDate.toLocaleTimeString().slice(0, -3)} e' stata cancellata`,
+      });
+    }
   }
 
   return (

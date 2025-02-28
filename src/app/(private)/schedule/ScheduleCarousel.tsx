@@ -21,7 +21,7 @@ export default function ScheduleCarousel({
   return (
     <>
       {!hasSubscription && <CreateSubscriptionCard className="mb-5" />}
-      <CarouselContent>
+      <CarouselContent className="h-full">
         {getNext7Dates().map((date) => {
           const dateDay = getDay(date);
 

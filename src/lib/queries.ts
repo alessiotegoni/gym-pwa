@@ -59,7 +59,13 @@ export async function getBookings() {
     orderBy: ({ bookingDate }, { asc }) => asc(bookingDate),
     with: {
       user: {
-        columns: { firstName: true, lastName: true, email: true, image: true },
+        columns: {
+          id: true,
+          firstName: true,
+          lastName: true,
+          email: true,
+          image: true,
+        },
       },
       schedule: {
         columns: { id: true, startTime: true },

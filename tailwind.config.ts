@@ -10,10 +10,10 @@ export default {
   theme: {
     container: {
       center: true,
-      padding: "2rem",
+      padding: "1rem",
       screens: {
-        "2xl": "1400px",
-      },
+        xl: "1000px"
+      }
     },
     extend: {
       fontFamily: {
@@ -76,6 +76,9 @@ export default {
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
       },
+      screens: {
+        xs: "380px"
+      },
       keyframes: {
         "accordion-down": {
           from: {
@@ -100,5 +103,8 @@ export default {
       },
     },
   },
-  plugins: [require("tailwindcss-animate"), require("tailwindcss-displaymodes")],
+  plugins: [
+    require("tailwindcss-animate"),
+    require("tailwindcss-displaymodes"),
+  ],
 } satisfies Config;

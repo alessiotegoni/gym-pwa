@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { addDays, formatDate } from "date-fns";
+import { addDays, differenceInDays, formatDate, startOfDay } from "date-fns";
 import { CalendarIcon } from "lucide-react";
 
 import { cn } from "@/lib/utils";
@@ -16,6 +16,8 @@ import { Subscription } from "@/types";
 import SubmitBtn from "./SubmitBtn";
 import { extendSubscription } from "@/actions/subscriptions";
 import { toast } from "sonner";
+import { sendNotification } from "@/actions/pushNotifications";
+import { it } from "date-fns/locale";
 
 export default function ExtendSubDatePicker({
   subscription,
@@ -23,7 +25,9 @@ export default function ExtendSubDatePicker({
   subscription: Subscription;
 }) {
   const [isLoading, setIsLoading] = React.useState(false);
-  const [date, setDate] = React.useState<Date | undefined>(undefined);
+  const [date, setDate] = React.useState<Date | undefined>(
+    addDays(subscription.endDate, 1)
+  );
 
   async function handleClick() {
     if (!date) return;
@@ -41,12 +45,26 @@ export default function ExtendSubDatePicker({
       toast.error("Errore nell'estendere l'abbonamento, riprovare piu tardi");
     } else {
       toast.success(
-        `Data dell'abbonamento estesa fino al ${date.toLocaleString()}`
+        `Data dell'abbonamento estesa fino al ${date.toLocaleDateString()}`
       );
+      setDate(undefined);
+
+      const dayDifference = differenceInDays(
+        date,
+        startOfDay(subscription.endDate)
+      );
+
+      await sendNotification({
+        userId: subscription.userId,
+        title: "Abbonamento esteso",
+        body: `Il tuo abbonamento e' stato esteso di ${dayDifference} ${
+          dayDifference === 1 ? "giorno" : "giorni"
+        }`,
+        url: `/subscriptions/${subscription.id}`,
+      });
     }
 
     setIsLoading(false);
-    if (!res?.error) setDate(undefined);
   }
 
   return (
@@ -54,15 +72,11 @@ export default function ExtendSubDatePicker({
       <PopoverTrigger asChild>
         <Button
           className={cn(
-            "!mt-0 justify-start text-left font-normal basis-1/2 grow"
+            "!mt-0 justify-start text-left font-semibold basis-1/2 grow"
           )}
         >
           <CalendarIcon />
-          {date ? (
-            formatDate(date, "dd MMMM yyyy")
-          ) : (
-            <span className="font-semibold">Estendi durata</span>
-          )}
+          Estendi durata
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-auto p-0" align="end">

@@ -29,7 +29,8 @@ export async function updateEventSchedule(
     }))
   );
 
-  const result = await db.insert(eventSchedules).values(scheduleToInsert);
+  const result = await db.insert(eventSchedules).values(scheduleToInsert)
+    .onConflictDoUpdate({ target: [eventSchedules.id], set: {   } });
 
   if (!result.rowCount) return { error: true };
 }

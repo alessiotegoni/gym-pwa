@@ -13,14 +13,18 @@ export default async function PrivateLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <>
+    <div className="h-dvh grid grid-rows-[auto_1fr_auto]">
       <TopBar />
       <main
-        className={`container relative p-4 ${inter.variable} antialiased font-inter`}
+        className={`container py-4 ${inter.variable} antialiased font-inter`}
       >
         {children}
       </main>
-      <BottomBar />
-    </>
+      <BottomBar
+        classNames={{
+          nav: "standalone:my-0 standalone:h-[90px] standalone:items-start",
+        }}
+      />
+    </div>
   );
 }

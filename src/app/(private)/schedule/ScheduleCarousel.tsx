@@ -64,7 +64,7 @@ export default function ScheduleCarousel({
                 );
 
                 return (
-                  <section key={event.id} data-event={event.name}>
+                  <section key={event.id} data-event={event.name} className="mt-3">
                     <h3 className="text-lg font-semibold capitalize">
                       {event.name}
                     </h3>

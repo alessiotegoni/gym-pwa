@@ -11,26 +11,57 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Trash2 } from "lucide-react";
-import { useEffect, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import { DAYS_OF_WEEK_IN_ORDER, giorniSettimana } from "@/constants";
 import { EventScheduleSchemaType, WeekDay } from "@/types";
 import { useFieldArray, useFormContext } from "react-hook-form";
 import { Switch } from "@/components/ui/switch";
 import { addMinutes, format, roundToNearestMinutes } from "date-fns";
 import { getBookingTime } from "@/lib/utils";
+import { isScheduleOperable } from "@/actions/schedules";
+import { toast } from "sonner";
+import Link from "next/link";
+import SubmitBtn from "@/components/SubmitBtn";
 
 type Props = {
   day: WeekDay;
   eventDuration: number;
 };
 
+const displayErrorToast = (isUpdating: boolean = true) => {
+  toast.error(
+    `Ci sono delle prenotazioni attive legate a questa programmazione,
+        prima di ${
+          isUpdating ? "modificarla" : "eliminarla"
+        } elimina le prenotazioni`,
+    {
+      action: (
+        <Button asChild>
+          <Link href="/admin/bookings">Vai a prenotazioni</Link>
+        </Button>
+      ),
+      duration: 10_000,
+    }
+  );
+};
+
 export default function Schedule({ day, eventDuration }: Props) {
+  const [{ delitingScheduleId, isDeleting }, setDeletedSchedule] = useState<{
+    delitingScheduleId: number | null;
+    isDeleting: boolean;
+  }>({
+    delitingScheduleId: null,
+    isDeleting: false,
+  });
+
   const form = useFormContext<EventScheduleSchemaType>();
   const {
     fields: schedules,
     append,
     remove,
   } = useFieldArray({ name: day, control: form.control });
+
+  console.log(schedules);
 
   const [isDayActive, setIsDayActive] = useState(
     schedules.some((schedule) => schedule.isActive)
@@ -41,12 +72,12 @@ export default function Schedule({ day, eventDuration }: Props) {
       day,
       schedules.map(({ isActive, ...schedule }) => ({
         ...schedule,
-        isActive: !isDayActive ? false : isActive,
+        isActive: isDayActive,
       }))
     );
   }, [isDayActive]);
 
-  const handleAddTime = () => {
+  function handleAddTime() {
     const lastSchedule = schedules.at(-1);
 
     const lastStartTime = lastSchedule
@@ -61,11 +92,27 @@ export default function Schedule({ day, eventDuration }: Props) {
     );
 
     append({
+      scheduleId: null,
       startTime: format(startTime, "HH:mm"),
       endTime: format(addMinutes(startTime, eventDuration), "HH:mm"),
       isActive: true,
     });
-  };
+  }
+
+  async function handleRemoveTime(
+    scheduleId: number | null,
+    scheduleIndex: number
+  ) {
+    if (!scheduleId) return remove(scheduleIndex);
+
+    setDeletedSchedule({ delitingScheduleId: scheduleId, isDeleting: true });
+    const isDeletetable = await isScheduleOperable(scheduleId);
+
+    if (isDeletetable) remove(scheduleIndex);
+    else displayErrorToast(false);
+
+    setDeletedSchedule({ delitingScheduleId: scheduleId, isDeleting: false });
+  }
 
   return (
     <div className="rounded-xl p-4 border border-zinc-700/40 bg-zinc-900">
@@ -156,15 +203,18 @@ export default function Schedule({ day, eventDuration }: Props) {
                     </FormItem>
                   )}
                 />
-                <Button
+                <SubmitBtn
                   type="button"
-                  className="rounded-xl"
+                  className="rounded-xl w-fit"
                   variant="destructive"
-                  onClick={() => remove(i)}
+                  isLoading={
+                    delitingScheduleId === schedule.scheduleId && isDeleting
+                  }
+                  onClick={() => handleRemoveTime(schedule.scheduleId, i)}
                 >
                   <Trash2 />
                   Elimina
-                </Button>
+                </SubmitBtn>
               </div>
             </div>
           ))}

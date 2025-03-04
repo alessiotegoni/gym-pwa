@@ -1,0 +1,1 @@
+ALTER TABLE "eventSchedules" ALTER COLUMN "isActive" SET NOT NULL;

@@ -27,7 +27,7 @@ export default function ScheduleDate() {
   }, [api]);
 
   return (
-    <div className="flex justify-between items-center gap-2 mt-3 mb-7">
+    <div className="flex justify-between items-center gap-2 mt-3 mb-4">
       <CarouselPrevious />
       <h2
         className="text-xl font-semibold p-1 bg-secondary

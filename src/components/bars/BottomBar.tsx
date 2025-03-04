@@ -4,7 +4,6 @@ import Link from "next/link";
 import { Home, Calendar, User } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { AnimatedBackground } from "../ui/animated-background";
-import { BOTTOM_BAR_LINKS } from "@/constants";
 import { cn } from "@/lib/utils";
 
 type Props = {
@@ -15,6 +14,12 @@ type Props = {
   };
   showIcons?: boolean;
 };
+
+export const LINKS = [
+  { icon: Home, href: "/user", label: "Home" },
+  { icon: Calendar, href: "/schedule", label: "Palinsesto" },
+  { icon: User, href: "/user/profile", label: "Profilo" },
+];
 
 export default function BottomBar({ classNames, showIcons = true }: Props) {
   const pathname = usePathname();
@@ -28,9 +33,7 @@ export default function BottomBar({ classNames, showIcons = true }: Props) {
       )}
     >
       <AnimatedBackground
-        defaultValue={
-          BOTTOM_BAR_LINKS.find((link) => link.href === pathname)?.label
-        }
+        defaultValue={LINKS.find((link) => link.href === pathname)?.label}
         className="rounded-xl bg-background"
         transition={{
           type: "spring",
@@ -38,7 +41,7 @@ export default function BottomBar({ classNames, showIcons = true }: Props) {
           duration: 0.3,
         }}
       >
-        {BOTTOM_BAR_LINKS.map(({ icon: Icon, href, label }) => (
+        {LINKS.map(({ icon: Icon, href, label }) => (
           <Link
             key={href}
             href={href}

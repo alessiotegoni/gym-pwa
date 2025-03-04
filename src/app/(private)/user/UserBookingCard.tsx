@@ -6,6 +6,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import DeleteBookingBtn from "../../../components/DeleteBookingBtn";
 import { getUserBookings } from "@/lib/queries";
 import BookingDetails from "@/components/BookingDetails";
+import { isBookingOperable } from "@/lib/utils";
 
 type Props = {
   booking: Awaited<ReturnType<typeof getUserBookings>>[0];
@@ -39,7 +40,7 @@ export default function UserBookingCard({ booking, userId }: Props) {
               {format(booking.bookingDate, "HH:mm")}
             </p>
             <p className="text-sm text-muted-foreground">
-              -{" "}
+              {" "}
               {format(
                 addMinutes(
                   booking.bookingDate,
@@ -58,7 +59,17 @@ export default function UserBookingCard({ booking, userId }: Props) {
             eventCapacity={booking.schedule.event.capacity}
             bookingsCount={booking.schedule.bookings.length}
           />
-          <DeleteBookingBtn bookingId={booking.id} variant="destructive">
+          <DeleteBookingBtn
+            bookingId={booking.id}
+            variant="destructive"
+            disabled={
+              !isBookingOperable({
+                type: "delete",
+                bookingDate: booking.bookingDate,
+                cutoffMinutes: booking.schedule.event.bookingCutoffMinutes,
+              })
+            }
+          >
             <Trash2 />
             Elimina
           </DeleteBookingBtn>

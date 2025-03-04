@@ -36,6 +36,20 @@
       "when": 1740662786422,
       "tag": "0004_serious_marvel_boy",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1741090516238,
+      "tag": "0005_crazy_thor",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1741090901974,
+      "tag": "0006_flawless_lenny_balinger",
+      "breakpoints": true
     }
   ]
 }

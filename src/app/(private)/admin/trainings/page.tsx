@@ -20,7 +20,6 @@ export const getEventsTrainings = async ({
         columns: { eventId: false },
         where: ({ trainingDate, description }, { and, eq, ilike, gte }) =>
           and(
-            !date ? gte(trainingDate, formatDate(new Date())) : undefined,
             date ? eq(trainingDate, date) : undefined,
             search ? ilike(description, `%${search}%`) : undefined
           ),

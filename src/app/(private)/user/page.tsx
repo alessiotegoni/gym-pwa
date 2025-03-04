@@ -44,6 +44,7 @@ export default async function UserPage({ searchParams }: Props) {
     booking.bookingDate.toDateString()
   );
 
+
   return (
     <>
       {isSubscripted && success && <PaymentAlert success />}

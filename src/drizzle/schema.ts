@@ -43,7 +43,7 @@ export const usersRelations = relations(users, ({ many }) => ({
   bookings: many(bookings),
   accounts: many(accounts),
   subscriptions: many(subscriptions),
-  pushNotifications: many(pushNotifcations)
+  pushNotifications: many(pushNotifcations),
 }));
 
 export const pushNotifcations = pgTable("pushNotifications", {
@@ -115,7 +115,7 @@ export const eventSchedules = pgTable(
       .references(() => events.id),
     day: daysEnum("day").notNull(),
     startTime: time("startTime").notNull(),
-    isActive: boolean("isActive").default(true),
+    isActive: boolean("isActive").default(true).notNull(),
   },
   (table) => ({
     eventIdIndex: index("event_schedule_event_id_index").on(table.eventId),
@@ -139,7 +139,7 @@ export const bookings = pgTable(
   {
     id: serial("id").primaryKey(),
     scheduleId: integer("scheduleId")
-      .references(() => eventSchedules.id)
+      .references(() => eventSchedules.id, { onDelete: "set null" })
       .notNull(),
     userId: integer("userId")
       .references(() => users.id)

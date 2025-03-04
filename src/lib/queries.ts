@@ -89,7 +89,7 @@ export async function getBookings() {
 export async function getUserBookings(id: number) {
   const results = await db.query.bookings.findMany({
     where: ({ userId, bookingDate }, { and, gte, eq }) =>
-      and(eq(userId, id), gte(bookingDate, new Date())),
+      and(eq(userId, id), gte(bookingDate, startOfDay(new Date()))),
     with: {
       schedule: {
         columns: { startTime: true },
@@ -110,6 +110,7 @@ export async function getUserBookings(id: number) {
               imageUrl: true,
               capacity: true,
               durationMinutes: true,
+              bookingCutoffMinutes: true,
             },
           },
         },
@@ -185,10 +186,10 @@ export async function getEventsWithSchedules() {
 export async function getEventSchedule(scheduleEventId: number) {
   const schedules = await db.query.eventSchedules.findMany({
     columns: {
-      id: false,
       eventId: false,
     },
     where: ({ eventId }, { eq }) => eq(eventId, scheduleEventId),
+    orderBy: ({ startTime }, { asc }) => asc(startTime),
   });
 
   return schedules;

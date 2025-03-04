@@ -6,6 +6,7 @@ import { WeekDay } from "@/types";
 
 const timeSlotSchema = z
   .object({
+    scheduleId: z.number().positive().nullable(),
     startTime: z
       .string()
       .regex(/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/, "Formato orario non valido"),

@@ -29,16 +29,16 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 export function urlBase64ToUint8Array(base64String: string) {
-  const padding = '='.repeat((4 - (base64String.length % 4)) % 4)
-  const base64 = (base64String + padding).replace(/-/g, '+').replace(/_/g, '/')
+  const padding = "=".repeat((4 - (base64String.length % 4)) % 4);
+  const base64 = (base64String + padding).replace(/-/g, "+").replace(/_/g, "/");
 
-  const rawData = window.atob(base64)
-  const outputArray = new Uint8Array(rawData.length)
+  const rawData = window.atob(base64);
+  const outputArray = new Uint8Array(rawData.length);
 
   for (let i = 0; i < rawData.length; ++i) {
-    outputArray[i] = rawData.charCodeAt(i)
+    outputArray[i] = rawData.charCodeAt(i);
   }
-  return outputArray
+  return outputArray;
 }
 
 export const formatSubStatus = (status: SubscriptionStatus) =>
@@ -95,44 +95,47 @@ export function getSchedulesEntries(
   schedules: EventSchedules,
   eventDuration: number
 ) {
-  const scheduleEntries = DAYS_OF_WEEK_IN_ORDER.map((day) => {
+  return DAYS_OF_WEEK_IN_ORDER.map((day) => {
     const daySchedules = schedules.filter((schedule) => schedule.day === day);
 
-    const defaultStartTime = roundToNearestMinutes(new Date(), {
-      nearestTo: 30,
-    });
+    if (daySchedules.length) {
+      return [
+        day,
+        daySchedules.map(({ id, startTime, isActive }) => {
+          const parsedStartTime = parse(startTime, "HH:mm:ss", new Date());
+          return {
+            scheduleId: id,
+            startTime: format(parsedStartTime, "HH:mm"),
+            endTime: format(
+              addMinutes(parsedStartTime, eventDuration),
+              "HH:mm"
+            ),
+            isActive,
+          };
+        }),
+      ];
+    }
 
-    return [
-      day,
-      daySchedules.length
-        ? daySchedules.map(({ startTime, isActive }) => {
-            const parsedStartTime = parse(startTime, "HH:mm:ss", new Date());
+    if (["saturday", "sunday"].includes(day)) {
+      return [day, []];
+    }
 
-            return {
-              startTime: format(parsedStartTime, "HH:mm"),
-              endTime: format(
-                addMinutes(parsedStartTime, eventDuration),
-                "HH:mm"
-              ),
-              isActive,
-            };
-          })
-        : !["saturday", "sunday"].includes(day)
-        ? [
-            {
-              startTime: format(defaultStartTime, "HH:mm"),
-              endTime: format(
-                addMinutes(defaultStartTime, eventDuration),
-                "HH:mm"
-              ),
-              isActive: true,
-            },
-          ]
-        : [],
-    ];
+    return [day, []];
+    // const defaultStartTime = roundToNearestMinutes(new Date(), {
+    //   nearestTo: 30,
+    // });
+    // return [
+    //   day,
+    //   [
+    //     {
+    //       scheduleId: null,
+    //       startTime: format(defaultStartTime, "HH:mm"),
+    //       endTime: format(addMinutes(defaultStartTime, eventDuration), "HH:mm"),
+    //       isActive: true,
+    //     },
+    //   ],
+    // ];
   });
-
-  return scheduleEntries;
 }
 
 // export const groupBookings = (bookings: Bookings): GroupedBookings =>

@@ -6,6 +6,7 @@ type Props = {
   eventId: number;
   eventDuration: number;
 };
+
 export default async function SchedulesList({ eventId, eventDuration }: Props) {
   const schedules = await getEventSchedule(eventId);
   const schedulesEntries = getSchedulesEntries(schedules, eventDuration);
@@ -13,7 +14,7 @@ export default async function SchedulesList({ eventId, eventDuration }: Props) {
   return (
     <EventScheduleForm
       eventId={eventId}
-      schedules={schedulesEntries}
+      schedulesEntries={schedulesEntries}
       eventDuration={eventDuration}
     />
   );

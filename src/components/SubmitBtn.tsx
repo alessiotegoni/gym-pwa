@@ -27,7 +27,10 @@ export default function SubmitBtn({
   const form = useFormContext();
   const { pending } = useFormStatus();
 
-  const isPending = form?.formState?.isSubmitting || pending || isLoading;
+  const isPending =
+    isLoading !== undefined
+      ? isLoading
+      : form?.formState?.isSubmitting || pending;
 
   return (
     <Button

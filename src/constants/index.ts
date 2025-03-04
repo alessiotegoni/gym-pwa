@@ -1,5 +1,3 @@
-import { Calendar, Home, User } from "lucide-react";
-
 export const DAYS_OF_WEEK_IN_ORDER = [
   "monday",
   "tuesday",
@@ -33,12 +31,6 @@ export const COURSE_STATUSES = [
   "open",
   "terminated",
 ] as const
-
-export const BOTTOM_BAR_LINKS = [
-  { icon: Home, href: "/user", label: "Home" },
-  { icon: Calendar, href: "/schedule", label: "Palinsesto" },
-  { icon: User, href: "/user/profile", label: "Profilo" },
-]
 
 export const SUBSCRIPTIONS_PLANS = [
   {

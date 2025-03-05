@@ -1,5 +1,6 @@
 import SigninForm from "@/components/forms/SigninForm";
 import Link from "next/link";
+import { Suspense } from "react";
 
 export const metadata = {
   title: "Accedi",
@@ -12,13 +13,12 @@ export default function LoginPage() {
       <h1 className="text-2xl font-bold mb-6 text-center">
         Accedi al tuo account
       </h1>
-      <SigninForm />
+      <Suspense>
+        <SigninForm />
+      </Suspense>
       <p className="mt-4 text-center text-sm">
         Non hai un account?{" "}
-        <Link
-          href="/sign-up"
-          className="hover:underline text-primary"
-        >
+        <Link href="/sign-up" className="hover:underline text-primary">
           Registrati
         </Link>
       </p>

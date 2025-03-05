@@ -1,22 +1,18 @@
 import { SUBSCRIPTIONS_PLANS } from "@/constants";
 import { db } from "@/drizzle/db";
 import { subscriptions } from "@/drizzle/schema";
+import { stripe } from "@/lib/configs";
 import { SubscriptionStatus } from "@/types";
 import { addDays } from "date-fns";
 import { eq } from "drizzle-orm";
 import { NextResponse } from "next/server";
 import Stripe from "stripe";
 
-export const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: "2025-01-27.acacia",
-  typescript: true,
-});
-
-export const config = {
-  api: {
-    bodyParser: false,
-  },
-};
+// export const config = {
+//   api: {
+//     bodyParser: false,
+//   },
+// };
 
 const ALLOWED_EVENTS: Stripe.Event["type"][] = [
   "checkout.session.completed",

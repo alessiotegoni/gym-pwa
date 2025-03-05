@@ -12,8 +12,8 @@ import { createSubscriptionSchema } from "@/lib/schema/subscription";
 import { headers } from "next/headers";
 import { after } from "next/server";
 import { hasSubscription } from "@/lib/queries";
-import { stripe } from "@/app/api/stripe-webhook/route";
 import { SUBSCRIPTIONS_PLANS, TRIAL_DAYS } from "@/constants";
+import { stripe } from "@/lib/configs";
 
 export async function createTrialSubscription() {
   const session = await auth();

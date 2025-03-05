@@ -1,5 +1,4 @@
 import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
 import { CreditCard, Calendar, AlertCircle, HandCoins } from "lucide-react";
 import { formatDate } from "date-fns";
 import { db } from "@/drizzle/db";
@@ -10,11 +9,10 @@ import { notFound, redirect } from "next/navigation";
 import UserHeader from "@/components/UserHeader";
 import ExtendSubDatePicker from "@/components/ExtendSubscription";
 import DeleteSubscription from "@/components/DeleteSubscription";
-import { Metadata } from "next";
-import { stripe } from "@/app/api/stripe-webhook/route";
 import { SUBSCRIPTIONS_PLANS } from "@/constants";
 import { cn } from "@/lib/utils";
 import BtnFixedContainer from "@/components/BtnFixedContainer";
+import { stripe } from "@/lib/configs";
 
 type Props = {
   params: Promise<{ id?: string }>;

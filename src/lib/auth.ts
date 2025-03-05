@@ -6,6 +6,7 @@ import { signinSchema } from "./schema/auth";
 import { compare } from "bcrypt";
 import { ADMINS_EMAILS } from "@/constants";
 import { getUser } from "./queries";
+import type { User } from "next-auth";
 
 export const adapter = DrizzleAdapter(db);
 
@@ -25,7 +26,7 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
 
         if (!success) return null;
 
-        const user = await getUser({ userEmail: data.email })
+        const user = await getUser({ userEmail: data.email });
 
         if (!user) return null;
 
@@ -33,7 +34,12 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
 
         if (!isMatch) return null;
 
-        return user;
+        return {
+          id: user.id.toString(),
+          name: user.firstName,
+          email: user.email,
+          image: user.image,
+        };
       },
     }),
   ],

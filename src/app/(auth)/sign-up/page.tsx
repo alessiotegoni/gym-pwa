@@ -1,6 +1,7 @@
 import SignupForm from "@/components/forms/SignupForm";
 import { TRIAL_DAYS } from "@/constants";
 import Link from "next/link";
+import { Suspense } from "react";
 
 export const metadata = {
   title: "Iscriviti",
@@ -13,7 +14,9 @@ export default function SignupPage() {
       <h1 className="text-2xl font-bold mb-4 text-center">
         Crea il tuo account
       </h1>
-      <SignupForm />
+      <Suspense>
+        <SignupForm />
+      </Suspense>
       <p className="mt-4 text-center text-sm dark:text-slate-300">
         Hai gia un account?{" "}
         <Link href="/sign-in" className="hover:underline text-primary">

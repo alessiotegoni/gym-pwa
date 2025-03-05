@@ -1,39 +1,12 @@
-import { db } from "@/drizzle/db";
 import { auth } from "@/lib/auth";
 import type { Metadata } from "next";
 import { TrainingsEventsList } from "./TrainingsEventsList";
 import SearchBar from "@/components/SearchBar";
 import { DatePicker } from "@/components/DatePicker";
 import CreateEventCta from "@/components/CreateEventCta";
-import { formatDate } from "@/lib/utils";
+import { getEventsTrainings } from "@/lib/queries";
 
 export type TrainingSearchParams = Awaited<Props["searchParams"]>;
-
-export const getEventsTrainings = async ({
-  search,
-  date,
-}: TrainingSearchParams) => {
-  const results = await db.query.events.findMany({
-    columns: { id: true, name: true },
-    with: {
-      dailyTrainings: {
-        columns: { eventId: false },
-        where: ({ trainingDate, description }, { and, eq, ilike, gte }) =>
-          and(
-            date ? eq(trainingDate, date) : undefined,
-            search ? ilike(description, `%${search}%`) : undefined
-          ),
-        orderBy: ({ trainingDate }, { asc }) => asc(trainingDate),
-        limit: 10,
-      },
-    },
-    where: search
-      ? (events, { ilike }) => ilike(events.name, `%${search}%`)
-      : undefined,
-  });
-
-  return results;
-};
 
 export const metadata: Metadata = {
   title: "Gestione Allenamenti",

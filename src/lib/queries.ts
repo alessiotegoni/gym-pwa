@@ -1,5 +1,6 @@
 "server-only";
 
+import { TrainingSearchParams } from "@/app/(private)/admin/trainings/page";
 import { db } from "@/drizzle/db";
 import { bookings, subscriptions } from "@/drizzle/schema";
 import { addDays, startOfDay } from "date-fns";
@@ -193,4 +194,30 @@ export async function getEventSchedule(scheduleEventId: number) {
   });
 
   return schedules;
+}
+
+export async function getEventsTrainings({
+  search,
+  date,
+}: TrainingSearchParams) {
+  const results = await db.query.events.findMany({
+    columns: { id: true, name: true },
+    with: {
+      dailyTrainings: {
+        columns: { eventId: false },
+        where: ({ trainingDate, description }, { and, eq, ilike, gte }) =>
+          and(
+            date ? eq(trainingDate, date) : undefined,
+            search ? ilike(description, `%${search}%`) : undefined
+          ),
+        orderBy: ({ trainingDate }, { asc }) => asc(trainingDate),
+        limit: 10,
+      },
+    },
+    where: search
+      ? (events, { ilike }) => ilike(events.name, `%${search}%`)
+      : undefined,
+  });
+
+  return results;
 }

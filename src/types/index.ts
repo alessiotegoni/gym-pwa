@@ -1,13 +1,11 @@
-import { getEventsTrainings } from "@/app/(private)/admin/trainings/page";
 import { DAYS_OF_WEEK_IN_ORDER } from "@/constants";
+import { dailyTrainings, events, subscriptions, users } from "@/drizzle/schema";
 import {
-  dailyTrainings,
-  events,
-  eventSchedules,
-  subscriptions,
-  users,
-} from "@/drizzle/schema";
-import { getBookings, getEventSchedule, getEventsWithSchedules } from "@/lib/queries";
+  getBookings,
+  getEventSchedule,
+  getEventsTrainings,
+  getEventsWithSchedules,
+} from "@/lib/queries";
 import { signupSchema } from "@/lib/schema/auth";
 import { dailyTrainingSchema } from "@/lib/schema/dailyTraining";
 import { eventSchema } from "@/lib/schema/event";
@@ -38,7 +36,9 @@ export type EventSchemaType = z.infer<typeof eventSchema>;
 
 export type EventSchedules = Awaited<ReturnType<typeof getEventSchedule>>;
 export type EventScheduleSchemaType = z.infer<typeof eventScheduleSchema>;
-export type EventsWithSchedules = Awaited<ReturnType<typeof getEventsWithSchedules>>
+export type EventsWithSchedules = Awaited<
+  ReturnType<typeof getEventsWithSchedules>
+>;
 
 export type EventsTrainings = Awaited<ReturnType<typeof getEventsTrainings>>;
 

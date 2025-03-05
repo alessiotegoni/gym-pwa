@@ -27,6 +27,8 @@ export default function usePushNotifications() {
       updateViaCache: "none",
     });
 
+    console.log("Service worker registered");
+
     const sub = await registration.pushManager.getSubscription();
     if (!sub)
       toast.info(

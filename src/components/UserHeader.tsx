@@ -12,18 +12,25 @@ type Props = {
     "firstName" | "lastName" | "image" | "email"
   >;
   showLogout?: boolean;
+  showEditUser?: boolean;
 };
-export default function UserHeader({ user, showLogout = false }: Props) {
+export default function UserHeader({
+  user,
+  showLogout = false,
+  showEditUser = true,
+}: Props) {
   return (
     <header>
-      <div className="flex items-center justify-between mb-3">
-        <h1 className="text-xl font-semibold">Profilo</h1>
-        <Button variant="ghost" size="icon" asChild>
-          <Link href="/user/profile/edit" className="!size-5">
-            <Edit className="!size-5" />
-          </Link>
-        </Button>
-      </div>
+      {showEditUser && (
+        <div className="flex items-center justify-between mb-3">
+          <h1 className="text-xl font-semibold">Profilo</h1>
+          <Button variant="ghost" size="icon" asChild>
+            <Link href="/user/profile/edit" className="!size-5">
+              <Edit className="!size-5" />
+            </Link>
+          </Button>
+        </div>
+      )}
       <div className="flex justify-between card-primary">
         <div className="flex items-center gap-3">
           <Avatar className="size-14">

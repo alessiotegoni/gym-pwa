@@ -72,7 +72,9 @@ export default async function SubscriptionPage({ params }: Props) {
   return (
     <div className="flex flex-col h-full">
       <header>
-        {session?.isAdmin && <UserHeader user={subscription.user} />}
+        {session?.isAdmin && (
+          <UserHeader user={subscription.user} showEditUser={false} />
+        )}
       </header>
 
       <main className="grow mb-10">

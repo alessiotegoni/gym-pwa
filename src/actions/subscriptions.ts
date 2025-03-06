@@ -13,7 +13,9 @@ import { headers } from "next/headers";
 import { after } from "next/server";
 import { hasSubscription } from "@/lib/queries";
 import { SUBSCRIPTIONS_PLANS, TRIAL_DAYS } from "@/constants";
-import { stripe } from "@/lib/configs";
+import Stripe from "stripe";
+
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
 
 export async function createTrialSubscription() {
   const session = await auth();

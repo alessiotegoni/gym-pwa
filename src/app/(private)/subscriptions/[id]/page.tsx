@@ -12,7 +12,9 @@ import DeleteSubscription from "@/components/DeleteSubscription";
 import { SUBSCRIPTIONS_PLANS } from "@/constants";
 import { cn } from "@/lib/utils";
 import BtnFixedContainer from "@/components/BtnFixedContainer";
-import { stripe } from "@/lib/configs";
+import Stripe from "stripe";
+
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
 
 type Props = {
   params: Promise<{ id?: string }>;

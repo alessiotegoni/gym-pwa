@@ -1,6 +1,7 @@
 import { SUBSCRIPTIONS_PLANS } from "@/constants";
 import { db } from "@/drizzle/db";
 import { subscriptions } from "@/drizzle/schema";
+import { formatDate } from "@/lib/utils";
 import { SubscriptionStatus } from "@/types";
 import { addDays } from "date-fns";
 import { eq } from "drizzle-orm";
@@ -32,6 +33,8 @@ export async function POST(req: Request) {
 
     if (!ALLOWED_EVENTS.includes(event.type)) return;
 
+    console.log(event.type);
+
     const expireSubscription = async (
       subscriptionId: string,
       status: SubscriptionStatus = "expired"
@@ -56,7 +59,9 @@ export async function POST(req: Request) {
           userId: parseInt(metadata.userId),
           stripeSubscriptionId,
           status: "active",
-          endDate: addDays(new Date(), SUBSCRIPTIONS_PLANS[0].duration),
+          endDate: formatDate(
+            addDays(new Date(), SUBSCRIPTIONS_PLANS[0].duration)
+          ),
         });
 
         break;
@@ -74,7 +79,9 @@ export async function POST(req: Request) {
 
         await db.insert(subscriptions).values({
           userId: res.userId,
-          endDate: addDays(new Date(), SUBSCRIPTIONS_PLANS[0].duration),
+          endDate: formatDate(
+            addDays(new Date(), SUBSCRIPTIONS_PLANS[0].duration)
+          ),
           status: "active",
           stripeSubscriptionId,
         });

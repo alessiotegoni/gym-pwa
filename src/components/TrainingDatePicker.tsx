@@ -37,76 +37,81 @@ export default function TrainingDatePicker({
   training,
   className,
 }: Props) {
-  const [date, setDate] = useState<Date | undefined>(
-    training
-      ? parse(training.trainingDate, "yyyy-MM-dd", new Date())
-      : undefined
-  );
+  const [date, setDate] = useState<Date>();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isPopoverOpen, setIsPopoverOpen] = useState(false);
 
   const formatDate = (date: string | Date) =>
-    format(date, "d MMMM yyyy", {
-      locale: it,
-    });
+    format(date, "d MMMM yyyy", { locale: it });
 
   return (
-    <Popover open={isPopoverOpen} onOpenChange={setIsPopoverOpen}>
-      <PopoverTrigger
-        className={cn(`text-xs rounded-full font-medium gap-[6px]`, className)}
-        asChild
-      >
-        <Button>{children}</Button>
-      </PopoverTrigger>
+    <>
+      {date && (
+        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+          <DialogContent className="rounded-xl">
+            <DialogHeader>
+              <DialogTitle>
+                {training ? "Modifica Allenamento" : "Crea Nuovo Allenamento"}
+              </DialogTitle>
+              <DialogDescription>
+                {training
+                  ? `Modifica i dettagli per l'allenamento dell'evento ${eventName} in data ${formatDate(
+                      training.trainingDate
+                    )} per la data ${formatDate(date!)}`
+                  : `Inserisci i dettagli per il nuovo allenamento dell'evento ${eventName} in data ${formatDate(
+                      date!
+                    )}`}
+                .
+              </DialogDescription>
+            </DialogHeader>
 
-      <PopoverContent className="w-auto p-0" align="end">
-        <Calendar
-          mode="single"
-          selected={date}
-          onSelect={setDate}
-          initialFocus
-          disabled={(day) => day < startOfDay(new Date())}
-        />
+            <TrainingForm
+              eventId={eventId}
+              trainingTimestamp={date!}
+              training={training}
+              onSubmitSuccess={() => {
+                setIsDialogOpen(false);
+              }}
+            />
+          </DialogContent>
+        </Dialog>
+      )}
 
-        <div className="p-3 pt-0">
-          <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-            <DialogTrigger disabled={!date} asChild>
-              <Button className="w-full">Scegli data</Button>
-            </DialogTrigger>
-            {date && (
-              <DialogContent className="rounded-xl">
-                <DialogHeader>
-                  <DialogTitle>
-                    {training
-                      ? "Modifica Allenamento"
-                      : "Crea Nuovo Allenamento"}
-                  </DialogTitle>
-                  <DialogDescription>
-                    {training
-                      ? `Modifica i dettagli per l'allenamento dell'evento ${eventName} in data ${formatDate(
-                          training.trainingDate
-                        )} per la data ${formatDate(date)}`
-                      : `Inserisci i dettagli per il nuovo allenamento dell'evento ${eventName} in data ${formatDate(
-                          date
-                        )}`}
-                    .
-                  </DialogDescription>
-                </DialogHeader>
+      <Popover open={isPopoverOpen} onOpenChange={setIsPopoverOpen}>
+        <PopoverTrigger
+          className={cn(
+            `text-xs rounded-full font-medium gap-[6px]`,
+            className
+          )}
+          asChild
+        >
+          <Button>{children}</Button>
+        </PopoverTrigger>
 
-                <TrainingForm
-                  eventId={eventId}
-                  trainingTimestamp={date}
-                  training={training}
-                  onSubmitSuccess={() => {
-                    setIsDialogOpen(false);
-                    setIsPopoverOpen(false);
-                  }}
-                />
-              </DialogContent>
-            )}
-          </Dialog>
-        </div>
-      </PopoverContent>
-    </Popover>
+        <PopoverContent className="w-auto p-0" align="end">
+          <Calendar
+            mode="single"
+            selected={date}
+            onSelect={setDate}
+            initialFocus
+            disabled={(day) => day < startOfDay(new Date())}
+          />
+
+          <div className="p-3 pt-0">
+            <Button
+              className="w-full"
+              onClick={() => {
+                if (!date) return;
+                setIsPopoverOpen(false);
+                setTimeout(() => setIsDialogOpen(true), 100);
+              }}
+              disabled={!date}
+            >
+              Scegli data
+            </Button>
+          </div>
+        </PopoverContent>
+      </Popover>
+    </>
   );
 }

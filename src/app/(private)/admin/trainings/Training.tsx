@@ -68,9 +68,7 @@ export default function Training({ eventId, eventName, training }: Props) {
       </CardHeader>
       <CardContent>
         <TrainingImg {...training} />
-        <p className="text-sm text-white/80 mt-2">
-          {training.description}
-        </p>
+        <p className="text-sm text-white/80 mt-2">{training.description}</p>
       </CardContent>
       <CardFooter className="flex justify-end gap-2">
         {isTrainingEditable(training.trainingDate) ? (
@@ -106,7 +104,10 @@ export default function Training({ eventId, eventName, training }: Props) {
                 </AlertDialogHeader>
                 <AlertDialogFooter>
                   <AlertDialogCancel>Annulla</AlertDialogCancel>
-                  <AlertDialogAction onClick={() => handleDelete(training.id)}>
+                  <AlertDialogAction
+                    className="bg-destructive text-destructive-foreground"
+                    onClick={() => handleDelete(training.id)}
+                  >
                     Elimina
                   </AlertDialogAction>
                 </AlertDialogFooter>

@@ -61,8 +61,6 @@ export default function Schedule({ day, eventDuration }: Props) {
     remove,
   } = useFieldArray({ name: day, control: form.control });
 
-  console.log(schedules);
-
   const [isDayActive, setIsDayActive] = useState(
     schedules.some((schedule) => schedule.isActive)
   );
@@ -103,13 +101,23 @@ export default function Schedule({ day, eventDuration }: Props) {
     scheduleId: number | null,
     scheduleIndex: number
   ) {
-    if (!scheduleId) return remove(scheduleIndex);
+    const isLast = !schedules.filter((s) => s.scheduleId !== scheduleId).length;
+
+    if (!scheduleId) {
+      remove(scheduleIndex);
+      if (isLast) setIsDayActive(false);
+      return;
+    }
 
     setDeletedSchedule({ delitingScheduleId: scheduleId, isDeleting: true });
     const isDeletetable = await isScheduleOperable(scheduleId);
 
-    if (isDeletetable) remove(scheduleIndex);
-    else displayErrorToast(false);
+    if (isDeletetable) {
+      remove(scheduleIndex);
+      if (isLast) setIsDayActive(false);
+    } else {
+      displayErrorToast(false);
+    }
 
     setDeletedSchedule({ delitingScheduleId: scheduleId, isDeleting: false });
   }

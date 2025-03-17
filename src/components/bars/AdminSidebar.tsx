@@ -85,6 +85,7 @@ export function AdminSidebar() {
         <SidebarMenu>
           <SidebarMenuItem>
             <form
+            className="standalone:mb-2"
               action={async () => {
                 await signOut({ redirectTo: "/sign-in" });
               }}

@@ -7,9 +7,7 @@ import { bookings, eventSchedules } from "@/drizzle/schema";
 import { EventScheduleSchemaType, WeekDay } from "@/types";
 import { eventScheduleSchema } from "@/lib/schema/schedule";
 import { startOfDay } from "date-fns";
-import { getEventSchedule } from "@/lib/queries";
 import { BatchItem } from "drizzle-orm/batch";
-import { getBookingTime } from "@/lib/utils";
 
 export async function isScheduleOperable(scheduleId: number) {
   const session = await auth();

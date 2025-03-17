@@ -9,7 +9,7 @@ import SubmitBtn from "@/components/SubmitBtn";
 import Link from "next/link";
 import CurrentSubscription from "../../subscriptions/ActiveSubscription";
 import UserHeader from "@/components/UserHeader";
-import { isWithinInterval } from "date-fns";
+import { isWithinInterval, startOfDay } from "date-fns";
 import DeleteSubscription from "@/components/DeleteSubscription";
 import { TRIAL_DAYS } from "@/constants";
 import BtnFixedContainer from "@/components/BtnFixedContainer";
@@ -46,7 +46,10 @@ export default async function UserProfilePage({ searchParams }: Props) {
   if (!user) redirect("/sign-in");
 
   const currentSub = user.subscriptions.find((sub) =>
-    isWithinInterval(new Date(), { start: sub.createdAt, end: sub.endDate })
+    isWithinInterval(startOfDay(new Date()), {
+      start: startOfDay(sub.createdAt),
+      end: startOfDay(new Date(sub.endDate)),
+    })
   );
 
   return (

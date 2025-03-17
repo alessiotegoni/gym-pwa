@@ -50,6 +50,13 @@
       "when": 1741090901974,
       "tag": "0006_flawless_lenny_balinger",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1742236564461,
+      "tag": "0007_bumpy_cobalt_man",
+      "breakpoints": true
     }
   ]
 }

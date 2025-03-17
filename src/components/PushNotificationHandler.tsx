@@ -18,20 +18,20 @@ export default function PushNotificationHandler({
     unsubscribeFromPush,
   } = usePushNotifications();
 
-  if (loading) return null
+  if (loading || !isSupported) return null
 
-  if (!isSupported)
-    return (
-      <Button
-        variant="ghost"
-        size="icon"
-        onClick={() =>
-          toast.error("Il tuo dispositivo non supporta le notifiche push")
-        }
-      >
-        <BellOff className="!size-5" />
-      </Button>
-    );
+  // if (!isSupported)
+  //   return (
+  //     <Button
+  //       variant="ghost"
+  //       size="icon"
+  //       onClick={() =>
+  //         toast.error("Il tuo dispositivo non supporta le notifiche push")
+  //       }
+  //     >
+  //       <BellOff className="!size-5" />
+  //     </Button>
+  //   );
 
   return subscription ? (
     <Button variant="ghost" size="icon"  onClick={unsubscribeFromPush}>

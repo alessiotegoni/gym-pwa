@@ -71,8 +71,6 @@ export function EventScheduleForm({
     toast.success("Programma dell'evento aggiornato con successo.");
   }
 
-  console.log(form.formState.errors);
-
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">

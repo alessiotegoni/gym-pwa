@@ -175,7 +175,7 @@ export const subscriptions = pgTable(
       .references(() => users.id, { onDelete: "cascade" }),
     stripeSubscriptionId: text("stripePaymentId").unique(),
     status: subscriptionStatusesEnum("status").notNull(),
-    endDate: timestamp("endDate").notNull(),
+    endDate: date("endDate").notNull(),
     ...timestampObj,
   },
   (table) => ({

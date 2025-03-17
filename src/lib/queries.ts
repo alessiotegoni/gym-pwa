@@ -3,8 +3,9 @@
 import { TrainingSearchParams } from "@/app/(private)/admin/trainings/page";
 import { db } from "@/drizzle/db";
 import { bookings, subscriptions } from "@/drizzle/schema";
-import { addDays, startOfDay } from "date-fns";
+import { addDays, startOfDay, subDays } from "date-fns";
 import { and, count, eq, lte, gte, ne } from "drizzle-orm";
+import { formatDate } from "./utils";
 
 export async function getUser({
   userId,
@@ -29,7 +30,7 @@ export async function hasSubscription(userId: number) {
       and(
         eq(subscriptions.userId, userId),
         lte(subscriptions.createdAt, new Date()),
-        gte(subscriptions.endDate, new Date()),
+        gte(subscriptions.endDate, formatDate(new Date())),
         ne(subscriptions.status, "canceled"),
         ne(subscriptions.status, "expired")
       )
@@ -44,7 +45,7 @@ export async function getActiveSubscriptions(userId: number) {
       and(
         eq(sub.userId, userId),
         lte(sub.createdAt, new Date()),
-        gte(sub.endDate, new Date()),
+        gte(sub.endDate, formatDate(new Date())),
         ne(sub.status, "canceled"),
         ne(sub.status, "expired")
       ),
@@ -205,12 +206,12 @@ export async function getEventsTrainings({
     with: {
       dailyTrainings: {
         columns: { eventId: false },
-        where: ({ trainingDate, description }, { and, eq, ilike, gte }) =>
+        where: ({ trainingDate, description }, { and, eq, ilike }) =>
           and(
             date ? eq(trainingDate, date) : undefined,
             search ? ilike(description, `%${search}%`) : undefined
           ),
-        orderBy: ({ trainingDate }, { asc }) => asc(trainingDate),
+        orderBy: ({ trainingDate }, { desc }) => desc(trainingDate),
         limit: 10,
       },
     },

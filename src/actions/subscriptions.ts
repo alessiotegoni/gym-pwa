@@ -14,6 +14,7 @@ import { after } from "next/server";
 import { hasSubscription } from "@/lib/queries";
 import { SUBSCRIPTIONS_PLANS, TRIAL_DAYS } from "@/constants";
 import Stripe from "stripe";
+import { formatDate } from "@/lib/utils";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
 
@@ -25,7 +26,7 @@ export async function createTrialSubscription() {
   await db.insert(subscriptions).values({
     userId: session.userId,
     status: "trial",
-    endDate: addDays(new Date(), TRIAL_DAYS),
+    endDate: formatDate(addDays(new Date(), TRIAL_DAYS)),
   });
 
   revalidatePath("/user/profile");
@@ -85,7 +86,7 @@ export async function adminCreateSubscription(values: CreateSubscriptionType) {
     .values({
       userId: parseInt(data.userId),
       status: data.isTrial ? "trial" : "active",
-      endDate: addDays(new Date(), SUBSCRIPTIONS_PLANS[0].duration),
+      endDate: formatDate(addDays(new Date(), SUBSCRIPTIONS_PLANS[0].duration)),
     })
     .returning({ id: subscriptions.id });
 
@@ -108,7 +109,7 @@ export async function extendSubscription(
 
   await db
     .update(subscriptions)
-    .set({ endDate: newEndDate })
+    .set({ endDate: formatDate(newEndDate) })
     .where(eq(subscriptions.id, id));
 
   after(async () => {

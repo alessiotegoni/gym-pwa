@@ -2,6 +2,7 @@ import { db } from "@/drizzle/db";
 import CurrentSubscription from "./ActiveSubscription";
 import Subscription from "./Subscription";
 import { auth } from "@/lib/auth";
+import { formatDate } from "@/lib/utils";
 
 export const metadata = {
   title: "I tuoi abbonamenti",
@@ -14,10 +15,10 @@ export default async function SubscriptionsList() {
   if (!session?.userId) return;
 
   const subscriptions = await db.query.subscriptions.findMany({
-    where: ({ userId, endDate, status }, { and, eq, lte, or }) =>
+    where: ({ userId, endDate, status }, { and, eq, lt, or }) =>
       and(
         eq(userId, session.userId),
-        or(lte(endDate, new Date()), eq(status, "canceled"))
+        or(lt(endDate, formatDate(new Date())), eq(status, "canceled"))
       ),
   });
 

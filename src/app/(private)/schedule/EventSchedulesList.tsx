@@ -45,14 +45,14 @@ export default function EventSchedulesList({
         return (
           <Card
             key={schedule.id}
-            className="rounded-xl border border-zinc-300/40 bg-zinc-100 dark:border-zinc-700/40 dark:bg-zinc-900"
+            className="card-primary"
           >
-            <CardContent className="p-4">
+            <CardContent className="p-0">
               <div className="flex justify-between items-center">
                 <div className="flex items-center gap-3">
                   <div className="relative w-12 h-12 rounded-full overflow-hidden">
                     <Image
-                      src={event.imageUrl || "/placeholder.svg"}
+                      src={event.imageUrl}
                       alt={event.name}
                       objectFit="cover"
                       fill

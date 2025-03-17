@@ -15,8 +15,8 @@ type Props = {
 
 export default function UserBookingCard({ booking, userId }: Props) {
   return (
-    <Card>
-      <CardContent className="p-4">
+    <Card className="card-primary">
+      <CardContent className="p-0">
         <div className="grid grid-cols-[auto_1fr_auto]">
           <div className="flex items-center gap-3">
             <div className="relative w-12 h-12 rounded-full overflow-hidden">
@@ -37,7 +37,7 @@ export default function UserBookingCard({ booking, userId }: Props) {
           </div>
           <div className="text-right">
             <p className="text-2xl font-bold">
-              {format(booking.bookingDate, "HH:mm")}
+              {format(booking.bookingDate, "HH:mm", { locale: it })}
             </p>
             <p className="text-sm text-muted-foreground">
               {" "}
@@ -46,7 +46,8 @@ export default function UserBookingCard({ booking, userId }: Props) {
                   booking.bookingDate,
                   booking.schedule.event.durationMinutes
                 ),
-                "HH:mm"
+                "HH:mm",
+                { locale: it }
               )}
             </p>
           </div>

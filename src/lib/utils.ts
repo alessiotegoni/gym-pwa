@@ -5,19 +5,16 @@ import {
   addDays,
   addMinutes,
   format,
-  isAfter,
   isBefore,
-  isToday,
   isValid,
   isWithinInterval,
   parse,
-  roundToNearestMinutes,
   set,
-  setMinutes,
   startOfDay,
   subDays,
   subMinutes,
 } from "date-fns";
+import { fromZonedTime } from "date-fns-tz"
 import { it } from "date-fns/locale";
 import { twMerge } from "tailwind-merge";
 import { ACCEPTED_FILE_TYPES, MAX_FILE_SIZE } from "./schema/image";
@@ -211,20 +208,26 @@ type BookingOperableParams = {
 export const isBookingOperable = (params: BookingOperableParams) => {
   const { type, bookingDate, cutoffMinutes } = params;
 
-  const now = new Date();
-  const cutoffDate = subMinutes(bookingDate, cutoffMinutes!);
+  const nowUtc = fromZonedTime(new Date(), "UTC");
+  const bookingDateUtc = fromZonedTime(bookingDate, "UTC");
+  const cutoffDateUtc = subMinutes(bookingDateUtc, cutoffMinutes!);
+
+  // console.log("🕒 Ora attuale UTC:", nowUtc);
+  // console.log("📅 Booking Date UTC:", bookingDateUtc);
+  // console.log("⏳ Cutoff UTC:", cutoffDateUtc);
 
   switch (type) {
     case "create":
       const { bookingsCount, eventCapacity } = params;
       if (bookingsCount >= eventCapacity) return false;
 
-      return isWithinInterval(now, {
-        start: subDays(bookingDate, 2),
-        end: !cutoffMinutes ? bookingDate : cutoffDate,
+      return isWithinInterval(nowUtc, {
+        start: subDays(bookingDateUtc, 2),
+        end: !cutoffMinutes ? bookingDateUtc : cutoffDateUtc,
       });
+
     case "delete":
-      return isBefore(now, !cutoffMinutes ? bookingDate : cutoffDate);
+      return isBefore(nowUtc, !cutoffMinutes ? bookingDateUtc : cutoffDateUtc);
   }
 };
 

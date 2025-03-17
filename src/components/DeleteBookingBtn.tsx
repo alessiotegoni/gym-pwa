@@ -8,6 +8,8 @@ import { ReactNode, useTransition } from "react";
 import { cn } from "@/lib/utils";
 import SubmitBtn from "./SubmitBtn";
 import { sendNotification } from "@/actions/pushNotifications";
+import { format } from "date-fns";
+import { it } from "date-fns/locale";
 
 type Props = {
   bookingId: number;
@@ -53,7 +55,11 @@ export default function DeleteBookingBtn({
       await sendNotification({
         userId,
         title: "Prenotazione eliminata",
-        body: `La tua prenotazione in data ${bookingDate.toLocaleDateString()} delle ore ${bookingDate.toLocaleTimeString().slice(0, -3)} e' stata cancellata`,
+        body: `La tua prenotazione in data ${format(bookingDate, "dd/MM/yyyy", {
+          locale: it,
+        })} delle ore ${format(bookingDate, "HH:mm", {
+          locale: it,
+        })} e' stata cancellata`,
       });
     }
   }

@@ -36,7 +36,7 @@ export default function ExtendSubDatePicker({
 
     const res = await extendSubscription(
       subscription.id,
-      subscription.endDate,
+      new Date(subscription.endDate),
       date,
       subscription.stripeSubscriptionId
     );
@@ -85,7 +85,7 @@ export default function ExtendSubDatePicker({
           selected={date || addDays(subscription.endDate, 1)}
           onSelect={setDate}
           initialFocus
-          disabled={(day) => day <= subscription.endDate}
+          disabled={(day) => day <= startOfDay(new Date(subscription.endDate))}
         />
 
         <div className="p-3">

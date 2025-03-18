@@ -4,6 +4,8 @@ import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { Toaster } from "@/components/ui/sonner";
+import Head from "next/head";
+import Manifest from "@/components/Manifest";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -36,17 +38,24 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
+      {/* <head>
+        <link
+          rel="manifest"
+          href="/manifest.json"
+          crossOrigin="use-credentials"
+        />
+      </head> */}
       <body className={`${inter.variable} antialiased font-inter`}>
         <ThemeProvider
           attribute="class"
           defaultTheme="dark"
           disableTransitionOnChange
         >
-          <SidebarProvider>
-            {children}
-          </SidebarProvider>
+          <SidebarProvider>{children}</SidebarProvider>
           <Toaster richColors position="top-center" duration={5_000} />
         </ThemeProvider>
+
+        <Manifest />
       </body>
     </html>
   );

@@ -1,6 +1,7 @@
 import { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  // crossOrigin: "use-credentials" only works on scripts,
   images: {
     dangerouslyAllowSVG: true,
     remotePatterns: [
@@ -26,6 +27,13 @@ const nextConfig: NextConfig = {
             key: "Referrer-Policy",
             value: "strict-origin-when-cross-origin",
           },
+        ],
+      },
+      {
+        source: "/manifest.webmanifest",
+        headers: [
+          { key: "Access-Control-Allow-Origin", value: "*" },
+          { key: "Access-Control-Allow-Credentials", value: "true" },
         ],
       },
       {

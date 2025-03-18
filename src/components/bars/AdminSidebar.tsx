@@ -90,7 +90,7 @@ export function AdminSidebar() {
             <form
               className="standalone:mb-2"
               action={async () => {
-                toast.loading("Disconnessione");
+                toast.loading("Disconnessione...");
                 await signOut({ redirectTo: "/sign-in" });
               }}
             >

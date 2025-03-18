@@ -1,23 +1,31 @@
 "use client";
 
-import { CarouselNext, CarouselPrevious, useCarousel } from "@/components/ui/carousel";
+import {
+  CarouselNext,
+  CarouselPrevious,
+  useCarousel,
+} from "@/components/ui/carousel";
 import { getNext7Dates } from "@/lib/utils";
 import { format } from "date-fns";
 import { it } from "date-fns/locale";
 import { UseEmblaCarouselType } from "embla-carousel-react";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 
 export default function ScheduleDate() {
-
   const { api } = useCarousel();
 
   const [dateIndex, setDateIndex] = useState(api?.selectedScrollSnap() ?? 0);
 
-  const nextDates = getNext7Dates();
-  const currentDate = nextDates[dateIndex];
+  const nextDates = useMemo(getNext7Dates, []);
+  const currentDate = useMemo(
+    () => nextDates[dateIndex],
+    [nextDates, dateIndex]
+  );
 
-  const onSelect = (e: UseEmblaCarouselType[1]) =>
-    e && setDateIndex(e.selectedScrollSnap());
+  const onSelect = useCallback(
+    (e: UseEmblaCarouselType[1]) => e && setDateIndex(e.selectedScrollSnap()),
+    [api]
+  );
 
   useEffect(() => {
     api?.on("select", onSelect);

@@ -6,6 +6,7 @@ import { auth } from "@/lib/auth";
 import { getBookingsCount, hasSubscription } from "@/lib/queries";
 import { isBookingOperable } from "@/lib/utils";
 import { startOfDay } from "date-fns";
+import { fromZonedTime } from "date-fns-tz";
 import { and, eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 
@@ -71,7 +72,11 @@ export async function createBooking(
 
   const { rowCount } = await db
     .insert(bookings)
-    .values({ scheduleId, userId: session.userId, bookingDate });
+    .values({
+      scheduleId,
+      userId: session.userId,
+      bookingDate: fromZonedTime(bookingDate, "Europe/Rome"),
+    });
 
   if (!rowCount) return { error: true };
 

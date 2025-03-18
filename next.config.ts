@@ -2,6 +2,7 @@ import { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   // crossOrigin: "use-credentials" only works on scripts,
+  devIndicators: false,
   images: {
     dangerouslyAllowSVG: true,
     remotePatterns: [

@@ -9,7 +9,7 @@ import { cn } from "@/lib/utils";
 import SubmitBtn from "./SubmitBtn";
 import { sendNotification } from "@/actions/pushNotifications";
 import { format } from "date-fns";
-import { it } from "date-fns/locale";
+import { toZonedTime } from "date-fns-tz";
 
 type Props = {
   bookingId: number;
@@ -52,14 +52,14 @@ export default function DeleteBookingBtn({
     });
 
     if (userId && bookingDate) {
+      const zonedBookingDate = toZonedTime(bookingDate, "Europe/Rome");
       await sendNotification({
         userId,
         title: "Prenotazione eliminata",
-        body: `La tua prenotazione in data ${format(bookingDate, "dd/MM/yyyy", {
-          locale: it,
-        })} delle ore ${format(bookingDate, "HH:mm", {
-          locale: it,
-        })} e' stata cancellata`,
+        body: `La tua prenotazione in data ${zonedBookingDate.toLocaleDateString()} delle ore ${format(
+          zonedBookingDate,
+          "HH:mm"
+        )} e' stata cancellata`,
       });
     }
   }

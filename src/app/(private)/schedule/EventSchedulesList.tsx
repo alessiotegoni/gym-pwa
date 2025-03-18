@@ -30,11 +30,12 @@ export default function EventSchedulesList({
       {schedules.map((schedule) => {
         const bookingDate = getBookingDateTime(date, schedule.startTime);
 
-        const startTime = new Date(`2000-01-01T${schedule.startTime}`);
         const endTime = format(
-          addMinutes(startTime, event.durationMinutes),
+          addMinutes(bookingDate, event.durationMinutes),
           "HH:mm"
         );
+
+        console.log(bookingDate, bookingDate.getHours());
 
         const userBooking = schedule.bookings.find(
           (booking) =>
@@ -43,10 +44,7 @@ export default function EventSchedulesList({
         );
 
         return (
-          <Card
-            key={schedule.id}
-            className="card-primary"
-          >
+          <Card key={schedule.id} className="card-primary">
             <CardContent className="p-0">
               <div className="flex justify-between items-center">
                 <div className="flex items-center gap-3">
@@ -76,9 +74,11 @@ export default function EventSchedulesList({
                 </div>
                 <div>
                   <p className="text-2xl font-bold">
-                    {format(startTime, "HH:mm")}
+                    {format(bookingDate, "HH:mm")}
                   </p>
-                  <p className="text-sm text-end text-muted-foreground">{endTime}</p>
+                  <p className="text-sm text-end text-muted-foreground">
+                    {endTime}
+                  </p>
                 </div>
               </div>
               <div className="mt-4 flex items-center justify-between">

@@ -7,6 +7,7 @@ import DeleteBookingBtn from "../../../components/DeleteBookingBtn";
 import { getUserBookings } from "@/lib/queries";
 import BookingDetails from "@/components/BookingDetails";
 import { isBookingOperable } from "@/lib/utils";
+import { toZonedTime } from "date-fns-tz";
 
 type Props = {
   booking: Awaited<ReturnType<typeof getUserBookings>>[0];
@@ -14,6 +15,8 @@ type Props = {
 };
 
 export default function UserBookingCard({ booking, userId }: Props) {
+  const zonedBookingDate = toZonedTime(booking.bookingDate, "Europe/Rome");
+
   return (
     <Card className="card-primary">
       <CardContent className="p-0">
@@ -37,17 +40,16 @@ export default function UserBookingCard({ booking, userId }: Props) {
           </div>
           <div className="text-right">
             <p className="text-2xl font-bold">
-              {format(booking.bookingDate, "HH:mm", { locale: it })}
+              {format(zonedBookingDate, "HH:mm")}
             </p>
             <p className="text-sm text-muted-foreground">
               {" "}
               {format(
                 addMinutes(
-                  booking.bookingDate,
+                  zonedBookingDate,
                   booking.schedule.event.durationMinutes
                 ),
-                "HH:mm",
-                { locale: it }
+                "HH:mm"
               )}
             </p>
           </div>

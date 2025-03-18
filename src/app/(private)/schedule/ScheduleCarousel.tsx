@@ -71,7 +71,7 @@ export default function ScheduleCarousel({
                     {event.bookingCutoffMinutes && (
                       <p className="font-medium text-sm text-muted-foreground">
                         Le prenotazioni chiudono {event.bookingCutoffMinutes}{" "}
-                        minuti prima dell'inizio
+                        minuti prima dell'inizio del corso
                       </p>
                     )}
                     <EventSchedulesList

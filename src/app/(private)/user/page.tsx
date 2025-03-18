@@ -44,7 +44,6 @@ export default async function UserPage({ searchParams }: Props) {
     booking.bookingDate.toDateString()
   );
 
-
   return (
     <>
       {isSubscripted && success && <PaymentAlert success />}
@@ -53,10 +52,10 @@ export default async function UserPage({ searchParams }: Props) {
       {!bookings.length ? (
         <div
           className="flex flex-col items-center justify-center
-          p-4 py-6 bg-secondary rounded-xl"
+          card-primary"
         >
           <AlertCircle className="!size-12" />
-          <p className="text-center font-medium mt-3">
+          <p className="text-center text-sm font-medium mt-3">
             Non hai prenotazioni attive al momento
           </p>
           <Button className="mt-5 text-black font-semibold" asChild>

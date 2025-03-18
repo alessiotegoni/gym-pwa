@@ -31,7 +31,8 @@ export async function POST(req: Request) {
       process.env.WEBHOOK_SECRET_KEY!
     );
 
-    if (!ALLOWED_EVENTS.includes(event.type)) return;
+    if (!ALLOWED_EVENTS.includes(event.type))
+      return NextResponse.json({ received: true }, { status: 403 });
 
     console.log(event.type);
 
@@ -50,10 +51,12 @@ export async function POST(req: Request) {
     switch (event.type) {
       case "checkout.session.completed":
         metadata = event.data.object.metadata;
-        if (!metadata) throw new Error();
+        if (!metadata)
+          throw new Error(`Metadata not found on event: ${event.type}`);
 
         stripeSubscriptionId = event.data.object.subscription;
-        if (typeof stripeSubscriptionId !== "string") return;
+        if (typeof stripeSubscriptionId !== "string")
+          return NextResponse.json({ received: true }, { status: 403 });
 
         await db.insert(subscriptions).values({
           userId: parseInt(metadata.userId),
@@ -67,7 +70,8 @@ export async function POST(req: Request) {
         break;
       case "invoice.payment_succeeded":
         stripeSubscriptionId = event.data.object.subscription;
-        if (typeof stripeSubscriptionId !== "string") return;
+        if (typeof stripeSubscriptionId !== "string")
+          return NextResponse.json({ received: true }, { status: 403 });
 
         const res = await db.query.subscriptions.findFirst({
           where: ({ stripeSubscriptionId: subId }, { eq }) =>
@@ -75,7 +79,7 @@ export async function POST(req: Request) {
           columns: { userId: true },
         });
 
-        if (!res) return;
+        if (!res) return NextResponse.json({ received: true }, { status: 403 });
 
         await db.insert(subscriptions).values({
           userId: res.userId,
@@ -88,7 +92,8 @@ export async function POST(req: Request) {
         break;
       case "invoice.payment_failed":
         stripeSubscriptionId = event.data.object.subscription;
-        if (typeof stripeSubscriptionId !== "string") return;
+        if (typeof stripeSubscriptionId !== "string")
+          return NextResponse.json({ received: true }, { status: 403 });
 
         await expireSubscription(stripeSubscriptionId);
         break;
@@ -104,13 +109,13 @@ export async function POST(req: Request) {
         );
         break;
       default:
-        throw new Error();
+        throw new Error("Event type not allowed");
     }
 
     return NextResponse.json({ received: true }, { status: 200 });
-  } catch (err) {
+  } catch (err: any) {
     return NextResponse.json(
-      { message: "Something went wrong" },
+      { message: err?.message || "Something went wrong" },
       { status: 500 }
     );
   }

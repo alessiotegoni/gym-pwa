@@ -13,7 +13,7 @@ export default async function EditProfilePage() {
 
   return (
     <>
-      <h1 className="text-2xl font-bold mb-6">Modifica Profilo</h1>
+      <h1 className="text-2xl font-bold mb-3">Modifica Profilo</h1>
       <UserProfileForm user={userProfile} />
     </>
   );

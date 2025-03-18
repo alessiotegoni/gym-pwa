@@ -53,35 +53,40 @@ export function UserProfileForm({
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-3">
-        <FormField
-          control={form.control}
-          name="firstName"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Nome</FormLabel>
-              <FormControl>
-                <Input placeholder="Il tuo nome" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="lastName"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Cognome</FormLabel>
-              <FormControl>
-                <Input placeholder="Il tuo cognome" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <ImgFormField />
-        <BtnFixedContainer>
+      <form
+        onSubmit={form.handleSubmit(onSubmit)}
+        className="h-full flex flex-col gap-3"
+      >
+        <div className="space-y-3 grow">
+          <FormField
+            control={form.control}
+            name="firstName"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Nome</FormLabel>
+                <FormControl>
+                  <Input placeholder="Il tuo nome" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="lastName"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Cognome</FormLabel>
+                <FormControl>
+                  <Input placeholder="Il tuo cognome" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <ImgFormField />
+        </div>
+        <BtnFixedContainer className="bottom-[93px]">
           <SubmitBtn label="Aggiorna profilo" loadingLabel="Aggiornando" />
         </BtnFixedContainer>
       </form>

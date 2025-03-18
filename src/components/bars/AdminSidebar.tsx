@@ -24,6 +24,7 @@ import { Button } from "../ui/button";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
+import { toast } from "sonner";
 
 const LINKS = [
   { icon: Users, href: "/admin/members", label: "Gestisci Membri" },
@@ -43,8 +44,10 @@ export function AdminSidebar() {
 
   return (
     <Sidebar side="right" className="bg-white border-r border-gray-200">
-      <SidebarHeader className="text-2xl m-2 mb-0 font-bold flex-row items-center
-      bg-zinc-950 rounded-xl p-4 border border-zinc-700/30">
+      <SidebarHeader
+        className="text-2xl m-2 mb-0 font-bold flex-row items-center
+      bg-zinc-950 rounded-xl p-4 border border-zinc-700/30"
+      >
         <Image
           src="https://cyan-tropical-guanaco-792.mypinata.cloud/ipfs/bafkreidzwpent6mq2wm7yxu3mfmvwmwn5w3xxurj7dbakauepflhjsyvca"
           alt="Tabata addicted"
@@ -85,8 +88,9 @@ export function AdminSidebar() {
         <SidebarMenu>
           <SidebarMenuItem>
             <form
-            className="standalone:mb-2"
+              className="standalone:mb-2"
               action={async () => {
+                toast.loading("Disconnessione");
                 await signOut({ redirectTo: "/sign-in" });
               }}
             >

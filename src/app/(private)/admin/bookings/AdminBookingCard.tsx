@@ -1,6 +1,6 @@
 import { Bookings, GroupedBookings } from "@/types";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import DailyTrainingDialog from "@/components/TrainingDialog";
+import TrainingDialog from "@/components/TrainingDialog";
 import { addMinutes, isAfter, isToday, isWithinInterval } from "date-fns";
 import BookingTimeAccordion from "./BookingTimeAccordion";
 import { getBookingTime, getCurrentTime } from "@/lib/utils";
@@ -68,14 +68,18 @@ export default function AdminBookingCard({
           const futureTime = getFutureTime(bookingDate, times);
           const userTime = getUserTime(bookingDate, times);
 
-        return (
-            <div key={day + i} className="mt-2 first:mt-0 card-primary !bg-zinc-950">
+          return (
+            <div
+              key={day + i}
+              className="mt-2 first:mt-0 card-primary !bg-zinc-950"
+            >
               <div className="flex justify-between items-center">
                 <p className="text-base font-semibold capitalize">
                   {isToday(bookingDate) ? "oggi" : day}
                 </p>
-                <DailyTrainingDialog
+                <TrainingDialog
                   eventId={id}
+                  eventName={name}
                   isAdmin={isAdmin}
                   trainingTimestamp={bookingDate}
                 />

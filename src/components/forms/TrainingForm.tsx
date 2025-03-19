@@ -22,6 +22,7 @@ import { useRouter } from "next/navigation";
 
 type Props = {
   eventId: number;
+  eventName: string;
   trainingTimestamp: Date;
   training?: Omit<Training, "trainingDate">;
   onSubmitSuccess?: () => void;
@@ -29,6 +30,7 @@ type Props = {
 
 export default function TrainingForm({
   eventId,
+  eventName,
   training,
   trainingTimestamp,
   onSubmitSuccess,
@@ -73,7 +75,12 @@ export default function TrainingForm({
         </p>
       )}
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-3">
-        <ImgFormField />
+        <ImgFormField
+          alt={
+            training?.description ||
+            `Allenamento ${eventName} del giorno ${trainingTimestamp.toLocaleDateString()}`
+          }
+        />
         <FormField
           control={form.control}
           name="description"

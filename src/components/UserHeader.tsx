@@ -34,7 +34,10 @@ export default function UserHeader({
       <div className="flex justify-between card-primary">
         <div className="flex items-center gap-3">
           <Avatar className="size-14">
-            <AvatarImage src={user.image ?? ""} alt={user.lastName} />
+            <AvatarImage
+              src={user.image ?? ""}
+              alt={`${user.firstName} ${user.lastName}`}
+            />
             <AvatarFallback>
               {user.firstName
                 .split(" ")

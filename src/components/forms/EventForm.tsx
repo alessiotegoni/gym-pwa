@@ -75,7 +75,7 @@ export function EventForm({ event }: EventFormProps) {
             </FormItem>
           )}
         />
-        <ImgFormField />
+        <ImgFormField alt={event?.name || ""} />
         <FormField
           control={form.control}
           name="description"

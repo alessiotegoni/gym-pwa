@@ -31,8 +31,8 @@ export function UserProfileForm({
   const form = useForm<EditUserSchemaType>({
     resolver: zodResolver(editUserSchema),
     defaultValues: {
-      firstName: firstName ?? "",
-      lastName: lastName ?? "",
+      firstName,
+      lastName,
       img: image ?? undefined,
     },
   });
@@ -105,9 +105,7 @@ export function UserProfileForm({
             )}
           />
           <ImgFormField
-            imgAlt={`${form.getValues("firstName")} ${form.getValues(
-              "lastName"
-            )}} avatar`}
+            alt={`${form.getValues("firstName")} ${form.getValues("lastName")}`}
           />
         </div>
         <BtnFixedContainer className="bottom-[93px] md:bottom-3">

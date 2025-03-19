@@ -1,18 +1,19 @@
 "use client";
 
 import { DailyTraining, DailyTrainingSchemaType } from "@/types";
-import Image from "next/image";
+import Image, { ImageProps } from "next/image";
 import { useEffect, useMemo } from "react";
 import { useFormContext } from "react-hook-form";
 
-export default function TrainingImg({
-  id,
-  imageUrl,
-  description,
-}: Partial<DailyTraining>) {
+type Props = {
+  training: Partial<DailyTraining>;
+} & Partial<ImageProps>;
+
+export default function TrainingImg({ training, alt, ...props }: Props) {
   const form = useFormContext<DailyTrainingSchemaType>();
 
   const imageFile = form?.watch("img");
+  let imageUrl = training.imageUrl;
 
   imageUrl = useMemo(
     () =>
@@ -26,17 +27,16 @@ export default function TrainingImg({
     };
   }, [imageFile]);
 
-  const alt = description || `allenamento ${id}`;
-
   return (
     imageUrl && (
       <Image
-        src={imageUrl}
-        alt={alt}
+        alt={alt || (imageFile as File).name}
         width={300}
         height={400}
         priority={true}
         className="rounded-lg w-full object-cover aspect-video"
+        {...props}
+        src={imageUrl}
       />
     )
   );

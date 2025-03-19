@@ -21,8 +21,9 @@ import { Button } from "./ui/button";
 import { useFormContext } from "react-hook-form";
 import { EventSchemaType } from "@/types";
 import { isValidImage } from "@/lib/utils";
+import { ImageProps } from "next/image";
 
-export default function ImgFormField({ imgAlt }: { imgAlt: string }) {
+export default function ImgFormField({ alt, ...props }: Partial<ImageProps>) {
   const form = useFormContext<Pick<EventSchemaType, "img">>();
 
   return (
@@ -47,8 +48,9 @@ export default function ImgFormField({ imgAlt }: { imgAlt: string }) {
                   {(typeof value === "string" ||
                     isValidImage(value).isValid) && (
                     <TrainingImg
-                      description={imgAlt}
-                      imageUrl={typeof value === "string" ? value : undefined}
+                      alt={alt}
+                      {...props}
+                      training={{ imageUrl: typeof value === "string" ? value : undefined }}
                     />
                   )}
                 </FileUploaderContent>

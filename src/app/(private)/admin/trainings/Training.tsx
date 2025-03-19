@@ -1,6 +1,6 @@
 "use client";
 
-import { format, isAfter, isToday, parse, startOfDay } from "date-fns";
+import { format, isToday } from "date-fns";
 import { it } from "date-fns/locale";
 import {
   Card,
@@ -67,7 +67,13 @@ export default function Training({ eventId, eventName, training }: Props) {
         </CardTitle>
       </CardHeader>
       <CardContent>
-        <TrainingImg {...training} />
+        <TrainingImg
+          training={training}
+          alt={
+            training.description ||
+            `Allenamento ${eventName} del giorno ${training.trainingDate}`
+          }
+        />
         <p className="text-sm text-white/80 mt-2">{training.description}</p>
       </CardContent>
       <CardFooter className="flex justify-end gap-2">

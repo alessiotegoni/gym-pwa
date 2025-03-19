@@ -6,14 +6,20 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { db } from "@/drizzle/db";
-import { format } from "date-fns";
-import CreateDailyTrainingForm from "./forms/TrainingForm";
+import TrainingForm from "./forms/TrainingForm";
 import TrainingImg from "./TrainingImg";
+import { formatDate } from "@/lib/utils";
 
-type Props = { eventId: number; isAdmin: boolean; trainingTimestamp: Date };
+type Props = {
+  eventId: number;
+  eventName: string;
+  isAdmin: boolean;
+  trainingTimestamp: Date;
+};
 
 export default async function TrainingDialog({
   eventId,
+  eventName,
   isAdmin,
   trainingTimestamp,
 }: Props) {
@@ -26,7 +32,7 @@ export default async function TrainingDialog({
     where: ({ eventId: trainingEventId, trainingDate }, { and, eq }) =>
       and(
         eq(trainingEventId, eventId),
-        eq(trainingDate, format(trainingTimestamp, "yyyy-MM-dd"))
+        eq(trainingDate, formatDate(trainingTimestamp))
       ),
   });
 
@@ -42,15 +48,22 @@ export default async function TrainingDialog({
           <DialogTitle>Allenamento di oggi</DialogTitle>
         </DialogHeader>
         {isAdmin ? (
-          <CreateDailyTrainingForm
+          <TrainingForm
             eventId={eventId}
+            eventName={eventName}
             training={training}
             trainingTimestamp={trainingTimestamp}
           />
         ) : training ? (
           <>
             <p className="text-center">{training.description}</p>
-            <TrainingImg {...training} />
+            <TrainingImg
+              training={training}
+              alt={
+                training.description ||
+                `Allenamento ${eventName} del giorno ${trainingTimestamp.toLocaleDateString()}`
+              }
+            />
           </>
         ) : (
           <p>Il trainer deve ancora caricare l'allenamento</p>

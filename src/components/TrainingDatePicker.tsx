@@ -67,6 +67,7 @@ export default function TrainingDatePicker({
 
             <TrainingForm
               eventId={eventId}
+              eventName={eventName}
               trainingTimestamp={date!}
               training={training}
               onSubmitSuccess={() => {

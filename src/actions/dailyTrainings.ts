@@ -39,6 +39,8 @@ export async function createTraining(values: DailyTrainingSchemaType) {
 
   if (!session?.userId || !session.isAdmin) return { error: true };
 
+  console.log(values);
+
   const { success, data } = dailyTrainingSchema.safeParse(values);
 
   if (!success) return { error: true };

@@ -34,7 +34,7 @@ export default async function TrainingsPage({ searchParams }: Props) {
         <h2 className="text-3xl font-bold tracking-tight">
           Gestione Allenamenti
         </h2>
-        <div className="flex flex-col sm:flex-row gap-x-4">
+        <div className="flex flex-col sm:flex-row sm:items-center gap-x-4">
           <SearchBar search={params.search} placeholder="Cerca allenamento" />
           <DatePicker selectedDate={params.date} className="w-full h-10 rounded-xl" />
         </div>

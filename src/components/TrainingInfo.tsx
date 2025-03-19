@@ -40,12 +40,12 @@ export default function TrainingInfo({ bookingDate, isDialogOpen }: Props) {
         <section>
           {training ? (
             <>
-              <p className="mt-4 font-medium text-center">
+              <p className="font-medium text-center mt-1 mb-4">
                 Allenamento del {format(bookingDate, "dd MMMM", { locale: it })}
               </p>
               <TrainingImg {...training} />
               {training.description && (
-                <p className="font-semibold mb-6">{training.description}</p>
+                <p className="font-medium text-sm mt-3 mb-6">{training.description}</p>
               )}
             </>
           ) : (

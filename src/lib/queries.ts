@@ -97,7 +97,8 @@ export async function getUserBookings(id: number) {
         columns: { startTime: true },
         with: {
           bookings: {
-            where: ({ bookingDate }, { gte }) => gte(bookingDate, new Date()),
+            where: ({ bookingDate }, { gte }) =>
+              gte(bookingDate, startOfDay(new Date())),
             columns: { id: true },
             with: {
               user: {

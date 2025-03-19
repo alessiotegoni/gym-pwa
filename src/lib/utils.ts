@@ -208,7 +208,7 @@ type BookingOperableParams = {
 export const isBookingOperable = (params: BookingOperableParams) => {
   const { type, bookingDate, cutoffMinutes } = params;
 
-  const nowUtc = new Date()
+  const nowUtc = new Date();
   const bookingDateUtc = fromZonedTime(bookingDate, "Europe/Rome");
   const cutoffDate = subMinutes(bookingDateUtc, cutoffMinutes!);
 
@@ -255,8 +255,29 @@ export const isValidImage = ({ type, size }: File) => {
 };
 
 export const uploadImg = async (file: File) => {
-  const upload = await pinata.upload.file(file);
-  const url = await pinata.gateways.convert(upload.IpfsHash);
+  try {
+    console.log("Iniziando upload a Pinata...");
+    console.log("File da caricare:", file.name, file.size, file.type);
 
-  return url;
+    if (!process.env.PINATA_JWT || !process.env.PINATA_GATEWAY_URL) {
+      console.error("Credenziali Pinata mancanti");
+      throw new Error("Configurazione Pinata mancante");
+    }
+
+    const upload = await pinata.upload.file(file, {
+      metadata: {
+        name: `training-image-${Date.now()}`,
+      },
+    });
+
+    console.log("Upload completato, hash:", upload.IpfsHash);
+
+    const url = await pinata.gateways.convert(upload.IpfsHash);
+    console.log("URL generato:", url);
+
+    return url;
+  } catch (error) {
+    console.error("Errore durante l'upload dell'immagine:", error);
+    throw new Error("Impossibile caricare l'immagine. Riprova più tardi.");
+  }
 };

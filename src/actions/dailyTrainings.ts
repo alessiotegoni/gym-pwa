@@ -4,10 +4,11 @@ import { db } from "@/drizzle/db";
 import { dailyTrainings } from "@/drizzle/schema";
 import { auth } from "@/lib/auth";
 import { dailyTrainingSchema } from "@/lib/schema/dailyTraining";
-import { formatDate, isTrainingEditable, uploadImg } from "@/lib/utils";
+import { formatDate, isTrainingEditable } from "@/lib/utils";
 import { DailyTrainingSchemaType } from "@/types";
 import { eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
+import { uploadImg } from "./uploadimages";
 
 export async function getTraining({
   eventId,
@@ -59,7 +60,8 @@ export async function createTraining(values: DailyTrainingSchemaType) {
     };
 
   let imageUrl = img as string;
-  if (img instanceof File) imageUrl = await uploadImg(img);
+  if (img instanceof File)
+    imageUrl = await uploadImg(img, { folder: "trainings" });
 
   const result = await db.insert(dailyTrainings).values({
     eventId,
@@ -105,7 +107,8 @@ export async function editTraining(
       };
 
     let imageUrl = img as string;
-    if (img instanceof File) imageUrl = await uploadImg(img);
+    if (img instanceof File)
+      imageUrl = await uploadImg(img, { folder: "trainings" });
 
     const trainingDate = formatDate(trainingTimestamp);
 

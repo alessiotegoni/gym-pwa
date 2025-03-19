@@ -9,6 +9,7 @@ const nextConfig: NextConfig = {
       { hostname: "placehold.co" },
       { hostname: "images.unsplash.com" },
       { hostname: "cyan-tropical-guanaco-792.mypinata.cloud" },
+      { hostname: "res.cloudinary.com" },
     ],
   },
   async headers() {

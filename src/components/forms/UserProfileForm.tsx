@@ -1,13 +1,10 @@
 "use client";
 
-import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -21,6 +18,8 @@ import ImgFormField from "../ImgFormField";
 import SubmitBtn from "../SubmitBtn";
 import { updateUserProfile } from "@/actions/users";
 import BtnFixedContainer from "../BtnFixedContainer";
+import { prepareImageForUpload } from "@/actions/uploadimages";
+import { useRouter } from "next/navigation";
 
 type Props = {
   user: User;
@@ -38,17 +37,38 @@ export function UserProfileForm({
     },
   });
 
+  const router = useRouter();
+
   async function onSubmit(data: EditUserSchemaType) {
-    const res = await updateUserProfile(data);
+    try {
+      let optimizedData = { ...data };
 
-    if (res.error) {
-      toast.error(
-        "Si è verificato un errore durante l'aggiornamento del profilo. Riprova più tardi."
-      );
-      return;
+      if (data.img instanceof File) {
+        try {
+          optimizedData.img = await prepareImageForUpload(data.img, 800, 0.8);
+        } catch (error) {
+          console.error(
+            "Errore durante l'ottimizzazione dell'immagine:",
+            error
+          );
+        }
+      }
+
+      const res = await updateUserProfile(optimizedData);
+
+      if (res?.error) {
+        toast.error(
+          "Si è verificato un errore durante l'aggiornamento del profilo. Riprova più tardi."
+        );
+        return;
+      }
+
+      toast.success("Le tue informazioni sono state aggiornate con successo.");
+      router.back();
+    } catch (error) {
+      console.error("Errore durante l'aggiornamento del profilo:", error);
+      toast.error("Si è verificato un errore imprevisto. Riprova più tardi.");
     }
-
-    toast("Le tue informazioni sono state aggiornate con successo.");
   }
 
   return (
@@ -84,9 +104,13 @@ export function UserProfileForm({
               </FormItem>
             )}
           />
-          <ImgFormField />
+          <ImgFormField
+            imgAlt={`${form.getValues("firstName")} ${form.getValues(
+              "lastName"
+            )}} avatar`}
+          />
         </div>
-        <BtnFixedContainer className="bottom-[93px]">
+        <BtnFixedContainer className="bottom-[93px] md:bottom-3">
           <SubmitBtn label="Aggiorna profilo" loadingLabel="Aggiornando" />
         </BtnFixedContainer>
       </form>

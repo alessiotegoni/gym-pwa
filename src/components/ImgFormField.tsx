@@ -22,8 +22,7 @@ import { useFormContext } from "react-hook-form";
 import { EventSchemaType } from "@/types";
 import { isValidImage } from "@/lib/utils";
 
-type Props = {};
-export default function ImgFormField({}: Props) {
+export default function ImgFormField({ imgAlt }: { imgAlt: string }) {
   const form = useFormContext<Pick<EventSchemaType, "img">>();
 
   return (
@@ -48,6 +47,7 @@ export default function ImgFormField({}: Props) {
                   {(typeof value === "string" ||
                     isValidImage(value).isValid) && (
                     <TrainingImg
+                      description={imgAlt}
                       imageUrl={typeof value === "string" ? value : undefined}
                     />
                   )}
@@ -80,6 +80,7 @@ function FileInput() {
               ", "
             )}
           </p>
+
           <Button
             type="button"
             variant="outline"

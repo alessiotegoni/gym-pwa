@@ -4,10 +4,10 @@ import { db } from "@/drizzle/db";
 import { events } from "@/drizzle/schema";
 import { auth } from "@/lib/auth";
 import { eventSchema } from "@/lib/schema/event";
-import { uploadImg } from "@/lib/utils";
 import { EventSchemaType } from "@/types";
 import { eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
+import { uploadImg } from "./uploadimages";
 
 export async function createEvent(values: EventSchemaType) {
   const session = await auth();
@@ -34,7 +34,7 @@ export async function createEvent(values: EventSchemaType) {
       message: `Esiste gia' un evento col nome ${data.name}`,
     };
 
-  const imageUrl = await uploadImg(img);
+  const imageUrl = await uploadImg(img, { folder: "events" });
 
   if (!imageUrl) return { error: true };
 
@@ -61,7 +61,7 @@ export async function editEvent(values: EventSchemaType, eventId: number) {
 
   let imageUrl = img as string;
   if (img instanceof File) {
-    imageUrl = await uploadImg(img);
+    imageUrl = await uploadImg(img, { folder: "events" });
     if (!imageUrl) return { error: true };
   }
 

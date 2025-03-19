@@ -4,10 +4,10 @@ import { eq } from "drizzle-orm";
 import { auth } from "@/lib/auth";
 import { EditUserSchemaType } from "@/types";
 import { editUserSchema } from "@/lib/schema/user";
-import { uploadImg } from "@/lib/utils";
 import { db } from "@/drizzle/db";
 import { users } from "@/drizzle/schema";
-import { redirect } from "next/navigation";
+import { uploadImg } from "./uploadimages";
+import { revalidatePath } from "next/cache";
 
 export async function updateUserProfile(values: EditUserSchemaType) {
   const session = await auth();
@@ -21,7 +21,7 @@ export async function updateUserProfile(values: EditUserSchemaType) {
 
   let image = (img as string) ?? null;
   if (img instanceof File) {
-    image = await uploadImg(img);
+    image = await uploadImg(img, { folder: "usersAvatar", isProfilePic: true });
     if (!image) return { error: true };
   }
 
@@ -30,5 +30,5 @@ export async function updateUserProfile(values: EditUserSchemaType) {
     .set({ ...restData, image })
     .where(eq(users.id, session.userId));
 
-  redirect("/user/profile");
+  revalidatePath("/user/profile", "page");
 }

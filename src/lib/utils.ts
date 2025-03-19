@@ -18,8 +18,9 @@ import { fromZonedTime } from "date-fns-tz";
 import { it } from "date-fns/locale";
 import { twMerge } from "tailwind-merge";
 import { ACCEPTED_FILE_TYPES, MAX_FILE_SIZE } from "./schema/image";
-import { pinata } from "./configs";
+// import cloudinary from "./cloudinary";
 import { DAYS_OF_WEEK_IN_ORDER } from "@/constants";
+import { ImageTransformationOptions } from "cloudinary";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -252,32 +253,4 @@ export const isValidImage = ({ type, size }: File) => {
   }
 
   return { isValid, message };
-};
-
-export const uploadImg = async (file: File) => {
-  try {
-    console.log("Iniziando upload a Pinata...");
-    console.log("File da caricare:", file.name, file.size, file.type);
-
-    if (!process.env.PINATA_JWT || !process.env.PINATA_GATEWAY_URL) {
-      console.error("Credenziali Pinata mancanti");
-      throw new Error("Configurazione Pinata mancante");
-    }
-
-    const upload = await pinata.upload.file(file, {
-      metadata: {
-        name: `training-image-${Date.now()}`,
-      },
-    });
-
-    console.log("Upload completato, hash:", upload.IpfsHash);
-
-    const url = await pinata.gateways.convert(upload.IpfsHash);
-    console.log("URL generato:", url);
-
-    return url;
-  } catch (error) {
-    console.error("Errore durante l'upload dell'immagine:", error);
-    throw new Error("Impossibile caricare l'immagine. Riprova più tardi.");
-  }
 };

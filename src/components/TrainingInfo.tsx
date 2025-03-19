@@ -43,9 +43,17 @@ export default function TrainingInfo({ bookingDate, isDialogOpen }: Props) {
               <p className="font-medium text-center mt-1 mb-4">
                 Allenamento del {format(bookingDate, "dd MMMM", { locale: it })}
               </p>
-              <TrainingImg {...training} />
+              <TrainingImg
+                training={training}
+                alt={
+                  training.description ||
+                  `Allenamento del ${training.trainingDate}`
+                }
+              />
               {training.description && (
-                <p className="font-medium text-sm mt-3 mb-6">{training.description}</p>
+                <p className="font-medium text-sm mt-3 mb-6">
+                  {training.description}
+                </p>
               )}
             </>
           ) : (

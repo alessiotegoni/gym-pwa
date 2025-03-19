@@ -15,6 +15,9 @@ export async function getBookedUsers(id: number, date: Date) {
 
   if (!session?.userId || isNaN(id) || date < startOfDay(new Date())) return;
 
+  console.log(date);
+
+
   const results = await db.query.bookings.findMany({
     where: ({ scheduleId, bookingDate }, { and, eq }) =>
       and(eq(scheduleId, id), eq(bookingDate, date)),
@@ -29,6 +32,9 @@ export async function getBookedUsers(id: number, date: Date) {
       },
     },
   });
+
+  console.log(results);
+
 
   return results.map((booking) => booking.user);
 }

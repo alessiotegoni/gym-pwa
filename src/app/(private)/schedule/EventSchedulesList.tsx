@@ -9,6 +9,7 @@ import DeleteBookingBtn from "../../../components/DeleteBookingBtn";
 import { getBookingDateTime, isBookingOperable } from "@/lib/utils";
 import CreateBookingBtn from "@/components/CreateBookingBtn";
 import BookingDetails from "@/components/BookingDetails";
+import { fromZonedTime } from "date-fns-tz";
 
 type Props = {
   event: Event;
@@ -29,18 +30,19 @@ export default function EventSchedulesList({
     <div className="grid gap-4 lg:grid-cols-2 mt-2">
       {schedules.map((schedule) => {
         const bookingDate = getBookingDateTime(date, schedule.startTime);
+        const bookingDateUtc = fromZonedTime(bookingDate, "Europe/Rome");
 
         const endTime = format(
           addMinutes(bookingDate, event.durationMinutes),
           "HH:mm"
         );
 
-        console.log(bookingDate, bookingDate.getHours());
+        // console.log(bookingDate, bookingDate.getHours());
 
         const userBooking = schedule.bookings.find(
           (booking) =>
             booking.user.id === userId &&
-            isEqual(booking.bookingDate, bookingDate)
+            isEqual(booking.bookingDate, bookingDateUtc)
         );
 
         return (
@@ -85,7 +87,7 @@ export default function EventSchedulesList({
                 <BookingDetails
                   scheduleId={schedule.id}
                   userId={userId}
-                  bookingDate={bookingDate}
+                  bookingDate={bookingDateUtc}
                   bookingsCount={schedule.bookings.length}
                   eventCapacity={event.capacity}
                 />

@@ -107,12 +107,9 @@ export async function getUserBookings(id: number) {
           },
           event: {
             columns: {
-              id: true,
-              name: true,
-              imageUrl: true,
-              capacity: true,
-              durationMinutes: true,
-              bookingCutoffMinutes: true,
+              description: false,
+              createdAt: false,
+              updatedAt: false,
             },
           },
         },

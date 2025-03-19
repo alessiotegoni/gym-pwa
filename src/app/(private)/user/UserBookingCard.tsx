@@ -68,8 +68,8 @@ export default function UserBookingCard({ booking, userId }: Props) {
             disabled={
               !isBookingOperable({
                 type: "delete",
-                bookingDate: booking.bookingDate,
-                cutoffMinutes: booking.schedule.event.bookingCutoffMinutes,
+                bookingDate: zonedBookingDate,
+                cutoffMinutes: booking.schedule.event.cancellationCutoffMinutes,
               })
             }
           >

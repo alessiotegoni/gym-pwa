@@ -48,7 +48,7 @@ export default async function UserPage({ searchParams }: Props) {
     <>
       {isSubscripted && success && <PaymentAlert success />}
       <InstallPrompt />
-      <h2 className="text-2xl font-bold mb-2">Le mie prenotazioni</h2>
+      <h2 className="text-2xl font-bold">Le mie prenotazioni</h2>
       {!bookings.length ? (
         <div
           className="flex flex-col items-center justify-center

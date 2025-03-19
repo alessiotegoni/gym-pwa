@@ -212,9 +212,6 @@ export const isBookingOperable = (params: BookingOperableParams) => {
   const bookingDateUtc = fromZonedTime(bookingDate, "Europe/Rome");
   const cutoffDate = subMinutes(bookingDateUtc, cutoffMinutes!);
 
-  console.log("🕒 Ora attuale UTC:", nowUtc);
-  console.log("📅 Booking Date UTC:", bookingDateUtc);
-
   switch (type) {
     case "create":
       const { bookingsCount, eventCapacity } = params;

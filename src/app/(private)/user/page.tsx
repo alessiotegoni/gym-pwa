@@ -52,7 +52,7 @@ export default async function UserPage({ searchParams }: Props) {
       {!bookings.length ? (
         <div
           className="flex flex-col items-center justify-center
-          card-primary"
+          card-primary mt-2"
         >
           <AlertCircle className="!size-12" />
           <p className="text-center text-sm font-medium mt-3">
@@ -68,7 +68,7 @@ export default async function UserPage({ searchParams }: Props) {
 
           return (
             !!bookings?.length && (
-              <Fragment key={bookingDate}>
+              <section key={bookingDate} className="mt-2">
                 <div className="flex justify-between items-center gap-2">
                   <h3 className="text-lg font-semibold mt-4 mb-2">
                     {isToday(date)
@@ -87,7 +87,7 @@ export default async function UserPage({ searchParams }: Props) {
                     />
                   ))}
                 </div>
-              </Fragment>
+              </section>
             )
           );
         })

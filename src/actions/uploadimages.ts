@@ -20,7 +20,6 @@ export const uploadImg = async (
   } = {}
 ): Promise<string> => {
   try {
-    // Impostazioni predefinite
     const {
       folder = "uploads",
       maxWidth = 1200,
@@ -29,41 +28,34 @@ export const uploadImg = async (
       isProfilePic = false,
     } = options;
 
-    // Crea un ID univoco per l'immagine
     const uniqueId = `${folder}-${Date.now()}-${Math.random()
       .toString(36)
       .substring(2, 9)}`;
 
-    // Converti il File in un buffer
     const arrayBuffer = await file.arrayBuffer();
     const buffer = Buffer.from(arrayBuffer);
 
-    // Calcola le trasformazioni in base al tipo di immagine
     const transformations: ImageTransformationOptions[] = [];
 
     if (isProfilePic) {
-      // Specifiche per immagini profilo (ritaglio quadrato)
       transformations.push(
         { width: 400, height: 400, crop: "fill", gravity: "face" },
         { quality: "auto:good", fetch_format: "auto" }
       );
     } else {
-      // Trasformazioni per immagini generiche
       transformations.push(
         { width: maxWidth, height: maxHeight, crop: "limit" },
         { quality: quality, fetch_format: "auto" }
       );
     }
 
-    // Configura il formato per ottimizzare per mobile
     const delivery = {
       quality: "auto",
-      fetch_format: "auto", // Usa WebP quando supportato
-      dpr: "auto", // Ottimizza per il DPR del dispositivo
-      responsive: true, // Genera immagini responsive
+      fetch_format: "auto",
+      dpr: "auto",
+      responsive: true,
     };
 
-    // Esegui l'upload usando una Promise
     return new Promise((resolve, reject) => {
       const uploadStream = cloudinary.uploader.upload_stream(
         {
@@ -84,7 +76,6 @@ export const uploadImg = async (
         }
       );
 
-      // Passa il buffer all'upload stream
       uploadStream.end(buffer);
     });
   } catch (error) {
@@ -104,9 +95,7 @@ export const prepareImageForUpload = async (
 ): Promise<File> => {
   return new Promise((resolve, reject) => {
     try {
-      // Se il file è già abbastanza piccolo, non elaborarlo
       if (file.size < 500 * 1024) {
-        // 500KB
         return resolve(file);
       }
 
@@ -118,7 +107,6 @@ export const prepareImageForUpload = async (
           let width = img.width;
           let height = img.height;
 
-          // Ridimensiona se necessario
           if (width > maxWidth) {
             height = (height * maxWidth) / width;
             width = maxWidth;
@@ -130,7 +118,6 @@ export const prepareImageForUpload = async (
           const ctx = canvas.getContext("2d");
           ctx?.drawImage(img, 0, 0, width, height);
 
-          // Converti in Blob con qualità ridotta
           canvas.toBlob(
             (blob) => {
               if (!blob) {
@@ -138,7 +125,6 @@ export const prepareImageForUpload = async (
                 return;
               }
 
-              // Crea un nuovo File dal Blob
               const optimizedFile = new File([blob], file.name, {
                 type: "image/jpeg",
                 lastModified: Date.now(),

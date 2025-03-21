@@ -19,12 +19,11 @@ import TrainingImg from "./TrainingImg";
 import { FileUp } from "lucide-react";
 import { Button } from "./ui/button";
 import { useFormContext } from "react-hook-form";
-import { EventSchemaType } from "@/types";
 import { isValidImage } from "@/lib/utils";
 import { ImageProps } from "next/image";
 
 export default function ImgFormField({ alt, ...props }: Partial<ImageProps>) {
-  const form = useFormContext<Pick<EventSchemaType, "img">>();
+  const form = useFormContext<{ img: string | File }>();
 
   return (
     <FormField

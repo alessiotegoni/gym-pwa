@@ -6,7 +6,6 @@ import { signinSchema } from "./schema/auth";
 import { compare } from "bcrypt";
 import { ADMINS_EMAILS } from "@/constants";
 import { getUser } from "./queries";
-import type { User } from "next-auth";
 
 export const adapter = DrizzleAdapter(db);
 

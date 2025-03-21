@@ -51,11 +51,9 @@ export const credentialsSignIn = async (
   try {
     await signIn("credentials", {
       ...data,
-      redirect: false,
+      redirectTo: redirectUrl || "/user"
     });
   } catch (err) {
     return { error: true, message: "Credenziali errate" };
   }
-
-  redirect(redirectUrl || "/");
 };

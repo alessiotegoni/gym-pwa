@@ -3,6 +3,11 @@ import { NextConfig } from "next";
 const nextConfig: NextConfig = {
   // crossOrigin: "use-credentials" only works on scripts,
   devIndicators: false,
+  experimental: {
+    serverActions: {
+      bodySizeLimit: "5mb",
+    },
+  },
   images: {
     dangerouslyAllowSVG: true,
     remotePatterns: [
@@ -58,12 +63,5 @@ const nextConfig: NextConfig = {
     ];
   },
 };
-
-// const withPwa = nextPWA({
-//   dest: "public",
-//   register: true
-// })
-
-// const config = withPwa(nextConfig)
 
 export default nextConfig;

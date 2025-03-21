@@ -18,7 +18,7 @@ import ImgFormField from "../ImgFormField";
 import SubmitBtn from "../SubmitBtn";
 import { updateUserProfile } from "@/actions/users";
 import BtnFixedContainer from "../BtnFixedContainer";
-import { prepareImageForUpload } from "@/actions/uploadimages";
+import { prepareImageForUpload } from "@/actions/uploadImages";
 import { useRouter } from "next/navigation";
 
 type Props = {

@@ -244,12 +244,12 @@ export const isValidImage = ({ type, size }: File) => {
 
   if (!ACCEPTED_FILE_TYPES.includes(type)) {
     isValid = false;
-    message = "Formato file non valido. Usa JPEG, PNG, WEBP o HEIC.";
+    message = "Formato file non valido. Usa JPEG, JPG, PNG, WEBP o HEIC.";
   }
 
   if (size > MAX_FILE_SIZE) {
     isValid = false;
-    message = "Il file è troppo pesante. Dimensione massima: 5MB.";
+    message = "Il file è troppo pesante. Dimensione massima: 4MB.";
   }
 
   return { isValid, message };

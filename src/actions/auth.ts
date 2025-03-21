@@ -53,6 +53,8 @@ export const credentialsSignIn = async (
       ...data,
       redirectTo: redirectUrl || "/user"
     });
+
+    return { error: false }
   } catch (err) {
     return { error: true, message: "Credenziali errate" };
   }

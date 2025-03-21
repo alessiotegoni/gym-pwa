@@ -19,7 +19,7 @@ import SubmitBtn from "../SubmitBtn";
 import { updateUserProfile } from "@/actions/users";
 import BtnFixedContainer from "../BtnFixedContainer";
 import { useRouter } from "next/navigation";
-import { prepareImageForUpload } from "@/actions/uploadimages";
+import { prepareImageForUpload } from "@/actions/uploadImages";
 
 type Props = {
   user: User;

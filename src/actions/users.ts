@@ -7,7 +7,7 @@ import { editUserSchema } from "@/lib/schema/user";
 import { db } from "@/drizzle/db";
 import { users } from "@/drizzle/schema";
 import { revalidatePath } from "next/cache";
-import { uploadImg } from "./uploadimages";
+import { uploadImg } from "./uploadImages";
 
 export async function updateUserProfile(values: EditUserSchemaType) {
   const session = await auth();

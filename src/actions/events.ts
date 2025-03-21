@@ -7,7 +7,7 @@ import { eventSchema } from "@/lib/schema/event";
 import { EventSchemaType } from "@/types";
 import { eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
-import { uploadImg } from "./uploadImages";
+import { uploadImg } from "./images";
 
 export async function createEvent(values: EventSchemaType) {
   const session = await auth();

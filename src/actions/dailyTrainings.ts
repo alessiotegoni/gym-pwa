@@ -8,7 +8,7 @@ import { formatDate, isTrainingEditable } from "@/lib/utils";
 import { DailyTrainingSchemaType } from "@/types";
 import { eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
-import { uploadImg } from "./uploadImages";
+import { uploadImg } from "./images";
 
 export async function getTraining({
   eventId,

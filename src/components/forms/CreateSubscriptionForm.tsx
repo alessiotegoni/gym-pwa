@@ -37,6 +37,7 @@ import SubmitBtn from "../SubmitBtn";
 import { CreateSubscriptionType, User } from "@/types";
 import { adminCreateSubscription } from "@/actions/subscriptions";
 import { SUBSCRIPTIONS_PLANS } from "@/constants";
+import BtnFixedContainer from "../BtnFixedContainer";
 
 type Props = {
   users: Pick<User, "id" | "email">[];
@@ -64,7 +65,7 @@ export default function SubscriptionCreateForm({ users }: Props) {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
         <FormField
           control={form.control}
           name="userId"
@@ -188,7 +189,12 @@ export default function SubscriptionCreateForm({ users }: Props) {
             </FormItem>
           )}
         />
-        <SubmitBtn label="Crea Abbonamento" loadingLabel="Creazione in corso" />
+        <BtnFixedContainer>
+          <SubmitBtn
+            label="Crea Abbonamento"
+            loadingLabel="Creazione in corso"
+          />
+        </BtnFixedContainer>
       </form>
     </Form>
   );

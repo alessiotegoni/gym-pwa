@@ -20,9 +20,13 @@ const ALLOWED_EVENTS: Stripe.Event["type"][] = [
 export async function POST(req: Request) {
   try {
     const sig = req.headers.get("stripe-signature");
+    console.log(sig);
+
     if (!sig) throw new Error();
 
     const body = await req.text();
+    console.log(body);
+
     if (!body) throw new Error();
 
     const event = stripe.webhooks.constructEvent(
@@ -30,6 +34,8 @@ export async function POST(req: Request) {
       sig,
       process.env.WEBHOOK_SECRET_KEY!
     );
+
+    console.log(event);
 
     if (!ALLOWED_EVENTS.includes(event.type))
       return NextResponse.json({ received: true }, { status: 403 });

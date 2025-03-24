@@ -244,7 +244,7 @@ export const isValidImage = ({ type, size }: File) => {
 
   if (!ACCEPTED_FILE_TYPES.includes(type)) {
     isValid = false;
-    message = "Formato file non valido. Usa JPEG, JPG, PNG, WEBP o HEIC.";
+    message = "Formato file non valido. Usa JPEG, PNG, WEBP o HEIC.";
   }
 
   if (size > MAX_FILE_SIZE) {

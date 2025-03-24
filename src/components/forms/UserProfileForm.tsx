@@ -19,7 +19,6 @@ import SubmitBtn from "../SubmitBtn";
 import { updateUserProfile } from "@/actions/users";
 import BtnFixedContainer from "../BtnFixedContainer";
 import { useRouter } from "next/navigation";
-import { prepareImageForUpload } from "@/actions/images";
 
 type Props = {
   user: User;
@@ -40,35 +39,17 @@ export function UserProfileForm({
   const router = useRouter();
 
   async function onSubmit(data: EditUserSchemaType) {
-    try {
-      let optimizedData = { ...data };
+    const res = await updateUserProfile(data);
 
-      if (data.img instanceof File) {
-        try {
-          optimizedData.img = await prepareImageForUpload(data.img, 800, 0.8);
-        } catch (error) {
-          console.error(
-            "Errore durante l'ottimizzazione dell'immagine:",
-            error
-          );
-        }
-      }
-
-      const res = await updateUserProfile(optimizedData);
-
-      if (res?.error) {
-        toast.error(
-          "Si è verificato un errore durante l'aggiornamento del profilo. Riprova più tardi."
-        );
-        return;
-      }
-
-      toast.success("Le tue informazioni sono state aggiornate con successo.");
-      router.back();
-    } catch (error) {
-      console.error("Errore durante l'aggiornamento del profilo:", error);
-      toast.error("Si è verificato un errore imprevisto. Riprova più tardi.");
+    if (res?.error) {
+      toast.error(
+        "Si è verificato un errore durante l'aggiornamento del profilo. Riprova più tardi."
+      );
+      return;
     }
+
+    toast.success("Le tue informazioni sono state aggiornate con successo.");
+    router.back();
   }
 
   return (

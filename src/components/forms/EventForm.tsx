@@ -21,6 +21,7 @@ import FormAlert from "../FormAlert";
 import ImgFormField from "../ImgFormField";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import BtnFixedContainer from "../BtnFixedContainer";
 
 interface EventFormProps {
   event?: EventSchemaType & Pick<Event, "id">;
@@ -182,10 +183,12 @@ export function EventForm({ event }: EventFormProps) {
             </FormItem>
           )}
         />
-        <SubmitBtn
-          label={event ? "Modifica evento" : "Crea evento"}
-          loadingLabel={event ? "Modificando" : "Creando"}
-        />
+        <BtnFixedContainer>
+          <SubmitBtn
+            label={event ? "Modifica evento" : "Crea evento"}
+            loadingLabel={event ? "Modificando" : "Creando"}
+          />
+        </BtnFixedContainer>
       </form>
     </Form>
   );

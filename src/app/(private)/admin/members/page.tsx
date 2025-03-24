@@ -7,6 +7,8 @@ import Link from "next/link";
 import { CalendarDays, CreditCard, XCircle, CheckCircle } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { auth } from "@/lib/auth";
+import { startOfDay } from "date-fns";
+import { formatInTimeZone } from "date-fns-tz";
 
 export const metadata = {
   title: "Gestisci membri",
@@ -28,11 +30,13 @@ export default async function MembersPage({ searchParams }: Props) {
     with: {
       subscriptions: {
         columns: { id: true },
-        where: ({ status }, { eq }) => eq(status, "active"),
+        where: ({ status }, { or, eq }) =>
+          or(eq(status, "active"), eq(status, "trial")),
       },
       bookings: {
         columns: { id: true },
-        where: ({ bookingDate }, { gte }) => gte(bookingDate, new Date()),
+        where: ({ bookingDate }, { gte }) =>
+          gte(bookingDate, startOfDay(new Date())),
       },
     },
   });
@@ -83,7 +87,8 @@ export default async function MembersPage({ searchParams }: Props) {
             </CardHeader>
             <CardContent>
               <p className="text-sm text-zinc-400 mb-4">
-                Registrato il: {user.createdAt.toLocaleDateString()}
+                Registrato il:{" "}
+                {formatInTimeZone(user.createdAt, "Europe/Rome", "dd/MM/yyyy")}
               </p>
               <div className="flex flex-wrap gap-2 mb-4">
                 {user.subscriptions.length ? (

@@ -42,9 +42,9 @@ export async function createTraining(values: DailyTrainingSchemaType) {
 
   console.log(values);
 
-  const { success, data } = dailyTrainingSchema.safeParse(values);
+  const { success, data, error } = dailyTrainingSchema.safeParse(values);
 
-  if (!success) return { error: true };
+  if (!success) return { error: true, message: JSON.stringify(error) };
 
   const { eventId, img, trainingTimestamp, description } = data;
 

@@ -43,8 +43,6 @@ export default function TrainingDatePicker({
   const formatDate = (date: string | Date) =>
     format(date, "d MMMM yyyy", { locale: it });
 
-  console.log(date);
-
   return (
     <>
       {date && (

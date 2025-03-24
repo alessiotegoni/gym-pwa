@@ -14,11 +14,11 @@ export async function getTraining({
   eventId,
   date,
   trainingId,
-}: {
-  eventId?: number;
-  date?: string;
-  trainingId?: number;
-}) {
+}: Partial<{
+  eventId: number;
+  date: string;
+  trainingId: number;
+}>) {
   const session = await auth();
 
   if (!session?.userId) return;
@@ -80,9 +80,9 @@ export async function editTraining(
   if (!session?.userId || !session.isAdmin || isNaN(trainingId))
     return { error: true };
 
-  const { success, data } = dailyTrainingSchema.safeParse(values);
+  const { success, data, error } = dailyTrainingSchema.safeParse(values);
 
-  if (!success) return { error: true };
+  if (!success) return { error: true, message: error.message };
 
   const { img, description, trainingTimestamp } = data;
 

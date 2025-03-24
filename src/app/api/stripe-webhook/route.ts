@@ -18,27 +18,20 @@ const ALLOWED_EVENTS: Stripe.Event["type"][] = [
   "invoice.payment_failed",
 ];
 
+
 export async function POST(req: Request) {
   try {
     const sig = (await headers()).get("stripe-signature");
-
     if (!sig) throw new Error("Missing stripe signature");
 
     const body = await req.text();
-
     if (!body) throw new Error("Missing body");
-
-    console.log("body", body);
-    console.log("signature", sig);
-    console.log("env", process.env.WEBHOOK_SECRET_KEY!);
 
     const event = stripe.webhooks.constructEvent(
       body,
       sig,
       process.env.WEBHOOK_SECRET_KEY!
     );
-
-    console.log(event);
 
     if (!ALLOWED_EVENTS.includes(event.type))
       return NextResponse.json({ received: true }, { status: 403 });

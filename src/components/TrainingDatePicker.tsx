@@ -1,13 +1,12 @@
 "use client";
 
-import { format, parse, startOfDay } from "date-fns";
+import { format, startOfDay } from "date-fns";
 import {
   Dialog,
   DialogContent,
   DialogDescription,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
@@ -44,6 +43,8 @@ export default function TrainingDatePicker({
   const formatDate = (date: string | Date) =>
     format(date, "d MMMM yyyy", { locale: it });
 
+  console.log(date);
+
   return (
     <>
       {date && (
@@ -68,7 +69,7 @@ export default function TrainingDatePicker({
             <TrainingForm
               eventId={eventId}
               eventName={eventName}
-              trainingTimestamp={date!}
+              trainingTimestamp={date}
               training={training}
               onSubmitSuccess={() => {
                 setIsDialogOpen(false);

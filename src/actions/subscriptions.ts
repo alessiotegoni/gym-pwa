@@ -86,7 +86,12 @@ export async function adminCreateSubscription(values: CreateSubscriptionType) {
     .values({
       userId: parseInt(data.userId),
       status: data.isTrial ? "trial" : "active",
-      endDate: formatDate(addDays(new Date(), SUBSCRIPTIONS_PLANS[0].duration)),
+      endDate: formatDate(
+        addDays(
+          data.endDate,
+          data.isTrial ? TRIAL_DAYS : SUBSCRIPTIONS_PLANS[0].duration
+        )
+      ),
     })
     .returning({ id: subscriptions.id });
 

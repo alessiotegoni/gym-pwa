@@ -2,7 +2,7 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { addDays, format } from "date-fns";
+import { addDays, format, startOfDay } from "date-fns";
 import { it } from "date-fns/locale";
 import { CalendarIcon, Check, ChevronsUpDown } from "lucide-react";
 
@@ -36,8 +36,9 @@ import { createSubscriptionSchema } from "@/lib/schema/subscription";
 import SubmitBtn from "../SubmitBtn";
 import { CreateSubscriptionType, User } from "@/types";
 import { adminCreateSubscription } from "@/actions/subscriptions";
-import { SUBSCRIPTIONS_PLANS } from "@/constants";
+import { SUBSCRIPTIONS_PLANS, TRIAL_DAYS } from "@/constants";
 import BtnFixedContainer from "../BtnFixedContainer";
+import { useEffect } from "react";
 
 type Props = {
   users: Pick<User, "id" | "email">[];
@@ -48,13 +49,22 @@ export default function SubscriptionCreateForm({ users }: Props) {
     resolver: zodResolver(createSubscriptionSchema),
     defaultValues: {
       isTrial: false,
-      endDate: addDays(new Date(), SUBSCRIPTIONS_PLANS[0].duration),
     },
   });
 
-  async function onSubmit(values: CreateSubscriptionType) {
-    if (form.formState.isSubmitting) return;
+  const isTrial = form.watch("isTrial");
 
+  useEffect(() => {
+    form.setValue(
+      "endDate",
+      addDays(
+        new Date(),
+        isTrial ? TRIAL_DAYS : SUBSCRIPTIONS_PLANS[0].duration
+      )
+    );
+  }, [isTrial]);
+
+  async function onSubmit(values: CreateSubscriptionType) {
     const result = await adminCreateSubscription(values);
 
     if (result?.error)
@@ -65,130 +75,132 @@ export default function SubscriptionCreateForm({ users }: Props) {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-        <FormField
-          control={form.control}
-          name="userId"
-          render={({ field }) => (
-            <FormItem className="flex flex-col">
-              <FormLabel>Utente</FormLabel>
-              <Popover>
-                <PopoverTrigger asChild>
-                  <FormControl>
-                    <Button
-                      variant="outline"
-                      role="combobox"
-                      className={cn(
-                        "w-full justify-between",
-                        !field.value && "text-muted-foreground"
-                      )}
-                    >
-                      {field.value
-                        ? users.find(
-                            (user) => user.id.toString() === field.value
-                          )?.email
-                        : "Seleziona un utente"}
-                      <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                    </Button>
-                  </FormControl>
-                </PopoverTrigger>
-                <PopoverContent className="w-[300px] p-0">
-                  <Command>
-                    <CommandInput placeholder="Cerca un utente..." />
-                    <CommandList>
-                      <CommandEmpty>Nessun utente trovato.</CommandEmpty>
-                      <CommandGroup>
-                        {users.map((user) => (
-                          <CommandItem
-                            value={user.id.toString()}
-                            key={user.id}
-                            onSelect={field.onChange}
-                          >
-                            <Check
-                              className={cn(
-                                "mr-2 h-4 w-4",
-                                user.id.toString() === field.value
-                                  ? "opacity-100"
-                                  : "opacity-0"
-                              )}
-                            />
-                            {user.email}
-                          </CommandItem>
-                        ))}
-                      </CommandGroup>
-                    </CommandList>
-                  </Command>
-                </PopoverContent>
-              </Popover>
-              <FormDescription>
-                Seleziona l'utente per cui creare l'abbonamento.
-              </FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="isTrial"
-          render={({ field }) => (
-            <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
-              <div className="space-y-0.5">
-                <FormLabel className="text-base">Periodo di prova</FormLabel>
+      <form onSubmit={form.handleSubmit(onSubmit)} className="gap-5 h-full flex flex-col">
+        <div className="grow space-y-5">
+          <FormField
+            control={form.control}
+            name="userId"
+            render={({ field }) => (
+              <FormItem className="flex flex-col">
+                <FormLabel>Utente</FormLabel>
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <FormControl>
+                      <Button
+                        variant="outline"
+                        role="combobox"
+                        className={cn(
+                          "w-full justify-between",
+                          !field.value && "text-muted-foreground"
+                        )}
+                      >
+                        {field.value
+                          ? users.find(
+                              (user) => user.id.toString() === field.value
+                            )?.email
+                          : "Seleziona un utente"}
+                        <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                      </Button>
+                    </FormControl>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-[300px] p-0">
+                    <Command>
+                      <CommandInput placeholder="Cerca un utente..." />
+                      <CommandList>
+                        <CommandEmpty>Nessun utente trovato.</CommandEmpty>
+                        <CommandGroup>
+                          {users.map((user) => (
+                            <CommandItem
+                              value={user.id.toString()}
+                              key={user.id}
+                              onSelect={field.onChange}
+                            >
+                              <Check
+                                className={cn(
+                                  "mr-2 h-4 w-4",
+                                  user.id.toString() === field.value
+                                    ? "opacity-100"
+                                    : "opacity-0"
+                                )}
+                              />
+                              {user.email}
+                            </CommandItem>
+                          ))}
+                        </CommandGroup>
+                      </CommandList>
+                    </Command>
+                  </PopoverContent>
+                </Popover>
                 <FormDescription>
-                  Attiva se questo è un abbonamento di prova.
+                  Seleziona l'utente per cui creare l'abbonamento.
                 </FormDescription>
-              </div>
-              <FormControl>
-                <Switch
-                  checked={field.value}
-                  onCheckedChange={field.onChange}
-                />
-              </FormControl>
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="endDate"
-          render={({ field }) => (
-            <FormItem className="flex flex-col">
-              <FormLabel>Data di fine</FormLabel>
-              <Popover>
-                <PopoverTrigger asChild>
-                  <FormControl>
-                    <Button
-                      variant={"outline"}
-                      className={cn(
-                        "w-full pl-3 text-left font-normal",
-                        !field.value && "text-muted-foreground"
-                      )}
-                    >
-                      {field.value ? (
-                        format(field.value, "PPP", { locale: it })
-                      ) : (
-                        <span>Seleziona una data</span>
-                      )}
-                      <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                    </Button>
-                  </FormControl>
-                </PopoverTrigger>
-                <PopoverContent className="w-auto p-0" align="start">
-                  <Calendar
-                    mode="single"
-                    selected={field.value}
-                    onSelect={field.onChange}
-                    disabled={(date) => date < new Date()}
-                    initialFocus
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="isTrial"
+            render={({ field }) => (
+              <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
+                <div className="space-y-0.5">
+                  <FormLabel className="text-base">Periodo di prova</FormLabel>
+                  <FormDescription>
+                    Attiva se questo è un abbonamento di prova.
+                  </FormDescription>
+                </div>
+                <FormControl>
+                  <Switch
+                    checked={field.value}
+                    onCheckedChange={field.onChange}
                   />
-                </PopoverContent>
-              </Popover>
-              <FormDescription>
-                Seleziona la data di fine dell'abbonamento.
-              </FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+                </FormControl>
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="endDate"
+            render={({ field }) => (
+              <FormItem className="flex flex-col">
+                <FormLabel>Data di fine</FormLabel>
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <FormControl>
+                      <Button
+                        variant={"outline"}
+                        className={cn(
+                          "w-full pl-3 text-left font-normal",
+                          !field.value && "text-muted-foreground"
+                        )}
+                      >
+                        {field.value ? (
+                          format(field.value, "PPP", { locale: it })
+                        ) : (
+                          <span>Seleziona una data</span>
+                        )}
+                        <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                      </Button>
+                    </FormControl>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-auto p-0" align="start">
+                    <Calendar
+                      mode="single"
+                      selected={field.value}
+                      onSelect={field.onChange}
+                      disabled={(date) => date < startOfDay(new Date())}
+                      initialFocus
+                    />
+                  </PopoverContent>
+                </Popover>
+                <FormDescription>
+                  Seleziona la data di fine dell'abbonamento.
+                </FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
         <BtnFixedContainer>
           <SubmitBtn
             label="Crea Abbonamento"

@@ -3,7 +3,7 @@ import { db } from "@/drizzle/db";
 import { subscriptions } from "@/drizzle/schema";
 import { formatDate } from "@/lib/utils";
 import { SubscriptionStatus } from "@/types";
-import { addDays } from "date-fns";
+import { addDays, differenceInMinutes } from "date-fns";
 import { eq } from "drizzle-orm";
 import { headers } from "next/headers";
 import { NextResponse } from "next/server";
@@ -17,7 +17,6 @@ const ALLOWED_EVENTS: Stripe.Event["type"][] = [
   "invoice.payment_succeeded",
   "invoice.payment_failed",
 ];
-
 
 export async function POST(req: Request) {
   try {
@@ -78,19 +77,25 @@ export async function POST(req: Request) {
         const res = await db.query.subscriptions.findFirst({
           where: ({ stripeSubscriptionId: subId }, { eq }) =>
             eq(subId, stripeSubscriptionId as string),
-          columns: { userId: true },
+          orderBy: ({ endDate }, { asc }) => asc(endDate),
+          columns: { userId: true, createdAt: true },
         });
 
         if (!res) return NextResponse.json({ received: true }, { status: 403 });
 
-        await db.insert(subscriptions).values({
-          userId: res.userId,
-          endDate: formatDate(
-            addDays(new Date(), SUBSCRIPTIONS_PLANS[0].duration)
-          ),
-          status: "active",
-          stripeSubscriptionId,
-        });
+        const paymentDate = new Date(event.data.object.created * 1000);
+
+        if (differenceInMinutes(paymentDate, res.createdAt) > 1) {
+          await db.insert(subscriptions).values({
+            userId: res.userId,
+            endDate: formatDate(
+              addDays(new Date(), SUBSCRIPTIONS_PLANS[0].duration)
+            ),
+            status: "active",
+            stripeSubscriptionId,
+          });
+        }
+
         break;
       case "invoice.payment_failed":
         stripeSubscriptionId = event.data.object.subscription;

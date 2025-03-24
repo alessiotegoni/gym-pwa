@@ -30,14 +30,18 @@ export default function SigninForm() {
   });
 
   async function onSubmit(values: z.infer<typeof signinSchema>) {
-    const { error, message } = await credentialsSignIn(
+
+    if (form.formState.isSubmitSuccessful) return
+
+    const res = await credentialsSignIn(
       values,
       searchParams.get("redirectUrl")
     );
 
-    if (error)
+    if (res?.error)
       form.setError("root", {
-        message: message || "Errore nella registrazione, riprovare piu tardi",
+        message:
+          res?.message || "Errore nella registrazione, riprovare piu tardi",
       });
   }
 

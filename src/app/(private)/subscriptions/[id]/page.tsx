@@ -9,7 +9,7 @@ import { notFound, redirect } from "next/navigation";
 import UserHeader from "@/components/UserHeader";
 import ExtendSubDatePicker from "@/components/ExtendSubscription";
 import DeleteSubscription from "@/components/DeleteSubscription";
-import { SUBSCRIPTIONS_PLANS } from "@/constants";
+import { SUBSCRIPTIONS_PLANS, TRIAL_DAYS } from "@/constants";
 import { cn } from "@/lib/utils";
 import BtnFixedContainer from "@/components/BtnFixedContainer";
 import Stripe from "stripe";
@@ -97,12 +97,21 @@ export default async function SubscriptionPage({ params }: Props) {
             </p>
             <p>
               <span className="font-medium">Prezzo:</span>{" "}
-              {stripeSubscription?.items.data[0].price.unit_amount! / 100 || 50}
-              &euro;
+              {subscription.status === "trial" ? (
+                "Gratuito"
+              ) : (
+                <>
+                  {stripeSubscription?.items.data[0].price.unit_amount! / 100 ||
+                    50}
+                  &euro;
+                </>
+              )}
             </p>
             <p>
               <span className="font-medium">Durata:</span>{" "}
-              {SUBSCRIPTIONS_PLANS[0].duration} giorni
+              {subscription.status === "trial"
+                ? TRIAL_DAYS
+                : SUBSCRIPTIONS_PLANS[0].duration} giorni
             </p>
           </div>
         </section>
@@ -125,31 +134,33 @@ export default async function SubscriptionPage({ params }: Props) {
             </div>
           </div>
         </section>
-        <section className="card-primary">
-          <h2 className="text-xl font-semibold mb-4">Metodo di Pagamento</h2>
-          <div className="flex items-center gap-2">
-            {subscriptionPayment ? (
-              <CreditCard
-                className="
-              size-6"
-              />
-            ) : (
-              <HandCoins className="size-6" />
-            )}
-            <p>
+        {subscription.status !== "trial" && (
+          <section className="card-primary">
+            <h2 className="text-xl font-semibold mb-4">Metodo di Pagamento</h2>
+            <div className="flex items-center gap-2">
               {subscriptionPayment ? (
-                <>
-                  <span className="capitalize">
-                    {subscriptionPayment.card?.brand}{" "}
-                  </span>
-                  che termina con {subscriptionPayment.card?.last4}
-                </>
+                <CreditCard
+                  className="
+                size-6"
+                />
               ) : (
-                "Pagato in contanti"
+                <HandCoins className="size-6" />
               )}
-            </p>
-          </div>
-        </section>
+              <p>
+                {subscriptionPayment ? (
+                  <>
+                    <span className="capitalize">
+                      {subscriptionPayment.card?.brand}{" "}
+                    </span>
+                    che termina con {subscriptionPayment.card?.last4}
+                  </>
+                ) : (
+                  "Pagato in contanti"
+                )}
+              </p>
+            </div>
+          </section>
+        )}
       </main>
       <BtnFixedContainer>
         <footer className="space-y-2 grid grid-cols-2 gap-2">

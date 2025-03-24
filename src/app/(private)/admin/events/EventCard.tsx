@@ -100,7 +100,7 @@ export function EventCard({
                         <Button
                           type="submit"
                           variant="destructive"
-                          className="bg-destructive text-destructive-foreground w-full"
+                          className="!bg-destructive !text-destructive-foreground w-full"
                         >
                           Elimina
                         </Button>

@@ -48,7 +48,9 @@ export function EventForm({ event }: EventFormProps) {
     const res = await action(data);
 
     if (res?.error) {
-      toast.error("Si è verificato un errore. Riprova più tardi.");
+      toast.error(
+        res?.message || "Si è verificato un errore. Riprova più tardi."
+      );
       return;
     }
 
@@ -61,7 +63,6 @@ export function EventForm({ event }: EventFormProps) {
 
   return (
     <Form {...form}>
-      <FormAlert />
       <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-3">
         <FormField
           control={form.control}

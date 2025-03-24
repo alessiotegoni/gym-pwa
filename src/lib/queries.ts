@@ -3,7 +3,7 @@
 import { TrainingSearchParams } from "@/app/(private)/admin/trainings/page";
 import { db } from "@/drizzle/db";
 import { bookings, subscriptions } from "@/drizzle/schema";
-import { addDays, startOfDay, subDays } from "date-fns";
+import { addDays, startOfDay } from "date-fns";
 import { and, count, eq, lte, gte, ne } from "drizzle-orm";
 import { formatDate } from "./utils";
 
@@ -39,7 +39,7 @@ export async function hasSubscription(userId: number) {
   return !!subscriptionCount;
 }
 
-export async function getActiveSubscriptions(userId: number) {
+export async function getActiveSubscription(userId: number) {
   const results = await db.query.subscriptions.findFirst({
     where: (sub, { and, eq, lte, gte, ne }) =>
       and(

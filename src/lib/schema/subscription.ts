@@ -1,3 +1,4 @@
+import { startOfDay } from "date-fns";
 import * as z from "zod";
 
 export const createSubscriptionSchema = z.object({
@@ -6,7 +7,7 @@ export const createSubscriptionSchema = z.object({
   endDate: z
     .date()
     .refine(
-      (date) => date > new Date(),
-      "La data deve essere maggiore di quella di oggi"
+      (date) => date >= startOfDay(new Date()),
+      "La data deve essere maggiore o uguale di quella di oggi"
     ),
 });

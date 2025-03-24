@@ -1,5 +1,5 @@
 import Subscription from "./Subscription";
-import { getActiveSubscriptions } from "@/lib/queries";
+import { getActiveSubscription } from "@/lib/queries";
 import CreateSubscriptionCard from "@/components/CreateSubscriptionCard";
 
 type Props = {
@@ -7,7 +7,7 @@ type Props = {
 };
 
 export default async function ActiveSubscription({ userId }: Props) {
-  const currentSubscription = await getActiveSubscriptions(userId);
+  const currentSubscription = await getActiveSubscription(userId);
 
   return (
     <section>

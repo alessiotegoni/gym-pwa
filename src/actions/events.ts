@@ -5,9 +5,20 @@ import { events } from "@/drizzle/schema";
 import { auth } from "@/lib/auth";
 import { eventSchema } from "@/lib/schema/event";
 import { EventSchemaType } from "@/types";
-import { eq } from "drizzle-orm";
+import { and, count, eq, ne } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { uploadImg } from "./images";
+
+async function nameExist(name: string, eventId?: number) {
+  const [res] = await db
+    .select({ count: count() })
+    .from(events)
+    .where(
+      and(eq(events.name, name), eventId ? ne(events.id, eventId) : undefined)
+    );
+
+  return !!res.count;
+}
 
 export async function createEvent(values: EventSchemaType) {
   const session = await auth();
@@ -18,21 +29,12 @@ export async function createEvent(values: EventSchemaType) {
 
   if (!success) return { error: true };
 
+  if (await nameExist(data.name))
+    return { error: true, message: "Esiste gia un evento con questo nome" };
+
   const { img, ...restData } = data;
 
   if (!(img instanceof File)) return { error: true };
-
-  const eventExist = await db.query.events.findFirst({
-    columns: { id: true },
-    where: ({ name }, { eq, sql }) =>
-      eq(sql`lower(${name})`, restData.name.toLowerCase()),
-  });
-
-  if (eventExist)
-    return {
-      error: true,
-      message: `Esiste gia' un evento col nome ${data.name}`,
-    };
 
   const imageUrl = await uploadImg(img, { folder: "events" });
 
@@ -51,6 +53,9 @@ export async function editEvent(values: EventSchemaType, eventId: number) {
   if (!success || isNaN(eventId)) return { error: true };
 
   const { img, ...restData } = data;
+
+  if (await nameExist(data.name, eventId))
+    return { error: true, message: "Esiste gia un evento con questo nome" };
 
   const eventExist = await db.query.events.findFirst({
     columns: { id: true },

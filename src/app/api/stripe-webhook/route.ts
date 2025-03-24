@@ -5,6 +5,7 @@ import { formatDate } from "@/lib/utils";
 import { SubscriptionStatus } from "@/types";
 import { addDays } from "date-fns";
 import { eq } from "drizzle-orm";
+import { headers } from "next/headers";
 import { NextResponse } from "next/server";
 import Stripe from "stripe";
 
@@ -13,21 +14,23 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
 const ALLOWED_EVENTS: Stripe.Event["type"][] = [
   "checkout.session.completed",
   "customer.subscription.deleted",
-  "customer.subscription.updated",
+  "invoice.payment_succeeded",
   "invoice.payment_failed",
 ];
 
 export async function POST(req: Request) {
   try {
-    const sig = req.headers.get("stripe-signature");
-    console.log(sig);
+    const sig = (await headers()).get("stripe-signature");
 
-    if (!sig) throw new Error();
+    if (!sig) throw new Error("Missing stripe signature");
 
     const body = await req.text();
-    console.log(body);
 
-    if (!body) throw new Error();
+    if (!body) throw new Error("Missing body");
+
+    console.log("body", body);
+    console.log("signature", sig);
+    console.log("env", process.env.WEBHOOK_SECRET_KEY!);
 
     const event = stripe.webhooks.constructEvent(
       body,
@@ -122,7 +125,7 @@ export async function POST(req: Request) {
   } catch (err: any) {
     return NextResponse.json(
       { message: err?.message || "Something went wrong" },
-      { status: 500 }
+      { status: 400 }
     );
   }
 }

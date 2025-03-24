@@ -1,5 +1,4 @@
 import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
 import { db } from "@/drizzle/db";
 import { auth } from "@/lib/auth";
 import { CalendarDays, Dumbbell, TestTubeDiagonal, Trophy } from "lucide-react";
@@ -13,6 +12,8 @@ import { isWithinInterval, startOfDay } from "date-fns";
 import DeleteSubscription from "@/components/DeleteSubscription";
 import { TRIAL_DAYS } from "@/constants";
 import BtnFixedContainer from "@/components/BtnFixedContainer";
+
+export const revalidate = 60
 
 export const metadata = {
   title: "Profilo",

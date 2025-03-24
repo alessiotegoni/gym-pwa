@@ -40,11 +40,9 @@ export async function createTraining(values: DailyTrainingSchemaType) {
 
   if (!session?.userId || !session.isAdmin) return { error: true };
 
-  console.log(values);
-
   const { success, data, error } = dailyTrainingSchema.safeParse(values);
 
-  if (!success) return { error: true, message: JSON.stringify(error) };
+  if (!success) return { error: true, message: error.message };
 
   const { eventId, img, trainingTimestamp, description } = data;
 

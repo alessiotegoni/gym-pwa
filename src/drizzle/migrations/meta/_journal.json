@@ -57,6 +57,13 @@
       "when": 1742236564461,
       "tag": "0007_bumpy_cobalt_man",
       "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1742850064678,
+      "tag": "0008_perpetual_mandrill",
+      "breakpoints": true
     }
   ]
 }

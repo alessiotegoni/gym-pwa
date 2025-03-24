@@ -138,9 +138,9 @@ export const bookings = pgTable(
   "bookings",
   {
     id: serial("id").primaryKey(),
-    scheduleId: integer("scheduleId")
-      .references(() => eventSchedules.id, { onDelete: "set null" })
-      .notNull(),
+    scheduleId: integer("scheduleId").references(() => eventSchedules.id, {
+      onDelete: "set null",
+    }),
     userId: integer("userId")
       .references(() => users.id)
       .notNull(),

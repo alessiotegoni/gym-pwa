@@ -4,6 +4,7 @@ const nextConfig: NextConfig = {
   // crossOrigin: "use-credentials" only works on scripts,
   devIndicators: false,
   experimental: {
+    ppr: true,
     serverActions: {
       bodySizeLimit: "5mb",
     },

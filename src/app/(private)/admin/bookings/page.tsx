@@ -60,13 +60,13 @@ export default async function BookingsPage({ searchParams }: Props) {
           <AdminBookingCard
             key={id}
             event={
-              bookings.find((b) => b.schedule.event.id.toString() === id)
-                ?.schedule.event!
+              bookings.find((b) => b.schedule?.event.id.toString() === id)
+                ?.schedule?.event!
             }
             todayBookings={
               filteredBookings.filter(
                 (booking) =>
-                  booking.schedule.event.id.toString() === id &&
+                  booking?.schedule?.event.id.toString() === id &&
                   isToday(booking.bookingDate)
               ).length
             }

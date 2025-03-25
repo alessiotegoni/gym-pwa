@@ -3,9 +3,18 @@
 import { TrainingSearchParams } from "@/app/(private)/admin/trainings/page";
 import { db } from "@/drizzle/db";
 import { bookings, subscriptions } from "@/drizzle/schema";
-import { addDays, startOfDay } from "date-fns";
+import {
+  addDays,
+  endOfMonth,
+  format,
+  getMonth,
+  startOfDay,
+  startOfMonth,
+  subMonths,
+} from "date-fns";
 import { and, count, eq, lte, gte, ne } from "drizzle-orm";
 import { formatDate } from "./utils";
+import { it } from "date-fns/locale";
 
 export async function getUser({
   userId,
@@ -219,4 +228,76 @@ export async function getEventsTrainings({
   });
 
   return results;
+}
+
+export async function getUserWorkoutStats(userId: number) {
+  const now = new Date();
+  const startOfCurrentMonth = startOfMonth(now);
+  const endOfCurrentMonth = endOfMonth(now);
+  const lastMonthStart = startOfMonth(subMonths(now, 1));
+  const lastMonthEnd = endOfMonth(subMonths(now, 1));
+
+  const [
+    [{ totalWorkouts }],
+    [{ currentMonthWorkouts }],
+    [{ lastMonthWorkouts }],
+    monthlyData,
+  ] = await Promise.all([
+    db
+      .select({ totalWorkouts: count() })
+      .from(bookings)
+      .where(eq(bookings.userId, userId)),
+    db
+      .select({ currentMonthWorkouts: count() })
+      .from(bookings)
+      .where(
+        and(
+          eq(bookings.userId, userId),
+          gte(bookings.bookingDate, startOfCurrentMonth),
+          lte(bookings.bookingDate, endOfCurrentMonth)
+        )
+      ),
+    db
+      .select({ lastMonthWorkouts: count() })
+      .from(bookings)
+      .where(
+        and(
+          eq(bookings.userId, userId),
+          gte(bookings.bookingDate, lastMonthStart),
+          lte(bookings.bookingDate, lastMonthEnd)
+        )
+      ),
+    getMonthlyWorkoutData(userId, 6),
+  ]);
+
+  return {
+    totalWorkouts,
+    currentMonthWorkouts,
+    lastMonthWorkouts,
+    monthlyData,
+  };
+}
+
+async function getMonthlyWorkoutData(userId: number, monthsCount: number) {
+  const now = new Date();
+  const promises = Array.from({ length: monthsCount }, (_, i) => {
+    const monthDate = subMonths(now, i);
+    return db
+      .select({ workouts: count() })
+      .from(bookings)
+      .where(
+        and(
+          eq(bookings.userId, userId),
+          gte(bookings.bookingDate, startOfMonth(monthDate)),
+          lte(bookings.bookingDate, endOfMonth(monthDate))
+        )
+      )
+      .then(([{ workouts }]) => ({
+        name: format(monthDate, "MMM", { locale: it }),
+        workouts,
+        month: getMonth(monthDate) + 1 * 0.1,
+      }));
+  });
+
+  return await Promise.all(promises);
 }

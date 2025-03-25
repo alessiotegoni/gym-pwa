@@ -18,9 +18,7 @@ import { fromZonedTime } from "date-fns-tz";
 import { it } from "date-fns/locale";
 import { twMerge } from "tailwind-merge";
 import { ACCEPTED_FILE_TYPES, MAX_FILE_SIZE } from "./schema/image";
-// import cloudinary from "./cloudinary";
 import { DAYS_OF_WEEK_IN_ORDER } from "@/constants";
-import { ImageTransformationOptions } from "cloudinary";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -60,7 +58,7 @@ export function filterByUsers<
 
 export function groupBookings(bookings: Bookings) {
   const groupedByEventId = Object.groupBy(bookings, (booking) =>
-    booking.schedule.event.id.toString()
+    booking.schedule!.event.id.toString()
   );
 
   const groupedByDay = Object.fromEntries(
@@ -79,7 +77,7 @@ export function groupBookings(bookings: Bookings) {
         Object.entries(days).map(([day, dayBookings]) => [
           day,
           Object.groupBy(dayBookings ?? [], (dayBooking) =>
-            dayBooking.schedule.startTime.slice(0, 5)
+            dayBooking.schedule!.startTime.slice(0, 5)
           ),
         ])
       ),

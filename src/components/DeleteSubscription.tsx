@@ -24,6 +24,7 @@ type Props = {
 };
 
 export default function DeleteSubscription({ subscription, className }: Props) {
+
   const [loading, setLoading] = useState(false);
 
   const handleCancelSubscription = async (e: React.FormEvent) => {

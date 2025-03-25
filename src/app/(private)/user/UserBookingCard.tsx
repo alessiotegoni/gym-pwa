@@ -24,14 +24,14 @@ export default function UserBookingCard({ booking, userId }: Props) {
           <div className="flex items-center gap-3">
             <div className="relative w-12 h-12 rounded-full overflow-hidden">
               <Image
-                src={booking.schedule.event.imageUrl}
-                alt={booking.schedule.event.name}
+                src={booking.schedule!.event.imageUrl}
+                alt={booking.schedule!.event.name}
                 objectFit="cover"
                 fill
               />
             </div>
             <div>
-              <h3 className="font-semibold">{booking.schedule.event.name}</h3>
+              <h3 className="font-semibold">{booking.schedule!.event.name}</h3>
               <p className="text-sm flex items-center gap-1 text-muted-foreground">
                 <CalendarDays className="size-4" />
                 {format(booking.bookingDate, "d MMMM", { locale: it })}
@@ -47,7 +47,7 @@ export default function UserBookingCard({ booking, userId }: Props) {
               {format(
                 addMinutes(
                   zonedBookingDate,
-                  booking.schedule.event.durationMinutes
+                  booking.schedule!.event.durationMinutes
                 ),
                 "HH:mm"
               )}
@@ -56,11 +56,11 @@ export default function UserBookingCard({ booking, userId }: Props) {
         </div>
         <div className="mt-5 flex items-center justify-between">
           <BookingDetails
-            scheduleId={booking.scheduleId}
+            scheduleId={booking.scheduleId!}
             userId={userId}
             bookingDate={booking.bookingDate}
-            eventCapacity={booking.schedule.event.capacity}
-            bookingsCount={booking.schedule.bookings.length}
+            eventCapacity={booking.schedule!.event.capacity}
+            bookingsCount={booking.schedule!.bookings.length}
           />
           <DeleteBookingBtn
             bookingId={booking.id}
@@ -69,7 +69,8 @@ export default function UserBookingCard({ booking, userId }: Props) {
               !isBookingOperable({
                 type: "delete",
                 bookingDate: zonedBookingDate,
-                cutoffMinutes: booking.schedule.event.cancellationCutoffMinutes,
+                cutoffMinutes:
+                  booking.schedule!.event.cancellationCutoffMinutes,
               })
             }
           >

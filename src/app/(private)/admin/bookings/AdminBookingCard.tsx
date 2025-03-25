@@ -7,7 +7,11 @@ import { getBookingTime, getCurrentTime } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
 
 type Props = {
-  event: Bookings[0]["schedule"]["event"];
+  event: {
+    id: number;
+    name: string;
+    durationMinutes: number
+  }
   todayBookings: number;
   days: GroupedBookings[string];
   isAdmin: boolean;

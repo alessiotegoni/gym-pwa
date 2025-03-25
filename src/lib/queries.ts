@@ -295,9 +295,11 @@ async function getMonthlyWorkoutData(userId: number, monthsCount: number) {
       .then(([{ workouts }]) => ({
         name: format(monthDate, "MMM", { locale: it }),
         workouts,
-        month: getMonth(monthDate) + 1 * 0.1,
+        month: i,
       }));
   });
 
-  return await Promise.all(promises);
+  const monthlyData = await Promise.all(promises);
+
+  return monthlyData.sort((a, b) => b.month - a.month);
 }

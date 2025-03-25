@@ -16,7 +16,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { CalendarDays, Dumbbell, Trophy } from "lucide-react";
+import { Calendar, Clock, Dumbbell } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { getUserWorkoutStats } from "@/lib/queries";
 import { use } from "react";
@@ -43,36 +43,36 @@ export default function UserStatistics({
   statsPromise: ReturnType<typeof getUserWorkoutStats>;
 }) {
   const stats = use(statsPromise);
-  // Sort the monthly data by month number to ensure correct order
   const sortedMonthlyData = stats.monthlyData.toSorted(
-    (a, b) => a.month - b.month
+    (a, b) => b.month - a.month
   );
 
   return (
-    <section className="space-y-4">
-      <h3 className="text-lg font-semibold mb-2">Statistiche</h3>
+    <section>
+      <h3 className="text-lg font-semibold mb-3 mt-4">Allenamenti</h3>
 
       <div className="grid grid-cols-3 gap-3">
         <div className="flex flex-col items-center p-2 border border-zinc-300/40 bg-zinc-100 dark:border-zinc-700/40 dark:bg-zinc-900 rounded-xl">
           <Dumbbell className="!size-6 mb-1 dark:text-primary" />
           <span className="text-xl font-bold">{stats.totalWorkouts}</span>
-          <span className="text-xs text-muted-foreground">Allenamenti</span>
+          <span className="text-xs text-muted-foreground">Totali</span>
         </div>
         <div className="flex flex-col items-center p-2 border border-zinc-300/40 bg-zinc-100 dark:border-zinc-700/40 dark:bg-zinc-900 rounded-xl">
-          <CalendarDays className="!size-6 mb-1 dark:text-primary" />
+          <Calendar className="!size-6 mb-1 dark:text-primary" />
           <span className="text-xl font-bold">
             {stats.currentMonthWorkouts}
           </span>
           <span className="text-xs text-muted-foreground">Questo mese</span>
         </div>
         <div className="flex flex-col items-center p-2 border border-zinc-300/40 bg-zinc-100 dark:border-zinc-700/40 dark:bg-zinc-900 rounded-xl">
-          <Trophy className="!size-6 mb-1 dark:text-primary" />
+          <Clock className="!size-6 mb-1 dark:text-primary" />
           <span className="text-xl font-bold">{stats.lastMonthWorkouts}</span>
           <span className="text-xs text-muted-foreground">Mese scorso</span>
         </div>
       </div>
 
-      <Card>
+      <h3 className="text-lg font-semibold mb-3 mt-4">Statistiche</h3>
+      <Card className="card-primary !p-0">
         <CardHeader className="pb-2">
           <CardTitle className="text-base">Allenamenti mensili</CardTitle>
           <CardDescription>Confronto degli ultimi mesi</CardDescription>

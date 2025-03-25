@@ -36,20 +36,18 @@ export default async function UserProfilePage({ searchParams }: Props) {
   if (!user) redirect("/sign-in");
 
   return (
-    <div className="flex flex-col h-full gap-6">
+    <div className="flex flex-col h-full gap-4">
       <UserHeader user={user} showLogout={true} />
       <main className="flex-1">
-        <div className="space-y-6">
-          <Suspense
-            fallback={<Skeleton className="card-primary w-full h-[150px]" />}
-          >
-            <AllowedTrial userId={user.id} />
-            <CurrentSubscription userId={user.id} />
-          </Suspense>
-          <Suspense fallback={<UserStatisticsSkeleton />}>
-            <UserStatistics statsPromise={getUserWorkoutStats(user.id)} />
-          </Suspense>
-        </div>
+        <Suspense
+          fallback={<Skeleton className="card-primary w-full h-[150px]" />}
+        >
+          <AllowedTrial userId={user.id} />
+          <CurrentSubscription userId={user.id} />
+        </Suspense>
+        <Suspense fallback={<UserStatisticsSkeleton />}>
+          <UserStatistics statsPromise={getUserWorkoutStats(user.id)} />
+        </Suspense>
       </main>
       <footer>
         <BtnFixedContainer>

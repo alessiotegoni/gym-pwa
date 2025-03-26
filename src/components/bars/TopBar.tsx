@@ -36,7 +36,7 @@ export default async function TopBar() {
         showIcons={false}
       />
       <div className="flex justify-center items-center gap-3">
-        <PushNotificationHandler userId={session?.userId} />
+        <PushNotificationHandler />
         {session?.isAdmin && (
           <div className="md:hidden">
             <SidebarTrigger />

@@ -1,15 +1,10 @@
 "use client";
 
 import usePushNotifications from "@/hooks/usePushNotifications";
-import { BellOff, BellRing, LoaderCircle } from "lucide-react";
+import { BellOff, BellRing } from "lucide-react";
 import { Button } from "./ui/button";
-import { toast } from "sonner";
 
-export default function PushNotificationHandler({
-  userId,
-}: {
-  userId: number;
-}) {
+export default function PushNotificationHandler() {
   const {
     isSupported,
     loading,
@@ -18,7 +13,7 @@ export default function PushNotificationHandler({
     unsubscribeFromPush,
   } = usePushNotifications();
 
-  if (loading || !isSupported) return null
+  if (loading || !isSupported) return null;
 
   // if (!isSupported)
   //   return (
@@ -34,11 +29,11 @@ export default function PushNotificationHandler({
   //   );
 
   return subscription ? (
-    <Button variant="ghost" size="icon"  onClick={unsubscribeFromPush}>
+    <Button variant="ghost" size="icon" onClick={unsubscribeFromPush}>
       <BellRing className="!size-5" />
     </Button>
   ) : (
-    <Button variant="ghost" size="icon"  onClick={subscribeToPush}>
+    <Button variant="ghost" size="icon" onClick={subscribeToPush}>
       <BellOff className="!size-5" />
     </Button>
   );

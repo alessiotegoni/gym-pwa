@@ -233,7 +233,6 @@ export async function getEventsTrainings({
 export async function getUserWorkoutStats(userId: number) {
   const now = new Date();
   const startOfCurrentMonth = startOfMonth(now);
-  const endOfCurrentMonth = endOfMonth(now);
   const lastMonthStart = startOfMonth(subMonths(now, 1));
   const lastMonthEnd = endOfMonth(subMonths(now, 1));
 
@@ -254,7 +253,7 @@ export async function getUserWorkoutStats(userId: number) {
         and(
           eq(bookings.userId, userId),
           gte(bookings.bookingDate, startOfCurrentMonth),
-          lte(bookings.bookingDate, endOfCurrentMonth)
+          lte(bookings.bookingDate, now)
         )
       ),
     db
@@ -281,7 +280,7 @@ export async function getUserWorkoutStats(userId: number) {
 async function getMonthlyWorkoutData(userId: number, monthsCount: number) {
   const now = new Date();
   const promises = Array.from({ length: monthsCount }, (_, i) => {
-    const monthDate = subMonths(now, i);
+    const monthDate = subMonths(now, i + 1);
     return db
       .select({ workouts: count() })
       .from(bookings)

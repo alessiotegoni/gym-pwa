@@ -14,12 +14,13 @@ import {
 import { Input } from "@/components/ui/input";
 import { signinSchema } from "@/lib/schema/auth";
 import SubmitBtn from "../SubmitBtn";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { credentialsSignIn } from "@/actions/auth";
 import FormAlert from "../FormAlert";
 
 export default function SigninForm() {
   const searchParams = useSearchParams();
+  const router = useRouter();
 
   const form = useForm<z.infer<typeof signinSchema>>({
     resolver: zodResolver(signinSchema),
@@ -30,19 +31,19 @@ export default function SigninForm() {
   });
 
   async function onSubmit(values: z.infer<typeof signinSchema>) {
+    if (form.formState.isSubmitSuccessful) return;
 
-    if (form.formState.isSubmitSuccessful) return
+    const res = await credentialsSignIn(values);
 
-    const res = await credentialsSignIn(
-      values,
-      searchParams.get("redirectUrl")
-    );
-
-    if (res?.error)
+    if (res?.error) {
       form.setError("root", {
         message:
           res?.message || "Errore nella registrazione, riprovare piu tardi",
       });
+      return;
+    }
+
+    router.push(searchParams.get("redirectUrl") || "/user");
   }
 
   return (

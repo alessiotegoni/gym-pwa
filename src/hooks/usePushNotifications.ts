@@ -26,8 +26,7 @@ export default function usePushNotifications() {
       scope: "/",
       updateViaCache: "none",
     });
-
-    console.log("Service worker registered");
+    console.info("Service worker registered");
 
     const sub = await registration.pushManager.getSubscription();
     if (!sub)

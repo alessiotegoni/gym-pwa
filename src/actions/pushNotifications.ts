@@ -38,7 +38,7 @@ export async function subscribeUser(sub: PushSubscription) {
     .values({ userId: session.userId, ...subscription })
     .onConflictDoUpdate({
       target: [pushNotifcations.userId],
-      set: { userId: session.userId, ...subscription },
+      set: subscription,
     });
 
   if (!rowCount) return { error: true };

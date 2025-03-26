@@ -51,7 +51,7 @@ export default function TrainingInfo({ bookingDate, isDialogOpen }: Props) {
                 }
               />
               {training.description && (
-                <p className="font-medium text-sm mt-3 mb-6">
+                <p className="font-medium text-sm mt-3">
                   {training.description}
                 </p>
               )}
@@ -66,6 +66,7 @@ export default function TrainingInfo({ bookingDate, isDialogOpen }: Props) {
       <SubmitBtn
         label="Aggiorna"
         loadingLabel="Aggiornando"
+        className="mt-6"
         disabled={isLoading}
         onClick={() => {
           setIsLoading(true);

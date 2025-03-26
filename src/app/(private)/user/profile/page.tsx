@@ -38,28 +38,24 @@ export default async function UserProfilePage({ searchParams }: Props) {
   return (
     <div className="flex flex-col h-full gap-4">
       <UserHeader user={user} showLogout={true} />
-      <main className="flex-1">
-        <Suspense
-          fallback={<Skeleton className="card-primary w-full h-[150px]" />}
-        >
-          <AllowedTrial userId={user.id} />
-          <CurrentSubscription userId={user.id} />
-        </Suspense>
-        <Suspense fallback={<UserStatisticsSkeleton />}>
-          <UserStatistics statsPromise={getUserWorkoutStats(user.id)} />
-        </Suspense>
-      </main>
-      <footer>
-        <BtnFixedContainer>
-          <DeleteSubscription
-            subscription={await getActiveSubscription(user.id)}
-            className="basis-1/2 p-0 mb-2"
-          />
-          <Button className="grow w-full basis-1/2" asChild>
-            <Link href="/subscriptions">Vedi Abbonamenti</Link>
-          </Button>
-        </BtnFixedContainer>
-      </footer>
+      <Suspense
+        fallback={<Skeleton className="card-primary w-full h-[150px]" />}
+      >
+        <AllowedTrial userId={user.id} />
+        <CurrentSubscription userId={user.id} />
+      </Suspense>
+      <Suspense fallback={<UserStatisticsSkeleton />}>
+        <UserStatistics statsPromise={getUserWorkoutStats(user.id)} />
+      </Suspense>
+      <BtnFixedContainer>
+        <DeleteSubscription
+          subscription={await getActiveSubscription(user.id)}
+          className="basis-1/2 p-0 mb-2"
+        />
+        <Button className="grow w-full basis-1/2" asChild>
+          <Link href="/subscriptions">Vedi Abbonamenti</Link>
+        </Button>
+      </BtnFixedContainer>
     </div>
   );
 }

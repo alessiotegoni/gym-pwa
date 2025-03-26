@@ -10,7 +10,13 @@ export default function FormAlert({ className }: { className?: string }) {
 
   if (errors.root) {
     return (
-      <Alert variant="destructive" className={cn("mb-4", className)}>
+      <Alert
+        variant="destructive"
+        className={cn(
+          "mb-4 bg-red-50 border-red-200 dark:bg-red-900/20 dark:border-red-700",
+          className
+        )}
+      >
         <AlertCircle />
         <div className="!pl-9">
           <AlertTitle>Errore</AlertTitle>
@@ -25,7 +31,7 @@ export default function FormAlert({ className }: { className?: string }) {
       <Alert
         variant="default"
         className={cn(
-          "mb-4 bg-green-50 text-green-800 border-green-200",
+          "mb-4 bg-green-50 border-green-200 dark:bg-green-900/20 dark:border-green-700",
           className
         )}
       >

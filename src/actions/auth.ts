@@ -3,10 +3,7 @@
 import { db } from "@/drizzle/db";
 import { users } from "@/drizzle/schema";
 import { signIn } from "@/lib/auth";
-import {
-  signinSchema,
-  signupSchema,
-} from "@/lib/schema/auth";
+import { signinSchema, signupSchema } from "@/lib/schema/auth";
 import { SignupSchemaType } from "@/types";
 import { hash } from "bcrypt";
 import { redirect } from "next/navigation";
@@ -37,13 +34,10 @@ export async function signup(values: SignupSchemaType, isTrial: string | null) {
   redirect(`/sign-in?${searchParams.toString()}`);
 }
 
-export const credentialsSignIn = async (
-  values: {
-    email: string;
-    password: string;
-  },
-  redirectUrl: string | null
-) => {
+export const credentialsSignIn = async (values: {
+  email: string;
+  password: string;
+}) => {
   const { error, data } = signinSchema.safeParse(values);
 
   if (error) return { error: true };
@@ -51,10 +45,8 @@ export const credentialsSignIn = async (
   try {
     await signIn("credentials", {
       ...data,
-      redirectTo: redirectUrl || "/user"
+      redirect: false,
     });
-
-    return { error: false }
   } catch (err) {
     return { error: true, message: "Credenziali errate" };
   }

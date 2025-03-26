@@ -43,69 +43,72 @@ export default function UserStatistics({
   statsPromise: ReturnType<typeof getUserWorkoutStats>;
 }) {
   const stats = use(statsPromise);
-  const sortedMonthlyData = stats.monthlyData.toSorted(
-    (a, b) => b.month - a.month
-  );
 
   return (
-    <section>
-      <h3 className="text-lg font-semibold mb-3 mt-4">Allenamenti</h3>
+    <div className="grow">
+      <section>
+        <h3 className="text-lg font-semibold mb-3">Allenamenti</h3>
 
-      <div className="grid grid-cols-3 gap-3">
-        <div className="flex flex-col items-center p-2 border border-zinc-300/40 bg-zinc-100 dark:border-zinc-700/40 dark:bg-zinc-900 rounded-xl">
-          <Dumbbell className="!size-6 mb-1 dark:text-primary" />
-          <span className="text-xl font-bold">{stats.totalWorkouts}</span>
-          <span className="text-xs text-muted-foreground">Totali</span>
-        </div>
-        <div className="flex flex-col items-center p-2 border border-zinc-300/40 bg-zinc-100 dark:border-zinc-700/40 dark:bg-zinc-900 rounded-xl">
-          <Calendar className="!size-6 mb-1 dark:text-primary" />
-          <span className="text-xl font-bold">
-            {stats.currentMonthWorkouts}
-          </span>
-          <span className="text-xs text-muted-foreground">Questo mese</span>
-        </div>
-        <div className="flex flex-col items-center p-2 border border-zinc-300/40 bg-zinc-100 dark:border-zinc-700/40 dark:bg-zinc-900 rounded-xl">
-          <Clock className="!size-6 mb-1 dark:text-primary" />
-          <span className="text-xl font-bold">{stats.lastMonthWorkouts}</span>
-          <span className="text-xs text-muted-foreground">Mese scorso</span>
-        </div>
-      </div>
-
-      <h3 className="text-lg font-semibold mb-3 mt-4">Statistiche</h3>
-      <Card className="card-primary !p-0">
-        <CardHeader className="pb-2">
-          <CardTitle className="text-base">Allenamenti mensili</CardTitle>
-          <CardDescription>Confronto degli ultimi mesi</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="h-[200px]">
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={sortedMonthlyData}>
-                <XAxis
-                  dataKey="name"
-                  fontSize={12}
-                  tickLine={false}
-                  axisLine={false}
-                />
-                <YAxis
-                  fontSize={12}
-                  tickLine={false}
-                  axisLine={false}
-                  tickFormatter={(value) => `${value}`}
-                />
-                <Tooltip content={<CustomTooltip />} />
-                <Bar
-                  dataKey="workouts"
-                  fill="hsl(var(--primary))"
-                  radius={[4, 4, 0, 0]}
-                  className="fill-primary"
-                />
-              </BarChart>
-            </ResponsiveContainer>
+        <div className="grid grid-cols-3 gap-3">
+          <div className="flex flex-col items-center p-2 border border-zinc-300/40 bg-zinc-100 dark:border-zinc-700/40 dark:bg-zinc-900 rounded-xl">
+            <Dumbbell className="!size-6 mb-1 dark:text-primary" />
+            <span className="text-xl font-bold">{stats.totalWorkouts}</span>
+            <span className="text-xs text-muted-foreground">Totali</span>
           </div>
-        </CardContent>
-      </Card>
-    </section>
+          <div className="flex flex-col items-center p-2 border border-zinc-300/40 bg-zinc-100 dark:border-zinc-700/40 dark:bg-zinc-900 rounded-xl">
+            <Calendar className="!size-6 mb-1 dark:text-primary" />
+            <span className="text-xl font-bold">
+              {stats.currentMonthWorkouts}
+            </span>
+            <span className="text-xs text-muted-foreground">Questo mese</span>
+          </div>
+          <div className="flex flex-col items-center p-2 border border-zinc-300/40 bg-zinc-100 dark:border-zinc-700/40 dark:bg-zinc-900 rounded-xl">
+            <Clock className="!size-6 mb-1 dark:text-primary" />
+            <span className="text-xl font-bold">{stats.lastMonthWorkouts}</span>
+            <span className="text-xs text-muted-foreground">Mese scorso</span>
+          </div>
+        </div>
+      </section>
+
+      {stats.monthlyData.some(({ workouts }) => Boolean(workouts)) && (
+        <section>
+          <h3 className="text-lg font-semibold mb-3 mt-4">Statistiche</h3>
+          <Card className="card-primary !p-0">
+            <CardHeader className="pb-2">
+              <CardTitle className="text-base">Allenamenti mensili</CardTitle>
+              <CardDescription>Confronto degli ultimi mesi</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="h-[200px]">
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart data={stats.monthlyData}>
+                    <XAxis
+                      dataKey="name"
+                      fontSize={12}
+                      tickLine={false}
+                      axisLine={false}
+                    />
+                    <YAxis
+                      fontSize={12}
+                      tickLine={false}
+                      axisLine={false}
+                      tickFormatter={(value) => `${value}`}
+                    />
+                    <Tooltip content={<CustomTooltip />} />
+                    <Bar
+                      dataKey="workouts"
+                      fill="hsl(var(--primary))"
+                      radius={[4, 4, 0, 0]}
+                      className="fill-primary"
+                    />
+                  </BarChart>
+                </ResponsiveContainer>
+              </div>
+            </CardContent>
+          </Card>
+        </section>
+      )}
+    </div>
   );
 }
 export function UserStatisticsSkeleton() {

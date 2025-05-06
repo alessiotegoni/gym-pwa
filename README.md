@@ -1,6 +1,6 @@
 # 🏋️ Tabata – Gym PWA
 
-**Tabata** è un'applicazione web progressiva (PWA) pensata per le palestre e i loro clienti. L'app permette agli utenti di registrarsi, visualizzare i corsi disponibili, prenotare le lezioni, gestire il proprio abbonamento tramite Stripe, ricevere notifiche push e monitorare i propri progressi. I trainer (admin) possono gestire corsi, utenti, prenotazioni ed eventi tramite un'area amministrativa dedicata.
+**Tabata** è un'applicazione web progressiva (PWA) pensata per la palestra e i loro clienti. L'app permette agli utenti di registrarsi, visualizzare i corsi disponibili, prenotare le lezioni, gestire il proprio abbonamento tramite Stripe, ricevere notifiche push e monitorare i propri progressi. I trainer (admin) possono gestire corsi, utenti, prenotazioni ed eventi tramite un'area amministrativa dedicata.
 
 ---
 

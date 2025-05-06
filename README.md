@@ -15,7 +15,7 @@
 - 🔔 **Push Notifications** in tempo reale per ricordare corsi e aggiornamenti
 - 🗂️ Validazione form avanzata con **React Hook Form** + **Zod**
 - 💽 Gestione dati con **PostgreSQL** e ORM **Drizzle**
-- ⚡ Performance ottimizzata con caching lato server e PWA support
+- ⚡ Performance ottimizzata e PWA support
 
 ---
 
